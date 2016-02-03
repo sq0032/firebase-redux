@@ -1,39 +1,37 @@
 /*
  * action types
  */
-
-export const ADD_TODO = 'ADD_TODO'
-export const COMPLETE_TODO = 'COMPLETE_TODO'
-export const SET_VISIBILITY_FILTER = 'SET_VISIBILITY_FILTER'
+export const TYPE = {
+  GO_NEXT_SCREEN: 'GO_NEXT_SCREEN', 
+  GO_PREVIOUS_SCREEN: 'GO_PREVIOUS_SCREEN', 
+}
 
 /*
  * other constants
  */
 
-export const VisibilityFilters = {
-  SHOW_ALL: 'SHOW_ALL',
-  SHOW_COMPLETED: 'SHOW_COMPLETED',
-  SHOW_ACTIVE: 'SHOW_ACTIVE'
-}
+export const GameScreens = [
+  'INTRO',
+  'READ',
+  'PLAN',
+  'DO',
+  'TEST',
+]
 
 /*
  * action creators
  */
 
-let nextTodoId = 0;
-
-export function addTodo(text) {
+export function goNextScreen(cur_screen){
   return {
-    type: ADD_TODO,
-    id: nextTodoId++,
-    text
+    type: TYPE.GO_NEXT_SCREEN,
+    cur_screen: cur_screen,
   };
 }
-
-export function completeTodo(id) {
-  return { type: COMPLETE_TODO, id }
-}
-
-export function setVisibilityFilter(filter) {
-  return { type: SET_VISIBILITY_FILTER, filter }
+  
+export function goPreviousScreen(cur_screen){
+  return {
+    type: TYPE.GO_PREVIOUS_SCREEN,
+    cur_screen: cur_screen,
+  };
 }

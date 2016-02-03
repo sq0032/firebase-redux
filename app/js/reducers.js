@@ -1,57 +1,33 @@
 import { combineReducers } from 'redux'
-import { ADD_TODO, COMPLETE_TODO, SET_VISIBILITY_FILTER, VisibilityFilters } from './actions'
-const { SHOW_ALL } = VisibilityFilters
+import { TYPE, GameScreens } from './actions'
 
-function visibilityFilter(state = SHOW_ALL, action) {
-  switch (action.type) {
-    case SET_VISIBILITY_FILTER:
-      return action.filter
-    default:
-      return state
-  }
-}
 
-function todo(state, action) {
+function gameScreens(state = GameScreens[0], action){
+  const screen_index = GameScreens.indexOf(action.cur_screen);
   switch (action.type) {
-    case ADD_TODO:
-      return {
-        id: action.id,
-        text: action.text,
-        completed: false
-      }
-    case COMPLETE_TODO:
-      if (state.id !== action.id) {
+    case TYPE.GO_NEXT_SCREEN:
+      console.log('GO_NEXT_SCREEN');
+      console.log(screen_index);
+      if(screen_index<GameScreens.length-1){
+        return GameScreens[screen_index+1];
+      }else{
         return state
       }
-
-      return {
-        ...state,
-        completed: !state.completed
-      }
-    default:
-      return state
-  }
-}
-
-function todos(state = [], action) {
-  switch (action.type) {
-    case ADD_TODO:
-      return [
-        ...state,
-        todo(undefined, action)
-      ]
-    case COMPLETE_TODO:
-      return state.map(t =>
-        todo(t, action)
-      )
+    case TYPE.GO_PREVIOUS_SCREEN:
+      console.log('GO_PREVIOUS_SCREEN');
+      console.log(screen_index);
+      if(screen_index>0){
+        return GameScreens[screen_index-1];
+      }else{
+        return state
+      }      
     default:
       return state
   }
 }
 
 const todoApp = combineReducers({
-  visibilityFilter,
-  todos
+  gameScreens
 })
 
 export default todoApp
