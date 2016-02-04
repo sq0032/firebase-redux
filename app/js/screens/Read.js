@@ -1,14 +1,18 @@
-import React, { Component, PropTypes } from 'react'
+import React, { Component, PropTypes } from 'react';
+import {Motion, spring} from 'react-motion';
 
 export default class Read extends Component {
   render() {
-    const offset = {
-      left: `${100*this.props.offset}%`
-    };
+    const left = 100*this.props.offset;
     return (
-      <div style={{...style.base, ...offset}}>
-        Read
-      </div>
+      <Motion style={{left: spring(left)}}>
+        {value =>
+          <div style={{...style.base, left:`${value.left}%`}}>
+            Read
+            <p>{value.left}</p>
+          </div>
+        }
+      </Motion>
     )
   }
 }
@@ -21,6 +25,8 @@ const style = {
     width: '100%',
     height: '100%',
     border: '1px solid black',
-    position: 'absolute'
+    position: 'absolute',
+    backgroundColor: '#EEE',
+    padding: '40px'
   }
 }

@@ -7,6 +7,7 @@ import Read from '../screens/Read';
 import Plan from '../screens/Plan';
 import Do from '../screens/Do';
 import Test from '../screens/Test';
+import Screen from '../screens/Screen';
 
   
 class App extends Component {
@@ -19,7 +20,7 @@ class App extends Component {
         <Read offset={-offset+1}/>
         <Plan offset={-offset+2}/>
         <Do offset={-offset+3}/>
-        <Test offset={-offset+4}/> 
+        <Test offset={-offset+4}/>
       </div>
     );
   }
