@@ -14,15 +14,15 @@ class App extends Component {
   
   renderScreen() {
     const offset = this.props.gameScreen;
-    return (
-      <div style={style.screen}>
-        <Intro offset={-offset+0}/>
-        <Read offset={-offset+1}/>
-        <Plan offset={-offset+2}/>
-        <Do offset={-offset+3}/>
-        <Test offset={-offset+4}/>
-      </div>
-    );
+    const Screens = GameScreens.map((screen, index)=>{
+//      if (index >= offset - 1 && index <= offset + 1 ){
+        return (
+          <Screen screen={screen} offset={-offset+index} key={screen}/>
+        );
+//      }
+    });
+    console.log('renderScreen');
+    return Screens;
   }
   render() {
     // Injected by connect() call:

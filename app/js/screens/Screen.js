@@ -11,58 +11,39 @@ import Test from './Test';
 export default class Screen extends Component {
   render() {
     const left = 100*this.props.offset;
+    let Screen = null;
+    console.log(left);
     switch (this.props.screen){
       case GameScreens[0]:
-        return (
-          <Motion style={{left: spring(left)}}>
-            {value =>
-              <div style={{...style.base, left:`${value.left}%`}}>
-                <Intro />
-              </div>
-            }
-          </Motion>
-        )
+        Screen = <Intro />;
+        break;
       case GameScreens[1]:
-        return (
-          <Motion style={{left: spring(left)}}>
-            {value =>
-              <div style={{...style.base, left:`${value.left}%`}}>
-                <Read />
-              </div>
-            }
-          </Motion>
-        )
+        Screen = <Read />;
+        break;
       case GameScreens[2]:
-        return (
-          <Motion style={{left: spring(left)}}>
-            {value =>
-              <div style={{...style.base, left:`${value.left}%`}}>
-                <Plan />
-              </div>
-            }
-          </Motion>
-        )
+        Screen = <Plan />;
+        break;
       case GameScreens[3]:
-        return (
-          <Motion style={{left: spring(left)}}>
-            {value =>
-              <div style={{...style.base, left:`${value.left}%`}}>
-                <Do />
-              </div>
-            }
-          </Motion>
-        )
+        Screen = <Do />;
+        break;
       case GameScreens[4]:
-        return (
-          <Motion style={{left: spring(left)}}>
-            {value =>
-              <div style={{...style.base, left:`${value.left}%`}}>
-                <Test />
-              </div>
-            }
-          </Motion>
-        )
+        Screen = <Test />;
+        break;
     }
+    
+    return (
+      <Motion style={{left: spring(left)}}>
+        {value => {
+            const left_str = value.left.toString()+'%';
+            return (
+              <div style={{...style.base, left:left_str}}>
+                {Screen}
+              </div>
+            )
+          }
+        }
+      </Motion>
+    )
   }
 }
 
