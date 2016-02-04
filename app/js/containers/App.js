@@ -1,24 +1,54 @@
 import React, { Component, PropTypes } from 'react'
 import { connect } from 'react-redux'
-//import { addTodo, completeTodo, setVisibilityFilter, goNextScreen, goPreviousScreen, VisibilityFilters } from '../actions'
-import { goNextScreen, goPreviousScreen } from '../actions'
-//import AddTodo from '../components/AddTodo'
-//import TodoList from '../components/TodoList'
-//import Footer from '../components/Footer'
-  
+import { goNextScreen, goPreviousScreen, GameScreens } from '../actions'
+
+import Intro from '../screens/Intro';
+import Read from '../screens/Read';
+import Plan from '../screens/Plan';
+import Do from '../screens/Do';
+import Test from '../screens/Test';
+
   
 class App extends Component {
+  
+  renderScreen() {
+    const offset = this.props.gameScreen;
+    return (
+      <div style={style.screen}>
+        <Intro offset={-offset+0}/>
+        <Read offset={-offset+1}/>
+        <Plan offset={-offset+2}/>
+        <Do offset={-offset+3}/>
+        <Test offset={-offset+4}/> 
+      </div>
+    );
+  }
   render() {
     // Injected by connect() call:
 //    const { dispatch, visibleTodos, visibilityFilter, gameScreen } = this.props
+    const Screen = this.renderScreen();
     const { dispatch, gameScreen } = this.props
     return (
       <div>
         <button onClick={()=>dispatch(goPreviousScreen(gameScreen))}>Go Previous</button>
         <button onClick={()=>dispatch(goNextScreen(gameScreen))}>Go Next</button>
-        {gameScreen}
+        <p>
+          Screen Index:{gameScreen}, Screen Name:{GameScreens[gameScreen]}
+        </p>
+        {Screen}
       </div>
     )
+  }
+}
+
+const style = {
+  screen: {
+    left:'0px',
+    right:'1px',
+    top:'100px',
+    bottom: '0px',
+    border: '1px solid black',
+    position: 'absolute'
   }
 }
 
@@ -34,24 +64,12 @@ App.propTypes = {
 //  ]).isRequired
 }
 
-//function selectTodos(todos, filter) {
-//  switch (filter) {
-//    case VisibilityFilters.SHOW_ALL:
-//      return todos
-//    case VisibilityFilters.SHOW_COMPLETED:
-//      return todos.filter(todo => todo.completed)
-//    case VisibilityFilters.SHOW_ACTIVE:
-//      return todos.filter(todo => !todo.completed)
-//  }
-//}
-
-// Which props do we want to inject, given the global state?
-// Note: use https://github.com/faassen/reselect for better performance.
 function select(state) {
   return {
 //    visibleTodos: selectTodos(state.todos, state.visibilityFilter),
 //    visibilityFilter: state.visibilityFilter,
-    gameScreen: state.gameScreens
+    gameScreen: state.gameScreens,
+    test: 'testttt'
   }
 }
 
