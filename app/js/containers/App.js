@@ -1,41 +1,31 @@
 import React, { Component, PropTypes } from 'react'
 import { connect } from 'react-redux'
-import { goNextScreen, goPreviousScreen, GameScreens } from '../actions'
+import { GameScreens } from '../actions';
 
-import Intro from '../screens/Intro';
-import Read from '../screens/Read';
-import Plan from '../screens/Plan';
-import Do from '../screens/Do';
-import Test from '../screens/Test';
 import Screen from '../screens/Screen';
+import Nav from '../components/Nav';
 
   
 class App extends Component {
   
   renderScreen() {
-    const offset = this.props.gameScreen;
+    const offset = this.props.gameScreen.cur_screen;
     const Screens = GameScreens.map((screen, index)=>{
-//      if (index >= offset - 1 && index <= offset + 1 ){
+      if (index >= offset - 1 && index <= offset + 1 ){
         return (
           <Screen screen={screen} offset={-offset+index} key={screen}/>
         );
-//      }
+      }
     });
     console.log('renderScreen');
     return Screens;
   }
   render() {
-    // Injected by connect() call:
-//    const { dispatch, visibleTodos, visibilityFilter, gameScreen } = this.props
     const Screen = this.renderScreen();
     const { dispatch, gameScreen } = this.props
     return (
       <div>
-        <button onClick={()=>dispatch(goPreviousScreen(gameScreen))}>Go Previous</button>
-        <button onClick={()=>dispatch(goNextScreen(gameScreen))}>Go Next</button>
-        <p>
-          Screen Index:{gameScreen}, Screen Name:{GameScreens[gameScreen]}
-        </p>
+        <Nav/>
         {Screen}
       </div>
     )
@@ -67,10 +57,7 @@ App.propTypes = {
 
 function select(state) {
   return {
-//    visibleTodos: selectTodos(state.todos, state.visibilityFilter),
-//    visibilityFilter: state.visibilityFilter,
     gameScreen: state.gameScreens,
-    test: 'testttt'
   }
 }
 

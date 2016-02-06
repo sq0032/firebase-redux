@@ -4,6 +4,9 @@
 export const TYPE = {
   GO_NEXT_SCREEN: 'GO_NEXT_SCREEN', 
   GO_PREVIOUS_SCREEN: 'GO_PREVIOUS_SCREEN', 
+  INTRO_OPEN_ENVELOP: 'INTRO_OPEN_ENVELOP',
+  ENABLE_NEXT_SCREEN: 'ENABLE_NEXT_SCREEN',
+  DROP_PARAGRAPH: 'DROP_PARAGRAPH'
 }
 
 /*
@@ -35,3 +38,21 @@ export function goPreviousScreen(cur_screen){
     cur_screen: cur_screen,
   };
 }
+  
+export function openEnvelop(){
+  return {
+    type: TYPE.INTRO_OPEN_ENVELOP
+  }
+}
+  
+export function enableNextScreen(){
+  return {
+    type: TYPE.ENABLE_NEXT_SCREEN
+  }
+}    
+  
+export function dropParagraph(){
+  return {
+    type: TYPE.DROP_PARAGRAPH
+  }
+}  
