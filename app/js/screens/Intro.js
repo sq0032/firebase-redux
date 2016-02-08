@@ -1,6 +1,7 @@
 import React, { Component, PropTypes } from 'react';
 import { openEnvelop, enableNextScreen } from '../actions';
 import { connect } from 'react-redux';
+import { DragSource } from 'react-dnd';
 
 class Intro extends Component {
   vaildateWork() {
@@ -25,7 +26,6 @@ class Intro extends Component {
   }
   render() {
     const Context = this.renderContext();
-    console.log(this.props.intro);
     return (
       <div>
         {Context}
