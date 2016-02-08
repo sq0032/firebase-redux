@@ -138,6 +138,30 @@ const mockup = {
       {
         index: 1,
         text: 'How many apples did Mark get if he colleted [5] apples and added them to [2] he already had?',
+        variables: {
+          //Variables that go with the question
+          default: [
+            {
+              index: 1,
+              value: 5,
+              name: null
+            }
+          ],
+          //Variables that are passed from other user 
+          input: [
+            {
+              index: 1,
+              value: 4,
+              name: {
+                first: 'first',
+                middle: 'middle',
+                last: 'last',
+              }
+            }
+          ],
+          //Variables that defined 
+          definded: []  //use for
+        },
         variables: [
           {
             index: 1,
