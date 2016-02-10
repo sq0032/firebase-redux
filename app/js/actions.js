@@ -19,6 +19,9 @@ export const TYPE = {
   DO_SELECT_FUNCTION: 'DO_SELECT_FUNCTION',
   DO_PASS_FUNCTION_PARAMETER: 'DO_PASS_FUNCTION_PARAMETER',
   DO_OUTPUT_VARIABLE: 'DO_OUTPUT_VARIABLE',
+  //PLAN
+  PLAN_SELECT_QUESTION: 'PLAN_SELECT_QUESTION',
+  PLAN_ASSIGN_PLAYER: 'PLAN_ASSIGN_PLAYER',
 }
 
 
@@ -89,4 +92,35 @@ export function dropParagraph(payload){
     index: payload.index,
     order: payload.order,
   }
+}
+  
+/*
+ * Plan actions
+ */
+//PLAN_SELECT_QUESTION
+//PLAN_ASSIGN_PLAYER
+export function selectAnswer(section_index, answer_index){
+  return {
+    type: TYPE.PLAN_SELECT_QUESTION,
+    section_index: section_index,
+    answer_index: answer_index,
+  }
+}
+  
+export function assignPlayer(section_index, player_id){
+  return {
+    type: TYPE.PLAN_ASSIGN_PLAYER,
+    section_index: section_index,
+    player_id: player_id,
+  }
+}
+  
+export default {
+  goNextScreen: goNextScreen,
+  goPreviousScreen: goPreviousScreen,
+  enableNextScreen: enableNextScreen,
+  openEnvelop: openEnvelop,
+  dropParagraph: dropParagraph,
+  selectAnswer: selectAnswer,
+  assignPlayer: assignPlayer,  
 }

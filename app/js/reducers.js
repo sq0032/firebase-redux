@@ -1,6 +1,6 @@
 import { combineReducers } from 'redux';
 import { TYPE, GameScreens } from './actions';
-import lodash from 'lodash';
+//import lodash from 'lodash';
 
   
 const mockup = {
@@ -23,7 +23,7 @@ const mockup = {
     sections: [
       {
         index: 0,
-        order: null,
+        order: 0,
         text: 'How many apples did Mark get if he colleted [5] apples and added them to [2] he already had?',
         variables: {
           //Variables that go with the question
@@ -52,10 +52,11 @@ const mockup = {
         },
         player: null,
         question: null,
+        answer: null
       },
       {
         index: 1,
-        order: null,
+        order: 1,
         text: 'How many apples did Seid have if he already had [4] and Mark gave him all his apples?',
         variables: {
           default: [
@@ -71,10 +72,11 @@ const mockup = {
         },
         player: null,
         question: null,
+        answer: null
       },
       {
         index: 2,
-        order: null,
+        order: 2,
         text: 'How many apples remained on the tree on day 1 after Mark ollected his apples?',
         variables: {
           default: [],
@@ -84,6 +86,7 @@ const mockup = {
         },
         player: null,
         question: null,
+        answer: null
       }
     ],
     answers: [
@@ -170,6 +173,18 @@ function section(state, action){
       } else {
         return state;
       }
+    case PLAN_SELECT_QUESTION:
+      if (state.index == action.section_index){
+        return Object.assign({}, state, {answer:action.answer_index});
+      } else {
+        return state;
+      }
+    case PLAN_ASSIGN_PLAYER:
+      if (state.index == action.section_index){
+        return Object.assign({}, state, {player:action.player_index});
+      } else {
+        return state;
+      }      
     default:
       return state
   }
@@ -178,6 +193,10 @@ function section(state, action){
 function sections(state, action){
   switch (action.type){
     case TYPE.DROP_PARAGRAPH:
+      return state.map(s=>section(s,action));
+    case TYPE.PLAN_SELECT_QUESTION:
+      return state.map(s=>section(s,action));
+    case TYPE.PLAN_ASSIGN_PLAYER:
       return state.map(s=>section(s,action));
     default:
       return state
@@ -197,7 +216,23 @@ function game(state = mockup.gamestate, action){
   }
 }
 
-function players(state = [], action){
+const user_dic = {
+  id: 1,
+  name: 'Mark',
+}
+
+function players(state = user_dic, action){
+  switch (action.type){
+//    case TYPE.JOIN_GAME:
+//      return {
+//        name: action.name
+//      }
+    default:
+      return state
+  }
+}
+
+function user(state = [user_dic], action){
   switch (action.type){
     case TYPE.JOIN_GAME:
       return {
@@ -209,7 +244,7 @@ function players(state = [], action){
 }
 
 const gameScreens_init = {
-  cur_screen: 0,
+  cur_screen: 2,
   enable_screens: {
     0: true,   //Intro
     1: false,  //Read
@@ -259,7 +294,8 @@ const todoApp = combineReducers({
   game,
   intro,
   read,
-  players
+  players,
+  user
 })
 
 
