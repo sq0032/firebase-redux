@@ -83,14 +83,14 @@ Read.propTypes = {
 
 const style = {
   paragraphes: {
-//    position: 'absolute',
+    position: 'absolute',
     top: '100px',
     left: '50px',
   },
   slots: {
-//    position: 'absolute',
+    position: 'absolute',
     top: '100px',
-    right: '50px',
+    left: '450px',
   }
 }
 

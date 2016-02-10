@@ -89,4 +89,4 @@ export function dropParagraph(payload){
     index: payload.index,
     order: payload.order,
   }
-}  
+}
