@@ -23,38 +23,42 @@ export default class Read extends Component {
       s=>typeof(s)!='undefined'
     ).length
     
-    if (game.paragraphes.length == num_filled_slots){
+    if (game.sections.length == num_filled_slots){
       dispatch(enableNextScreen());
     }
   }
   renderSlots() {
     const {game, read} = this.props;
     const validateWork = this.validateWork.bind(this);
-    return game.paragraphes.map((paragraph, index)=>{
-      if (!read.slots[index]){
-        return (
-          <DroppableSlot 
-            key={index} 
-            index={index}
+    var Slots = [];
+    for (let i = 0; i < game.sections.length; i++){
+      const section = game.sections.filter(section => section.order == i);
+      if (section.length != 0){
+        Slots[i] = (
+          <DroppableSlot
+            key={i}
+            order={i}
+            validateWork={validateWork}
+            paragraph={section[0].text}/>
+        );
+      } else {
+        Slots[i] = (
+          <DroppableSlot
+            key={i} 
+            order={i}
             validateWork={validateWork}
             paragraph='Drop Here'/>
         )
-      } else {
-        return (
-          <DroppableSlot 
-            key={index} 
-            index={index}
-            validateWork={validateWork}
-            paragraph={read.slots[index]}/>
-        );
       }
-    });
+    }
+    return Slots;
   }
   renderParagraphes() {
     const {game} = this.props;
-    return game.paragraphes.map((paragraph, index)=>{
+    return game.sections.map((section, index)=>{
+      const is_ordered = section.order == null ? false : true;
       return (
-        <DragableParagraph key={index} paragraph={paragraph}/>
+        <DragableParagraph key={index} is_ordered={is_ordered} index={section.index} paragraph={section.text}/>
       );
     });
   }
@@ -63,8 +67,12 @@ export default class Read extends Component {
     const Slots = this.renderSlots();
     return (
       <div>
-        {Paragraphes}
-        {Slots}
+        <div style={style.paragraphes}>
+          {Paragraphes}
+        </div>
+        <div style={style.slots}>
+          {Slots}
+        </div>
       </div>
     )
   }
@@ -74,6 +82,16 @@ Read.propTypes = {
 }
 
 const style = {
+  paragraphes: {
+//    position: 'absolute',
+    top: '100px',
+    left: '50px',
+  },
+  slots: {
+//    position: 'absolute',
+    top: '100px',
+    right: '50px',
+  }
 }
 
 

@@ -1,6 +1,129 @@
-import { combineReducers } from 'redux'
-import { TYPE, GameScreens } from './actions'
+import { combineReducers } from 'redux';
+import { TYPE, GameScreens } from './actions';
+import lodash from 'lodash';
 
+  
+const mockup = {
+  //gameScreens reducer
+  gameScreens: {
+    cur_screen: 0,
+    enable_screens: {
+      0: true,   //Intro
+      1: false,  //Read
+      2: false,  //Plan
+      3: false,  //Do
+      4: false   //Test
+    }
+  },
+  //gameState reducer
+  gamestate: {
+    statement: {
+      text: "There were 10 apples on the tree on day 1",
+    },
+    sections: [
+      {
+        index: 0,
+        order: null,
+        text: 'How many apples did Mark get if he colleted [5] apples and added them to [2] he already had?',
+        variables: {
+          //Variables that go with the question
+          default: [
+            {
+              index: 0,
+              value: 5,
+              name: null
+            }
+          ],
+          //Variables that are passed from other user 
+          input: [
+            {
+              index: 0,
+              value: 4,
+              name: {
+                first: 'first',
+                middle: 'middle',
+                last: 'last',
+              }
+            }
+          ],
+          //Variables that defined 
+          result: [],
+          output: []
+        },
+        player: null,
+        question: null,
+      },
+      {
+        index: 1,
+        order: null,
+        text: 'How many apples did Seid have if he already had [4] and Mark gave him all his apples?',
+        variables: {
+          default: [
+            {
+              index: 0,
+              value: 4,
+              name: null,
+            }
+          ],
+          input: [],
+          result: [],          
+          output: []
+        },
+        player: null,
+        question: null,
+      },
+      {
+        index: 2,
+        order: null,
+        text: 'How many apples remained on the tree on day 1 after Mark ollected his apples?',
+        variables: {
+          default: [],
+          input: [],
+          output: [],
+          result: []
+        },
+        player: null,
+        question: null,
+      }
+    ],
+    answers: [
+      {index: 1, text: "Mark got # apples"},
+      {index: 2, text: "Mark got # chairs"},
+      {index: 3, text: "Mark got # starts"},
+      {index: 4, text: "Seid got # apples"},
+      {index: 5, text: "Seid got # charis"},
+      {index: 6, text: "Seid got # stars"},
+      {index: 7, text: "On the tree # apples remained"},
+      {index: 8, text: "On the tree # charis remained"},
+      {index: 9, text: "On the tree # stars remained"}
+    ],
+    varable_names:{
+      first: [
+        {index: 1, text: "Mark's"},
+        {index: 2, text: "Seid's"},
+      ],
+      middle: [
+        {index: 1, text: "existing"},
+        {index: 2, text: "total"},
+        {index: 3, text: "colleted"},
+      ],
+      last: [
+        {index: 1, text: "apples"},
+        {index: 2, text: "chairs"},
+      ]
+    }
+  },
+  //read reducer
+  read: {
+    slots: []
+  },
+  //intro reducer
+  intro: {
+    message: 'this is intro message',
+    is_envelop_opened: false,
+  }
+};  
+  
 const intro_init = {
   message: 'this is intro message',
   is_envelop_opened: false,
@@ -36,17 +159,39 @@ function read(state = read_init, action){
   }
 }
 
-const game_init = {
-  paragraphes: [
-    "paragraph 1",
-    "paragraph 2",
-    "paragraph 3",
-    "paragraph 4",
-  ]
+function section(state, action){
+  switch (action.type){
+    case TYPE.DROP_PARAGRAPH:
+      if (state.order == action.order &&
+          state.index != action.index){
+        return Object.assign({}, state, {order:null});
+      } else if (state.index == action.index){
+        return Object.assign({}, state, {order:action.order});
+      } else {
+        return state;
+      }
+    default:
+      return state
+  }
 }
 
-function game(state = game_init, action){
+function sections(state, action){
   switch (action.type){
+    case TYPE.DROP_PARAGRAPH:
+      return state.map(s=>section(s,action));
+    default:
+      return state
+  }
+}
+
+function game(state = mockup.gamestate, action){
+  switch (action.type){
+    case TYPE.DROP_PARAGRAPH:
+      return Object.assign(
+        {}, 
+        state,
+        {sections: sections(state.sections, action)}
+      );
     default:
       return state
   }
@@ -117,136 +262,6 @@ const todoApp = combineReducers({
   players
 })
 
-const mockup = {
-  //gameScreens reducer
-  gameScreens: {
-    cur_screen: 0,
-    enable_screens: {
-      0: true,   //Intro
-      1: false,  //Read
-      2: false,  //Plan
-      3: false,  //Do
-      4: false   //Test
-    }
-  },
-  //gameState reducer
-  gamestate: {
-    statement: {
-      text: "There were 10 apples on the tree on day 1",
-    },
-    secions: [
-      {
-        index: 1,
-        text: 'How many apples did Mark get if he colleted [5] apples and added them to [2] he already had?',
-        variables: {
-          //Variables that go with the question
-          default: [
-            {
-              index: 1,
-              value: 5,
-              name: null
-            }
-          ],
-          //Variables that are passed from other user 
-          input: [
-            {
-              index: 1,
-              value: 4,
-              name: {
-                first: 'first',
-                middle: 'middle',
-                last: 'last',
-              }
-            }
-          ],
-          //Variables that defined 
-          definded: []  //use for
-        },
-        variables: [
-          {
-            index: 1,
-            value: 5,
-            name: null,
-          },
-          {
-            index: 2,
-            value: 2,
-            name: null,
-          },
-        ],
-        player: null,
-        question: null,
-        answer: null,
-        input: [],
-        output: [],
-        return: []
-      },
-      {
-        index: 2,
-        text: 'How many apples did Seid have if he already had [4] and Mark gave him all his apples?',
-        variables: [
-          {
-            index: 1,
-            value: 4,
-            name: null,
-          }
-        ],
-        player: null,
-        question: null,
-        answer: null,
-        input: [],
-        output: [],
-        return: []    
-      },
-      {
-        index: 3,
-        text: 'How many apples remained on the tree on day 1 after Mark ollected his apples?',
-        variables: [],
-        player: null,
-        question: null,
-        answer: null,
-        input: [],
-        output: [],
-        return: []
-      }
-    ],
-    answers: [
-      {index: 1, text: "Mark got # apples"},
-      {index: 2, text: "Mark got # chairs"},
-      {index: 3, text: "Mark got # starts"},
-      {index: 4, text: "Seid got # apples"},
-      {index: 5, text: "Seid got # charis"},
-      {index: 6, text: "Seid got # stars"},
-      {index: 7, text: "On the tree # apples remained"},
-      {index: 8, text: "On the tree # charis remained"},
-      {index: 9, text: "On the tree # stars remained"}
-    ],
-    varable_names:{
-      first: [
-        {index: 1, text: "Mark's"},
-        {index: 2, text: "Seid's"},
-      ],
-      middle: [
-        {index: 1, text: "existing"},
-        {index: 2, text: "total"},
-        {index: 3, text: "colleted"},
-      ],
-      last: [
-        {index: 1, text: "apples"},
-        {index: 2, text: "chairs"},
-      ]
-    }
-  },
-  //read reducer
-  read: {
-    slots: []
-  },
-  //intro reducer
-  intro: {
-    message: 'this is intro message',
-    is_envelop_opened: false,
-  }
-};
 
 
 export default todoApp
