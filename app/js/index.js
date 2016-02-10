@@ -7,6 +7,7 @@ import todoApp from './reducers';
 import createLogger from 'redux-logger';
 
 const loggerMiddleware = createLogger();
+console.log(todoApp);
 let store = createStore(
   todoApp,
   applyMiddleware(

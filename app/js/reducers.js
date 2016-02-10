@@ -173,13 +173,13 @@ function section(state, action){
       } else {
         return state;
       }
-    case PLAN_SELECT_QUESTION:
+    case TYPE.PLAN_SELECT_QUESTION:
       if (state.index == action.section_index){
         return Object.assign({}, state, {answer:action.answer_index});
       } else {
         return state;
       }
-    case PLAN_ASSIGN_PLAYER:
+    case TYPE.PLAN_ASSIGN_PLAYER:
       if (state.index == action.section_index){
         return Object.assign({}, state, {player:action.player_index});
       } else {
@@ -232,12 +232,12 @@ function players(state = user_dic, action){
   }
 }
 
-function user(state = [user_dic], action){
+function user(state = user_dic, action){
   switch (action.type){
-    case TYPE.JOIN_GAME:
-      return {
-        name: action.name
-      }
+//    case TYPE.JOIN_GAME:
+//      return {
+//        name: action.name
+//      }
     default:
       return state
   }  
@@ -297,7 +297,6 @@ const todoApp = combineReducers({
   players,
   user
 })
-
 
 
 export default todoApp
