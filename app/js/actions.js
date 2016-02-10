@@ -20,7 +20,7 @@ export const TYPE = {
   DO_PASS_FUNCTION_PARAMETER: 'DO_PASS_FUNCTION_PARAMETER',
   DO_OUTPUT_VARIABLE: 'DO_OUTPUT_VARIABLE',
   //PLAN
-  PLAN_SELECT_QUESTION: 'PLAN_SELECT_QUESTION',
+  PLAN_SELECT_ANSWER: 'PLAN_SELECT_ANSWER',
   PLAN_ASSIGN_PLAYER: 'PLAN_ASSIGN_PLAYER',
 }
 
@@ -101,7 +101,7 @@ export function dropParagraph(payload){
 //PLAN_ASSIGN_PLAYER
 export function selectAnswer(section_index, answer_index){
   return {
-    type: TYPE.PLAN_SELECT_QUESTION,
+    type: TYPE.PLAN_SELECT_ANSWER,
     section_index: section_index,
     answer_index: answer_index,
   }

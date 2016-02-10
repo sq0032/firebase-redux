@@ -173,7 +173,7 @@ function section(state, action){
       } else {
         return state;
       }
-    case TYPE.PLAN_SELECT_QUESTION:
+    case TYPE.PLAN_SELECT_ANSWER:
       if (state.index == action.section_index){
         return Object.assign({}, state, {answer:action.answer_index});
       } else {
@@ -194,7 +194,7 @@ function sections(state, action){
   switch (action.type){
     case TYPE.DROP_PARAGRAPH:
       return state.map(s=>section(s,action));
-    case TYPE.PLAN_SELECT_QUESTION:
+    case TYPE.PLAN_SELECT_ANSWER:
       return state.map(s=>section(s,action));
     case TYPE.PLAN_ASSIGN_PLAYER:
       return state.map(s=>section(s,action));
@@ -211,6 +211,12 @@ function game(state = mockup.gamestate, action){
         state,
         {sections: sections(state.sections, action)}
       );
+    case TYPE.PLAN_SELECT_ANSWER:
+      return Object.assign(
+        {}, 
+        state,
+        {sections: sections(state.sections, action)}
+      );
     default:
       return state
   }
@@ -221,7 +227,7 @@ const user_dic = {
   name: 'Mark',
 }
 
-function players(state = user_dic, action){
+function players(state = [user_dic], action){
   switch (action.type){
 //    case TYPE.JOIN_GAME:
 //      return {
@@ -232,7 +238,7 @@ function players(state = user_dic, action){
   }
 }
 
-function user(state = user_dic, action){
+function user(state = [user_dic], action){
   switch (action.type){
 //    case TYPE.JOIN_GAME:
 //      return {
