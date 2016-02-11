@@ -1,5 +1,5 @@
 import { combineReducers } from 'redux';
-import { TYPE, GameScreens } from './actions';
+import { TYPE, VARIABLETYPE, GameScreens } from './actions';
 //import lodash from 'lodash';
 
   
@@ -11,7 +11,7 @@ const mockup = {
       0: true,   //Intro
       1: false,  //Read
       2: false,  //Plan
-      3: false,  //Do
+      3: true,  //Do
       4: false   //Test
     }
   },
@@ -27,52 +27,32 @@ const mockup = {
         text: 'How many apples did Mark get if he colleted [5] apples and added them to [2] he already had?',
         variables: {
           //Variables that go with the question
-          default: [
-            {
-              index: 0,
-              value: 5,
-              name: null
-            }
-          ],
+          default: [1,2],
           //Variables that are passed from other user 
-          input: [
-            {
-              index: 0,
-              value: 4,
-              name: {
-                first: 'first',
-                middle: 'middle',
-                last: 'last',
-              }
-            }
-          ],
+          input: [],
           //Variables that defined 
-          result: [],
+          result: [3],
           output: []
         },
         player: null,
         question: null,
-        answer: null
+        answer: null,
+        watcher: []
       },
       {
         index: 1,
         order: 1,
         text: 'How many apples did Seid have if he already had [4] and Mark gave him all his apples?',
         variables: {
-          default: [
-            {
-              index: 0,
-              value: 4,
-              name: null,
-            }
-          ],
+          default: [4],
           input: [],
-          result: [],          
+          result: [5],          
           output: []
         },
         player: null,
         question: null,
-        answer: null
+        answer: null,
+        watcher: []
       },
       {
         index: 2,
@@ -82,11 +62,12 @@ const mockup = {
           default: [],
           input: [],
           output: [],
-          result: []
+          result: [6]
         },
         player: null,
         question: null,
-        answer: null
+        answer: null,
+        watcher: []
       }
     ],
     answers: [
@@ -114,7 +95,45 @@ const mockup = {
         {index: 1, text: "apples"},
         {index: 2, text: "chairs"},
       ]
-    }
+    },
+    variables:[
+      {
+        vid: 1,
+        value: 5,
+        name: null,
+        type: VARIABLETYPE.DEFAULT
+      },
+      {
+        vid: 2,
+        value: 6,
+        name: null,
+        type: VARIABLETYPE.DEFAULT
+      },
+      {
+        vid: 3,
+        value: null,
+        name: null,
+        type: VARIABLETYPE.RESULT
+      },
+      {
+        vid: 4,
+        value: 2,
+        name: null,
+        type: VARIABLETYPE.DEFAULT
+      },
+      {
+        vid: 5,
+        value: null,
+        name: null,
+        type: VARIABLETYPE.RESULT
+      },
+      {
+        vid: 6,
+        value: null,
+        name: null,
+        type: VARIABLETYPE.RESULT
+      },
+    ]
   },
   //read reducer
   read: {
@@ -225,6 +244,7 @@ function game(state = mockup.gamestate, action){
 const user_dic = {
   id: 1,
   name: 'Mark',
+  cur_section: 0,
 }
 
 function players(state = [user_dic], action){
@@ -250,12 +270,12 @@ function user(state = [user_dic], action){
 }
 
 const gameScreens_init = {
-  cur_screen: 2,
+  cur_screen: 3,
   enable_screens: {
     0: true,   //Intro
     1: false,  //Read
     2: false,  //Plan
-    3: false,  //Do
+    3: true,  //Do
     4: false   //Test
   }
 };

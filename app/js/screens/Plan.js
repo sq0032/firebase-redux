@@ -1,4 +1,5 @@
 import React, { Component, PropTypes } from 'react';
+import { selectAnswer, assignPlayer, enableNextScreen } from '../actions';
 import { connect } from 'react-redux';
 
 function select(state) {
@@ -9,14 +10,24 @@ function select(state) {
 }
 @connect(select)
 export default class Plan extends Component {
+  selectAnswer(event){
+    console.log('selectAnswer');
+    console.log(event.target.value);
+    this.props.dispatch(selectAnswer());
+  }
+  assignPlayer(event){
+    console.log('assignPlayer');
+    console.log(event.target.value);
+  }
   renderSections(){
     const {game, players} = this.props;
+    const that = this;
     
     var AnswerOptions = game.answers.map(answer=>(
       <option key={answer.index} value={answer.index}>{answer.text}</option>
     ));
     AnswerOptions = [
-      (<option key={0} value={null}>Select an resonable answer</option>),
+      (<option key={0} value="select">Select an resonable answer</option>),
       AnswerOptions
     ];
        
@@ -24,7 +35,7 @@ export default class Plan extends Component {
       <option key={player.id} value={player.id}>{player.name}</option>
     ));
     PlayerOptions = [
-      (<option key={0} value={null}>Select an player</option>),
+      (<option key={0} value="select">Select an player</option>),
       PlayerOptions
     ];
     
@@ -34,10 +45,10 @@ export default class Plan extends Component {
         <div key={i}>
           <p>{game.sections[i].text}</p>
           <label>Answer:</label>
-          <select>{AnswerOptions}</select>
+          <select value="select" onChange={this.selectAnswer.bind(this)}>{AnswerOptions}</select>
           <br/>
           <label>Player:</label>
-          <select>{PlayerOptions}</select>
+          <select value="select" onChange={this.assignPlayer.bind(this)}>{PlayerOptions}</select>
           <br/>
         </div>
       );

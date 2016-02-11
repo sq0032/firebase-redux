@@ -4,8 +4,8 @@ import {GameScreens} from '../actions'
 
 import Intro from './Intro';
 import Read from './Read';
-import Plan from './Plan';
-import Do from './Do';
+import Plan from './Plan/Base';
+import Do from './Do/Base';
 import Test from './Test';
 
 export default class Screen extends Component {

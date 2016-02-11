@@ -12,18 +12,23 @@ export const TYPE = {
   DROP_PARAGRAPH: 'DROP_PARAGRAPH',
   //PLAN
   PLAN_SELECT_ANSWER: 'PLAN_SELECT_ANSWER',
-  PLAN_SELECT_PLAYER: 'PLAN_SELECT_PLAYER',
+  PLAN_ASSIGN_PLAYER: 'PLAN_ASSIGN_PLAYER',
   PLAN_ENABLE_OUTPUT: 'PLAN_ENABLE_OUTPUT',
   //DO
   DO_NAME_VARIABLE: 'DO_NAME_VARIABLE',
   DO_SELECT_FUNCTION: 'DO_SELECT_FUNCTION',
   DO_PASS_FUNCTION_PARAMETER: 'DO_PASS_FUNCTION_PARAMETER',
   DO_OUTPUT_VARIABLE: 'DO_OUTPUT_VARIABLE',
-  //PLAN
-  PLAN_SELECT_ANSWER: 'PLAN_SELECT_ANSWER',
-  PLAN_ASSIGN_PLAYER: 'PLAN_ASSIGN_PLAYER',
+  DO_SWITCH_GAMEBOARD: 'DO_SWITCH_GAMEBOARD',
 }
 
+
+export const VARIABLETYPE = {
+  DEFAULT: 'DEFAULT',
+  INPUT: 'INPUT',
+  OUTPUT: 'OUTPUT',
+  RESULT: 'RESULT',
+}
 
 /*
  * component types (for DnD)
@@ -49,7 +54,6 @@ export const GameScreens = [
 /*
  * action creators
  */
-
 /*
  * General actions
  */
@@ -59,20 +63,17 @@ export function goNextScreen(cur_screen){
     cur_screen: cur_screen,
   };
 }
-  
 export function goPreviousScreen(cur_screen){
   return {
     type: TYPE.GO_PREVIOUS_SCREEN,
     cur_screen: cur_screen,
   };
 }
-
 export function enableNextScreen(){
   return {
     type: TYPE.ENABLE_NEXT_SCREEN
   }
 }
-  
 /*
  * Intro actions
  */
@@ -81,7 +82,6 @@ export function openEnvelop(){
     type: TYPE.INTRO_OPEN_ENVELOP
   }
 }
-
 /*
  * Read actions
  */
@@ -93,12 +93,9 @@ export function dropParagraph(payload){
     order: payload.order,
   }
 }
-  
 /*
  * Plan actions
  */
-//PLAN_SELECT_QUESTION
-//PLAN_ASSIGN_PLAYER
 export function selectAnswer(section_index, answer_index){
   return {
     type: TYPE.PLAN_SELECT_ANSWER,
@@ -106,7 +103,6 @@ export function selectAnswer(section_index, answer_index){
     answer_index: answer_index,
   }
 }
-  
 export function assignPlayer(section_index, player_id){
   return {
     type: TYPE.PLAN_ASSIGN_PLAYER,
@@ -114,7 +110,22 @@ export function assignPlayer(section_index, player_id){
     player_id: player_id,
   }
 }
-  
+export function switchSection(section_index){
+  return {
+    type: TYPE.DO_SWITCH_GAMEBOARD,
+    section_index: section_index
+  }
+}
+/*
+ * Do actions
+ */
+//export function assignPlayer(section_index, player_id){
+//  return {
+//    type: TYPE.PLAN_ASSIGN_PLAYER,
+//    section_index: section_index,
+//    player_id: player_id,
+//  }
+//}  
 export default {
   goNextScreen: goNextScreen,
   goPreviousScreen: goPreviousScreen,
