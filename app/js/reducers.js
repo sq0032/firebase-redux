@@ -25,13 +25,14 @@ const mockup = {
         index: 0,
         order: 0,
         text: 'How many apples did Mark get if he colleted [5] apples and added them to [2] he already had?',
-        variables: {
-          //Variables that go with the question
-          default: [1,2],
-          //Variables that are passed from other user 
-          input: [],
-          //Variables that defined 
+        default_variables: {
+          question: [1,2],
           result: [3],
+        },
+        decleared_variables:{
+          input: [],
+          question: [1,2,7],
+          result: [],
           output: []
         },
         player: null,
@@ -43,12 +44,18 @@ const mockup = {
         index: 1,
         order: 1,
         text: 'How many apples did Seid have if he already had [4] and Mark gave him all his apples?',
-        variables: {
+        default_variables: {
           default: [4],
           input: [],
           result: [5],          
           output: []
         },
+        decleared_variables:{
+          question: [],
+          input: [],
+          result: [],
+          output: []          
+        },        
         player: null,
         question: null,
         answer: null,
@@ -97,6 +104,12 @@ const mockup = {
       ]
     },
     variables:[
+      {
+        vid: 0,
+        value: 5,
+        name: null,
+        type: VARIABLETYPE.DEFAULT
+      },
       {
         vid: 1,
         value: 5,
@@ -158,7 +171,6 @@ function intro(state = intro_init, action){
     case TYPE.INTRO_OPEN_ENVELOP:
       return Object.assign({}, state, {is_envelop_opened:true});
     case TYPE.GO_NEXT_SCREEN:
-      console.log('GO_NEXT_SCREEN on intro');
       return state
     default:
       return state
@@ -172,7 +184,6 @@ const read_init = {
 function read(state = read_init, action){
   switch (action.type){
     case TYPE.DROP_PARAGRAPH:
-      console.log('DROP_PARAGRAPH');
       var slots = JSON.parse(JSON.stringify(state.slots));
       slots[action.index] = action.paragraph;
       return Object.assign({}, state, {slots:slots})
@@ -203,7 +214,7 @@ function section(state, action){
         return Object.assign({}, state, {player:action.player_index});
       } else {
         return state;
-      }      
+      }
     default:
       return state
   }
@@ -217,6 +228,17 @@ function sections(state, action){
       return state.map(s=>section(s,action));
     case TYPE.PLAN_ASSIGN_PLAYER:
       return state.map(s=>section(s,action));
+//    case TYPE.PLAN_ENABLE_OUTPUT:
+//      const length = state.length;
+//      return state.map(s=>{
+//        if (s.index == state.section_index){
+//          return Object.assign(
+//            {},
+//            s,
+//            {}
+//          );
+//        }
+//      });
     default:
       return state
   }
@@ -236,6 +258,15 @@ function game(state = mockup.gamestate, action){
         state,
         {sections: sections(state.sections, action)}
       );
+    case TYPE.DO_ADD_VARIABLE:
+      const i = action.section_index;
+      const l = action.line_num;
+      const t = action.variable_type;
+      const v = state.sections[i].default_variables[t][l-1];
+      if (typeof(v)=='undefined'){
+        
+      }
+      return state.      
     default:
       return state
   }
@@ -258,12 +289,18 @@ function players(state = [user_dic], action){
   }
 }
 
-function user(state = [user_dic], action){
+function user(state = user_dic, action){
   switch (action.type){
 //    case TYPE.JOIN_GAME:
 //      return {
 //        name: action.name
 //      }
+    case TYPE.DO_SWITCH_SECTION:
+      return Object.assign(
+        {},
+        state,
+        {cur_section: action.section_index}
+      )
     default:
       return state
   }  
@@ -283,24 +320,18 @@ const gameScreens_init = {
 function gameScreens(state = gameScreens_init, action){
   switch (action.type) {
     case TYPE.GO_NEXT_SCREEN:
-      console.log('GO_NEXT_SCREEN');
-      console.log(action.cur_screen);
       if(action.cur_screen < GameScreens.length - 1){
         return Object.assign({}, state, {cur_screen : state.cur_screen + 1});
       }else{
         return state
       }
     case TYPE.GO_PREVIOUS_SCREEN:
-      console.log('GO_PREVIOUS_SCREEN');
-      console.log(action.cur_screen);
       if(action.cur_screen > 0){
-//        return action.cur_screen-1;
         return Object.assign({}, state, {cur_screen : state.cur_screen - 1});
       }else{
         return state
       }
     case TYPE.ENABLE_NEXT_SCREEN:
-      console.log('ENABLE_NEXT_SCREEN');
       var enable_screens = JSON.parse(JSON.stringify(state.enable_screens));
       enable_screens[state.cur_screen+1] = true;
       console.log(enable_screens);

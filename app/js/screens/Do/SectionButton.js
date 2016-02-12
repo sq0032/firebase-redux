@@ -11,7 +11,7 @@ function select(state) {
 }
 
 @connect(select)
-export default class SectionSelector extends Component {
+export default class SectionButton extends Component {
 //  assignPlayer(event){
 //    const {dispatch, index} = this.props;
 ////    console.log('assignPlayer');
@@ -22,8 +22,9 @@ export default class SectionSelector extends Component {
 //    ));
 //  }
   switchSection(){
-//    const {dispatch} = this.props;
-//    dispatch(switchSection());
+    const {dispatch, section_index} = this.props;
+    console.log('switchSection');
+    dispatch(switchSection(section_index));
   }
   renderSections(){
     const {index, players, game} = this.props;
@@ -40,24 +41,36 @@ export default class SectionSelector extends Component {
     return Sections;
   }
   render() {
-    const {index, game} = this.props;
-    const Sections = this.renderSections();
+    const {index, section_index, game, user} = this.props;
+    console.log(index);
+    console.log(user.cur_section);
+    const backgroundColor = (user.cur_section == section_index) ? 'yellow' : null;
+//    const Sections = this.renderSections();
     return (
-      <div>
-        {Sections}
+      <div 
+        onClick={this.switchSection.bind(this)}
+        style={{...style.base, backgroundColor}}>
+        {index}
       </div>
     )
   }
 }
 
-SectionSelector.propTypes = {
+SectionButton.propTypes = {
 }
 
 
 
 const style = {
-  sections: {
-    top: '100px',
-    left: '50px',
+  base: {
+    height: '75px',
+    width: '75px',
+    borderRadius: '50%',
+    border: '1px solid black',
+    textAlign: 'center',
+    lineHeight: '75px',
+    fontSize: '200%',
+    marginBottom: '50px',
+    cursor: 'pointer'
   },
 }

@@ -19,7 +19,13 @@ export const TYPE = {
   DO_SELECT_FUNCTION: 'DO_SELECT_FUNCTION',
   DO_PASS_FUNCTION_PARAMETER: 'DO_PASS_FUNCTION_PARAMETER',
   DO_OUTPUT_VARIABLE: 'DO_OUTPUT_VARIABLE',
-  DO_SWITCH_GAMEBOARD: 'DO_SWITCH_GAMEBOARD',
+  DO_SWITCH_SECTION: 'DO_SWITCH_SECTION',
+  DO_ADD_VARIABLE: 'DO_ADD_VARIABLE',
+  DO_REMOVE_VARIABLE: 'DO_REMOVE_VARIABLE',
+  DO_SELECT_OUTPUT_VARIABLE: 'DO_SELECT_OUTPUT_VARIABLE',
+  DO_SELECT_FIRST_NAME: 'DO_SELECT_FIRST_NAME',
+  DO_SELECT_MIDDLE_NAME: 'DO_SELECT_MIDDLE_NAME',
+  DO_SELECT_LAST_NAME: 'DO_SELECT_LAST_NAME',
 }
 
 
@@ -110,28 +116,36 @@ export function assignPlayer(section_index, player_id){
     player_id: player_id,
   }
 }
-export function switchSection(section_index){
+export function enableOutput(section_index, output_number){
   return {
-    type: TYPE.DO_SWITCH_GAMEBOARD,
-    section_index: section_index
+    type: TYPE.PLAN_ENABLE_OUTPUT,
+    section_index: section_index,
+    output_number: output_number,
   }
 }
+  
 /*
  * Do actions
  */
-//export function assignPlayer(section_index, player_id){
-//  return {
-//    type: TYPE.PLAN_ASSIGN_PLAYER,
-//    section_index: section_index,
-//    player_id: player_id,
-//  }
-//}  
-export default {
-  goNextScreen: goNextScreen,
-  goPreviousScreen: goPreviousScreen,
-  enableNextScreen: enableNextScreen,
-  openEnvelop: openEnvelop,
-  dropParagraph: dropParagraph,
-  selectAnswer: selectAnswer,
-  assignPlayer: assignPlayer,  
+export function switchSection(section_index){
+  return {
+    type: TYPE.DO_SWITCH_SECTION,
+    section_index: section_index,
+  }
+}  
+export default addVariable(section_index, line_num, variable_type){
+  return {
+    type: TYPE.DO_ADD_VARIABLE,
+    section_index: section_index,
+    line_num: line_num,
+    variable_type: variable_type
+  }
+}
+export default removeVariable(section_index, line_num, variable_type){
+  return {
+    type: TYPE.DO_REMOVE_VARIABLE,
+    section_index: section_index,
+    line_num: line_num,
+    variable_type: variable_type
+  }
 }
