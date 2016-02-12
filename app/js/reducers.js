@@ -31,7 +31,7 @@ const mockup = {
         },
         decleared_variables:{
           input: [],
-          question: [1,2,7],
+          question: [],
           result: [],
           output: []
         },
@@ -266,7 +266,7 @@ function game(state = mockup.gamestate, action){
       if (typeof(v)=='undefined'){
         
       }
-      return state.      
+      return state 
     default:
       return state
   }

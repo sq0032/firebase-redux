@@ -133,7 +133,7 @@ export function switchSection(section_index){
     section_index: section_index,
   }
 }  
-export default addVariable(section_index, line_num, variable_type){
+export default function addVariable(section_index, line_num, variable_type){
   return {
     type: TYPE.DO_ADD_VARIABLE,
     section_index: section_index,
@@ -141,7 +141,7 @@ export default addVariable(section_index, line_num, variable_type){
     variable_type: variable_type
   }
 }
-export default removeVariable(section_index, line_num, variable_type){
+export default function removeVariable(section_index, line_num, variable_type){
   return {
     type: TYPE.DO_REMOVE_VARIABLE,
     section_index: section_index,
