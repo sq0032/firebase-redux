@@ -1,9 +1,10 @@
 import { combineReducers } from 'redux';
 import { TYPE, VARIABLETYPE, GameScreens } from './actions';
+import immutable from 'immutable';
 //import lodash from 'lodash';
 
   
-const mockup = {
+export const mockup = {
   //gameScreens reducer
   gameScreens: {
     cur_screen: 0,
@@ -32,6 +33,7 @@ const mockup = {
         decleared_variables:{
           input: [],
           question: [],
+          operation: [],
           result: [],
           output: []
         },
@@ -45,17 +47,18 @@ const mockup = {
         order: 1,
         text: 'How many apples did Seid have if he already had [4] and Mark gave him all his apples?',
         default_variables: {
-          default: [4],
+          question: [4],
           input: [],
-          result: [5],          
+          result: [5],
           output: []
         },
         decleared_variables:{
           question: [],
           input: [],
+          operation: [],
           result: [],
           output: []          
-        },        
+        },
         player: null,
         question: null,
         answer: null,
@@ -65,11 +68,18 @@ const mockup = {
         index: 2,
         order: 2,
         text: 'How many apples remained on the tree on day 1 after Mark ollected his apples?',
-        variables: {
-          default: [],
+        default_variables: {
+          question: [],
           input: [],
-          output: [],
-          result: [6]
+          result: [],
+          output: []
+        },
+        decleared_variables:{
+          question: [],
+          input: [],
+          operation: [],
+          result: [],
+          output: []          
         },
         player: null,
         question: null,
@@ -157,7 +167,7 @@ const mockup = {
     message: 'this is intro message',
     is_envelop_opened: false,
   }
-};  
+};
   
 const intro_init = {
   message: 'this is intro message',
@@ -192,7 +202,7 @@ function read(state = read_init, action){
   }
 }
 
-function section(state, action){
+function section(state, action, vid){
   switch (action.type){
     case TYPE.DROP_PARAGRAPH:
       if (state.order == action.order &&
@@ -215,12 +225,34 @@ function section(state, action){
       } else {
         return state;
       }
+    case TYPE.DO_ADD_VARIABLE:
+      if (action.section_index != state.index){
+        return state;
+      }
+      var section = immutable.fromJS(state);
+      section = section.setIn(['decleared_variables',action.variable_type,action.line_num-1], vid);
+      return section.toJS();
+    case TYPE.DO_SELECT_VARIABLE:
+      if (action.section_index != state.index){
+        return state;
+      }
+      var section = immutable.fromJS(state);
+      section = section.setIn(['decleared_variables',action.variable_type,action.line_num-1], action.vid);
+      return section.toJS();
+    case TYPE.DO_REMOVE_VARIABLE:
+      if (action.section_index != state.index)
+        return state;
+      
+      var section = immutable.fromJS(state);
+      section = section.setIn(['decleared_variables',action.variable_type,action.line_num-1], null);
+      return section.toJS();
+
     default:
       return state
   }
 }
 
-function sections(state, action){
+function sections(state, action, vid){
   switch (action.type){
     case TYPE.DROP_PARAGRAPH:
       return state.map(s=>section(s,action));
@@ -228,23 +260,20 @@ function sections(state, action){
       return state.map(s=>section(s,action));
     case TYPE.PLAN_ASSIGN_PLAYER:
       return state.map(s=>section(s,action));
-//    case TYPE.PLAN_ENABLE_OUTPUT:
-//      const length = state.length;
-//      return state.map(s=>{
-//        if (s.index == state.section_index){
-//          return Object.assign(
-//            {},
-//            s,
-//            {}
-//          );
-//        }
-//      });
+    case TYPE.DO_ADD_VARIABLE:
+      return state.map(s=>section(s,action,vid));
+    case TYPE.DO_REMOVE_VARIABLE:
+      return state.map(s=>section(s,action));
+    case TYPE.DO_SELECT_VARIABLE:
+      return state.map(s=>section(s,action));
+    case TYPE.DO_REMOVE_OUTPUT:
+      return state.map(s=>section(s,action));
     default:
       return state
   }
 }
 
-function game(state = mockup.gamestate, action){
+export function game(state = mockup.gamestate, action){
   switch (action.type){
     case TYPE.DROP_PARAGRAPH:
       return Object.assign(
@@ -259,14 +288,53 @@ function game(state = mockup.gamestate, action){
         {sections: sections(state.sections, action)}
       );
     case TYPE.DO_ADD_VARIABLE:
-      const i = action.section_index;
-      const l = action.line_num;
-      const t = action.variable_type;
-      const v = state.sections[i].default_variables[t][l-1];
-      if (typeof(v)=='undefined'){
-        
+      const s_i = action.section_index,
+            l = action.line_num,
+            v_type = action.variable_type;
+      var variables = [...state.variables];
+      
+      //Checktype
+      switch (v_type){
+        case VARIABLETYPE.QUESTION:
+          var vid = state.sections[s_i].default_variables[v_type][l-1];
+          if (typeof(vid)=='undefined'){
+            vid = variables[variables.length-1].vid+1;
+            variables.push({vid: vid, value: null, name: null});
+          }
+          break;
+        case VARIABLETYPE.OPERATION:
+          //Do nothing
+          break;
+        case VARIABLETYPE.OUTPUT:
+          //Do nothing
+          break;
       }
-      return state 
+      
+//          console.log('vid');
+      return Object.assign(
+        {},
+        state,
+        {variables: variables},
+        {sections: sections(state.sections, action, vid)}
+      );
+    case TYPE.DO_REMOVE_VARIABLE:
+      return Object.assign(
+        {},
+        state,
+        {sections: sections(state.sections, action)}
+      );
+    case TYPE.DO_SELECT_VARIABLE:
+      return Object.assign(
+        {},
+        state,
+        {sections: sections(state.sections, action)}
+      );
+    case TYPE.DO_REMOVE_OUTPUT:
+      return Object.assign(
+        {},
+        state,
+        {sections: sections(state.sections, action)}
+      );
     default:
       return state
   }
@@ -334,7 +402,6 @@ function gameScreens(state = gameScreens_init, action){
     case TYPE.ENABLE_NEXT_SCREEN:
       var enable_screens = JSON.parse(JSON.stringify(state.enable_screens));
       enable_screens[state.cur_screen+1] = true;
-      console.log(enable_screens);
       return Object.assign(
         {},
         state,
@@ -346,7 +413,7 @@ function gameScreens(state = gameScreens_init, action){
 
 
 
-const todoApp = combineReducers({
+const gameApp = combineReducers({
   gameScreens,
   game,
   intro,
@@ -356,4 +423,4 @@ const todoApp = combineReducers({
 })
 
 
-export default todoApp
+export default gameApp

@@ -15,25 +15,29 @@ export const TYPE = {
   PLAN_ASSIGN_PLAYER: 'PLAN_ASSIGN_PLAYER',
   PLAN_ENABLE_OUTPUT: 'PLAN_ENABLE_OUTPUT',
   //DO
-  DO_NAME_VARIABLE: 'DO_NAME_VARIABLE',
-  DO_SELECT_FUNCTION: 'DO_SELECT_FUNCTION',
-  DO_PASS_FUNCTION_PARAMETER: 'DO_PASS_FUNCTION_PARAMETER',
-  DO_OUTPUT_VARIABLE: 'DO_OUTPUT_VARIABLE',
   DO_SWITCH_SECTION: 'DO_SWITCH_SECTION',
   DO_ADD_VARIABLE: 'DO_ADD_VARIABLE',
   DO_REMOVE_VARIABLE: 'DO_REMOVE_VARIABLE',
-  DO_SELECT_OUTPUT_VARIABLE: 'DO_SELECT_OUTPUT_VARIABLE',
-  DO_SELECT_FIRST_NAME: 'DO_SELECT_FIRST_NAME',
-  DO_SELECT_MIDDLE_NAME: 'DO_SELECT_MIDDLE_NAME',
-  DO_SELECT_LAST_NAME: 'DO_SELECT_LAST_NAME',
+  DO_SELECT_VARIABLE: 'DO_SELECT_VARIABLE',
+  
+  DO_REMOVE_OUTPUT: 'DO_REMOVE_OUTPUT',
+//  DO_NAME_VARIABLE: 'DO_NAME_VARIABLE',
+//  DO_SELECT_FUNCTION: 'DO_SELECT_FUNCTION',
+//  DO_PASS_FUNCTION_PARAMETER: 'DO_PASS_FUNCTION_PARAMETER',
+//  DO_OUTPUT_VARIABLE: 'DO_OUTPUT_VARIABLE',
+//  DO_SELECT_OUTPUT_VARIABLE: 'DO_SELECT_OUTPUT_VARIABLE',
+//  DO_SELECT_FIRST_NAME: 'DO_SELECT_FIRST_NAME',
+//  DO_SELECT_MIDDLE_NAME: 'DO_SELECT_MIDDLE_NAME',
+//  DO_SELECT_LAST_NAME: 'DO_SELECT_LAST_NAME',
 }
 
 
 export const VARIABLETYPE = {
-  DEFAULT: 'DEFAULT',
-  INPUT: 'INPUT',
-  OUTPUT: 'OUTPUT',
-  RESULT: 'RESULT',
+  INPUT: 'input',
+  OUTPUT: 'output',
+  RESULT: 'result',
+  OPERATION: 'operation',
+  QUESTION: 'question',
 }
 
 /*
@@ -133,19 +137,35 @@ export function switchSection(section_index){
     section_index: section_index,
   }
 }  
-export default function addVariable(section_index, line_num, variable_type){
+export function addVariable(section_index, line_num, variable_type){
   return {
     type: TYPE.DO_ADD_VARIABLE,
     section_index: section_index,
     line_num: line_num,
-    variable_type: variable_type
+    variable_type: variable_type.toLowerCase()
   }
 }
-export default function removeVariable(section_index, line_num, variable_type){
+export function removeVariable(section_index, line_num, variable_type){
   return {
     type: TYPE.DO_REMOVE_VARIABLE,
     section_index: section_index,
     line_num: line_num,
     variable_type: variable_type
+  }
+}
+export function selectVariable(section_index, line_num, variable_type, vid){
+  return {
+    type: TYPE.DO_SELECT_VARIABLE,
+    section_index: section_index,
+    line_num: line_num,
+    variable_type: variable_type,
+    vid: vid
+  }
+}
+export function removeOutput(section_index, line_num){
+  return {
+    type: TYPE.DO_REMOVE_OUTPUT,
+    section_index: section_index,
+    line_num: line_num
   }
 }

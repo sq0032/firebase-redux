@@ -42,8 +42,6 @@ export default class SectionButton extends Component {
   }
   render() {
     const {index, section_index, game, user} = this.props;
-    console.log(index);
-    console.log(user.cur_section);
     const backgroundColor = (user.cur_section == section_index) ? 'yellow' : null;
 //    const Sections = this.renderSections();
     return (
