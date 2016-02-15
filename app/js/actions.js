@@ -137,12 +137,13 @@ export function switchSection(section_index){
     section_index: section_index,
   }
 }  
-export function addVariable(section_index, line_num, variable_type){
+export function addVariable(section_index, line_num, variable_type, variable_id){
   return {
     type: TYPE.DO_ADD_VARIABLE,
     section_index: section_index,
     line_num: line_num,
-    variable_type: variable_type.toLowerCase()
+    variable_type: variable_type.toLowerCase(),
+    variable_id: variable_id
   }
 }
 export function removeVariable(section_index, line_num, variable_type){

@@ -34,7 +34,6 @@ export const mockup = {
           input: [],
           question: [],
           operation: [],
-          result: [],
           output: []
         },
         player: null,
@@ -48,15 +47,12 @@ export const mockup = {
         text: 'How many apples did Seid have if he already had [4] and Mark gave him all his apples?',
         default_variables: {
           question: [4],
-          input: [],
           result: [5],
-          output: []
         },
         decleared_variables:{
           question: [],
           input: [],
           operation: [],
-          result: [],
           output: []          
         },
         player: null,
@@ -70,15 +66,12 @@ export const mockup = {
         text: 'How many apples remained on the tree on day 1 after Mark ollected his apples?',
         default_variables: {
           question: [],
-          input: [],
           result: [],
-          output: []
         },
         decleared_variables:{
           question: [],
           input: [],
           operation: [],
-          result: [],
           output: []          
         },
         player: null,
@@ -230,7 +223,7 @@ function section(state, action, vid){
         return state;
       }
       var section = immutable.fromJS(state);
-      section = section.setIn(['decleared_variables',action.variable_type,action.line_num-1], vid);
+      section = section.setIn(['decleared_variables',action.variable_type,action.line_num-1], action.variable_id);
       return section.toJS();
     case TYPE.DO_SELECT_VARIABLE:
       if (action.section_index != state.index){
@@ -261,7 +254,7 @@ function sections(state, action, vid){
     case TYPE.PLAN_ASSIGN_PLAYER:
       return state.map(s=>section(s,action));
     case TYPE.DO_ADD_VARIABLE:
-      return state.map(s=>section(s,action,vid));
+      return state.map(s=>section(s,action));
     case TYPE.DO_REMOVE_VARIABLE:
       return state.map(s=>section(s,action));
     case TYPE.DO_SELECT_VARIABLE:
@@ -291,31 +284,48 @@ export function game(state = mockup.gamestate, action){
       const s_i = action.section_index,
             l = action.line_num,
             v_type = action.variable_type;
-      var variables = [...state.variables];
+      var vid = action.variable_id;
+      var variables_state = [...state.variables];
+      var sections_state = null;
       
       //Checktype
       switch (v_type){
         case VARIABLETYPE.QUESTION:
-          var vid = state.sections[s_i].default_variables[v_type][l-1];
           if (typeof(vid)=='undefined'){
-            vid = variables[variables.length-1].vid+1;
-            variables.push({vid: vid, value: null, name: null});
+            action.variable_id = variables_state[variables_state.length-1].vid+1;
+            variables_state.push({vid: action.variable_id, value: null, name: null});
           }
+          sections_state = sections(state.sections, action);
           break;
         case VARIABLETYPE.OPERATION:
+          //Add the operation variable
+          sections_state = sections(state.sections, action);
+          
+          //Compute new result
+          var operation_id_arr = sections_state[s_i].decleared_variables.operation;
+          var result_id = sections_state[s_i].default_variables.result[0];
+          variables_state[result_id].value = 0;
+          for (let i = 0; i < operation_id_arr.length; i++){
+            const operation = variables_state[operation_id_arr[i]];
+            if (operation.value == null){
+              variables_state[result_id].value = null;
+              break;
+            } else {
+              variables_state[result_id].value = variables_state[result_id].value + operation.value;
+            }
+          }
           //Do nothing
           break;
         case VARIABLETYPE.OUTPUT:
           //Do nothing
           break;
       }
-      
-//          console.log('vid');
+              console.log(variables_state);
       return Object.assign(
         {},
         state,
-        {variables: variables},
-        {sections: sections(state.sections, action, vid)}
+        {variables: variables_state},
+        {sections: sections_state}
       );
     case TYPE.DO_REMOVE_VARIABLE:
       return Object.assign(
