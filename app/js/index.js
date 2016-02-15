@@ -7,17 +7,12 @@ import gameApp from './reducers';
 import createLogger from 'redux-logger';
 
 const loggerMiddleware = createLogger();
-console.log(gameApp);
 let store = createStore(
   gameApp,
   applyMiddleware(
     loggerMiddleware
   )
 );
-
-import * as actions from './actions';
-window.store = store;
-window.actions = actions;
 
 let rootElement = document.getElementById('app')
 render(

@@ -1,9 +1,7 @@
 import {game, computeResults} from '../app/js/reducers';
-//import {TYPE} from '../app/js/actions';
 import * as actions from '../app/js/actions';
 import immutable from 'immutable';
 import expect from 'expect.js';
-//var reducer = require('./ app/js/reducers');
 
 
 describe('Reducers', () => {

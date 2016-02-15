@@ -26,6 +26,7 @@ export default class Plan extends Component {
     const that = this;
     
     var Sections = [];
+    console.log(game);
     for (let i = 0; i < game.sections.length; i++){
       Sections[game.sections[i].order] = (
         <Section key={i} index={game.sections[i].index}/>
@@ -47,7 +48,6 @@ export default class Plan extends Component {
 
 Plan.propTypes = {
 }
-
 
 
 const style = {

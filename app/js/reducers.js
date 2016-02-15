@@ -238,17 +238,6 @@ function section(state, action, vid){
       var section = immutable.fromJS(state);
       section = section.setIn(['decleared_variables',action.variable_type,action.line_num-1], action.vid);
       return section.toJS();
-//    case TYPE.DO_REMOVE_VARIABLE:
-//      var section = immutable.fromJS(state);
-//      section = section.toJS();
-//      switch (action.variable_type){
-//        case VARIABLETYPE.QUESTION:
-//          if (action.section_index)
-//      }
-//      //
-//      section = section.setIn(['decleared_variables',action.variable_type,action.line_num-1], null);
-//      return section.toJS();
-
     default:
       return state
   }
@@ -355,7 +344,6 @@ export function game(state = mockup.gamestate, action){
           }
           break;
       }
-//            console.log(variables_state);
       return Object.assign(
         {},
         state,
