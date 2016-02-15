@@ -398,15 +398,85 @@ export function game(state = mockup.gamestate, action){
               }
               //Remove variable from operation array
               for (let j = 0; j < d_vs.get('output').size; j++){
-                console.log(`output vid: s${i}, a${j}, ${d_vs.getIn(['output', j])}`)
                 if ( d_vs.getIn(['output', j]) == vid ){
                   sections_state = sections_state.setIn([temp_s_i, 'decleared_variables', 'output', j], null);
                 }
               }
             }
           }
-          computeResults(s_i, sections_state.toJS(), variables_state);
+        case VARIABLETYPE.OPERATION:
+          var order = sections_state.getIn([s_i, 'order']);
+          var vid = sections_state.getIn([s_i, 'decleared_variables', v_type, l-1]);
+          for (let i = order; i < sections_state.size; i++){
+            var temp_s_i = sections_state.findIndex(s => s.get('order')==i);
+            var d_vs = sections_state.getIn([temp_s_i, 'decleared_variables']);
+            if (i > order){
+              //Remove variable from input array
+              for (let j = 0; j < d_vs.get('input').size; j++){
+                if ( d_vs.getIn(['input', j]) == vid ){
+                  sections_state = sections_state.setIn([temp_s_i, 'decleared_variables', 'input', j], null);
+                }
+              }
+              //Remove variable from question array
+              for (let j = 0; j < d_vs.get('question').size; j++){
+                if ( d_vs.getIn(['question', j]) == vid ){
+                  sections_state = sections_state.setIn([temp_s_i, 'decleared_variables', 'question', j], null);
+                }
+              }
+            }
+            if (i >= order){
+              //Remove variable from operation array
+              for (let j = 0; j < d_vs.get('operation').size; j++){
+                if ( d_vs.getIn(['operation', j]) == vid ){
+                  sections_state = sections_state.setIn([temp_s_i, 'decleared_variables', 'operation', j], null);
+                }
+              }
+              //Remove variable from operation array
+              for (let j = 0; j < d_vs.get('output').size; j++){
+                if ( d_vs.getIn(['output', j]) == vid ){
+                  sections_state = sections_state.setIn([temp_s_i, 'decleared_variables', 'output', j], null);
+                }
+              }
+            }
+          }
+        case VARIABLETYPE.OUTPUT:
+          var order = sections_state.getIn([s_i, 'order']);
+          var vid = sections_state.getIn([s_i, 'decleared_variables', v_type, l-1]);
+          for (let i = order; i < sections_state.size; i++){
+            var temp_s_i = sections_state.findIndex(s => s.get('order')==i);
+            var d_vs = sections_state.getIn([temp_s_i, 'decleared_variables']);
+            if (i > order){
+              //Remove variable from input array
+              for (let j = 0; j < d_vs.get('input').size; j++){
+                if ( d_vs.getIn(['input', j]) == vid ){
+                  sections_state = sections_state.setIn([temp_s_i, 'decleared_variables', 'input', j], null);
+                }
+              }
+              //Remove variable from question array
+              for (let j = 0; j < d_vs.get('question').size; j++){
+                if ( d_vs.getIn(['question', j]) == vid ){
+                  sections_state = sections_state.setIn([temp_s_i, 'decleared_variables', 'question', j], null);
+                }
+              }
+              //Remove variable from operation array
+              for (let j = 0; j < d_vs.get('operation').size; j++){
+                if ( d_vs.getIn(['operation', j]) == vid ){
+                  sections_state = sections_state.setIn([temp_s_i, 'decleared_variables', 'operation', j], null);
+                }
+              }
+            }
+            if (i >= order){
+              //Remove variable from operation array
+              for (let j = 0; j < d_vs.get('output').size; j++){
+                if ( d_vs.getIn(['output', j]) == vid ){
+                  sections_state = sections_state.setIn([temp_s_i, 'decleared_variables', 'output', j], null);
+                }
+              }
+            }
+          }          
       }
+      
+      computeResults(s_i, sections_state.toJS(), variables_state);
       
       return Object.assign(
         {},

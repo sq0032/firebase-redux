@@ -97,27 +97,39 @@ describe('Reducers', () => {
       });
       it('should handle removing a question variable', () => {
         //Remove an pre-decleared variable
-        //should add the variable id into question variable array
+        //should remove the variable id from question variable array
         expect(state.variables[3].value).to.equal(null);
         state = game(state, actions.removeVariable(0,4,actions.VARIABLETYPE.QUESTION));
         expect(state.variables[3].value).to.equal(5);
         
+        //should remove all the variable ids from the following sections
+        //and update reaults
         state = game(state, actions.removeVariable(0,1,actions.VARIABLETYPE.QUESTION));
         expect(state.sections[2].decleared_variables.input[0]).to.equal(null);
         expect(state.sections[2].decleared_variables.operation[0]).to.equal(null);
         expect(state.variables[6].value).to.equal(2)
       });
-      xit('should handle removing an operation variable', () => {
-        //Adding an validated variable (number)
-        //Should add the variable id into operation variable array and update answer value (number)
+      it('should handle removing an operation variable', () => {
+        //Remove an validated variable (number)
+        //should remove the variable id from operation variable array
+        expect(state.variables[3].value).to.equal(null);
+        state = game(state, actions.removeVariable(0,2,actions.VARIABLETYPE.OPERATION));
+        expect(state.variables[3].value).to.equal(5);
         
-        //Adding an non-validated variable (null)
-        //Should add the variable id into operation variable array and update answer value (null)
+        //should remove all the variables from the following sections
+        //and update results
+        state = game(state, actions.removeVariable(1,2,actions.VARIABLETYPE.OPERATION));
+        expect(state.variables[6].value).to.equal(10);
       });
-      xit('should handle removing output variable', () => {
-        //Adding a variable
-        //Should add the variable id into output variable array,
-        //and add the variable id into input variable array of the next section
+      it('should handle removing output variable', () => {
+        //Remove an output variable (number)
+        state = game(state, actions.removeVariable(0,1,actions.VARIABLETYPE.OUTPUT));
+        expect(state.sections[0].decleared_variables.question[0]).to.equal(1);
+
+        //should also remove all the variables from the following sections
+        //and update results
+        expect(state.sections[2].decleared_variables.input[0]).to.equal(null);
+        expect(state.variables[6].value).to.equal(2);
       });
     });
   });
