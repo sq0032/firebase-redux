@@ -1,4 +1,4 @@
-import {game} from '../app/js/reducers';
+import {game, computeResults} from '../app/js/reducers';
 //import {TYPE} from '../app/js/actions';
 import * as actions from '../app/js/actions';
 import immutable from 'immutable';
@@ -73,14 +73,39 @@ describe('Reducers', () => {
         expect(state.sections[1].decleared_variables.input[0]).to.equal(vid);
       });
     });
-    
     describe('REMOVE_VARIABLE', () => {
-      xit('should handle removing a question variable', () => {
-        //Adding an pre-decleared variable
-        //should add the variable id into question variable array
+      var state = null;
+      beforeEach(()=>{
+        //Setup testing enviroment
+        state = game(undefined, {});
+        state.sections[0].decleared_variables.question = [1, null, null, 7];  //1 is 5, 7 is null
+        state.sections[0].decleared_variables.operation = [1, 7];
+        state.sections[0].decleared_variables.output = [1, 3];  //3 is result, default vaule is null
         
-        //Adding an non-pre-decleared variable
-        //should create a new variable and add the id into question variable array
+        state.sections[1].decleared_variables.input = [1, 3];
+        state.sections[1].decleared_variables.operation = [1, 4]; //4 is 2
+        state.sections[1].decleared_variables.output = [1, 5]; //5 is result, default value is 5+2=7
+        
+        state.sections[2].decleared_variables.input = [1, 5];
+        state.sections[2].decleared_variables.operation = [1, 5]; //result is 5+7=12
+        computeResults(0, state.sections, state.variables);
+      });
+      
+      it('should output 12 as initial result', () => {
+        expect(state.variables[6].value).to.equal(12);
+        expect(state.variables[3].value).to.equal(null);
+      });
+      it('should handle removing a question variable', () => {
+        //Remove an pre-decleared variable
+        //should add the variable id into question variable array
+        expect(state.variables[3].value).to.equal(null);
+        state = game(state, actions.removeVariable(0,4,actions.VARIABLETYPE.QUESTION));
+        expect(state.variables[3].value).to.equal(5);
+        
+        state = game(state, actions.removeVariable(0,1,actions.VARIABLETYPE.QUESTION));
+        expect(state.sections[2].decleared_variables.input[0]).to.equal(null);
+        expect(state.sections[2].decleared_variables.operation[0]).to.equal(null);
+        expect(state.variables[6].value).to.equal(2)
       });
       xit('should handle removing an operation variable', () => {
         //Adding an validated variable (number)

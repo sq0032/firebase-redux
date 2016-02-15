@@ -149,6 +149,12 @@ export const mockup = {
         name: null,
         type: VARIABLETYPE.RESULT
       },
+      {
+        vid: 7,
+        value: null,
+        name: null,
+        type: VARIABLETYPE.RESULT
+      },
     ]
   },
   //read reducer
@@ -232,13 +238,16 @@ function section(state, action, vid){
       var section = immutable.fromJS(state);
       section = section.setIn(['decleared_variables',action.variable_type,action.line_num-1], action.vid);
       return section.toJS();
-    case TYPE.DO_REMOVE_VARIABLE:
-      if (action.section_index != state.index)
-        return state;
-      
-      var section = immutable.fromJS(state);
-      section = section.setIn(['decleared_variables',action.variable_type,action.line_num-1], null);
-      return section.toJS();
+//    case TYPE.DO_REMOVE_VARIABLE:
+//      var section = immutable.fromJS(state);
+//      section = section.toJS();
+//      switch (action.variable_type){
+//        case VARIABLETYPE.QUESTION:
+//          if (action.section_index)
+//      }
+//      //
+//      section = section.setIn(['decleared_variables',action.variable_type,action.line_num-1], null);
+//      return section.toJS();
 
     default:
       return state
@@ -255,8 +264,8 @@ function sections(state, action, vid){
       return state.map(s=>section(s,action));
     case TYPE.DO_ADD_VARIABLE:
       return state.map(s=>section(s,action));
-    case TYPE.DO_REMOVE_VARIABLE:
-      return state.map(s=>section(s,action));
+//    case TYPE.DO_REMOVE_VARIABLE:
+//      return state.map(s=>section(s,action));
     case TYPE.DO_SELECT_VARIABLE:
       return state.map(s=>section(s,action));
     case TYPE.DO_REMOVE_OUTPUT:
@@ -266,7 +275,36 @@ function sections(state, action, vid){
   }
 }
 
+export function computeResults(section_index, sections, variables){
+    //Compute new result
+    const begin_order = sections[section_index].order;
+    //Go through each section by order
+    for (let m = begin_order; m < sections.length; m++){
+      //Find the coresponding section
+      for (let n = 0; n < sections.length; n++){
+        if (sections[n].order != m){continue;}
+        //Compute new result
+        var operation_id_arr = sections[n].decleared_variables.operation;
+        var result_id = sections[n].default_variables.result[0];
+//        console.log(`result_id: ${result_id}`);
+        variables[result_id].value = 0;
+        for (let i = 0; i < operation_id_arr.length; i++){
+          const operation = variables[operation_id_arr[i]];
+          if (operation == null){continue;}
+          if (operation.value == null){
+            variables[result_id].value = null;
+            break;
+          } else {
+            variables[result_id].value = variables[result_id].value + operation.value;
+          }
+        }
+      }
+    }
+    return variables;
+}
+
 export function game(state = mockup.gamestate, action){
+  var s_i, l, v_type = null;
   switch (action.type){
     case TYPE.DROP_PARAGRAPH:
       return Object.assign(
@@ -281,8 +319,8 @@ export function game(state = mockup.gamestate, action){
         {sections: sections(state.sections, action)}
       );
     case TYPE.DO_ADD_VARIABLE:
-      const s_i = action.section_index,
-            l = action.line_num,
+            s_i = action.section_index;
+            l = action.line_num;
             v_type = action.variable_type;
       var vid = action.variable_id;
       var variables_state = [...state.variables];
@@ -300,29 +338,7 @@ export function game(state = mockup.gamestate, action){
         case VARIABLETYPE.OPERATION:
           //Add the operation variable
           sections_state = sections(state.sections, action);
-          
-          //Compute new result
-          const begin_order = sections_state[s_i].order;
-          //Go through each section by order
-          for (let m = begin_order; m < sections_state.length; m++){
-            //Find the coresponding section
-            for (let n = 0; n < sections_state.length; n++){
-              if (sections_state[n].order != m){continue;}
-              //Compute new result
-              var operation_id_arr = sections_state[n].decleared_variables.operation;
-              var result_id = sections_state[n].default_variables.result[0];
-              variables_state[result_id].value = 0;
-              for (let i = 0; i < operation_id_arr.length; i++){
-                const operation = variables_state[operation_id_arr[i]];
-                if (operation.value == null){
-                  variables_state[result_id].value = null;
-                  break;
-                } else {
-                  variables_state[result_id].value = variables_state[result_id].value + operation.value;
-                }
-              }
-            }
-          }
+          computeResults(s_i, sections_state, variables_state);
           break;
         case VARIABLETYPE.OUTPUT:
           //Add the operation variable
@@ -337,7 +353,6 @@ export function game(state = mockup.gamestate, action){
               ]
             }
           }
-          
           break;
       }
 //            console.log(variables_state);
@@ -348,10 +363,56 @@ export function game(state = mockup.gamestate, action){
         {sections: sections_state}
       );
     case TYPE.DO_REMOVE_VARIABLE:
+       s_i = action.section_index;
+            l = action.line_num;
+            v_type = action.variable_type;
+      var variables_state = [...state.variables];
+      var sections_state = immutable.fromJS(state.sections);
+      switch (v_type){
+        case VARIABLETYPE.QUESTION:
+          var order = sections_state.getIn([s_i, 'order']);
+          var vid = sections_state.getIn([s_i, 'decleared_variables', v_type, l-1]);
+          for (let i = order; i < sections_state.size; i++){
+            var temp_s_i = sections_state.findIndex(s => s.get('order')==i);
+            var d_vs = sections_state.getIn([temp_s_i, 'decleared_variables']);
+            if (i > order){
+              //Remove variable from input array
+              for (let j = 0; j < d_vs.get('input').size; j++){
+                if ( d_vs.getIn(['input', j]) == vid ){
+                  sections_state = sections_state.setIn([temp_s_i, 'decleared_variables', 'input', j], null);
+                }
+              }
+            }
+            if (i >= order){
+              //Remove variable from question array
+              for (let j = 0; j < d_vs.get('question').size; j++){
+                if ( d_vs.getIn(['question', j]) == vid ){
+                  sections_state = sections_state.setIn([temp_s_i, 'decleared_variables', 'question', j], null);
+                }
+              }
+              //Remove variable from operation array
+              for (let j = 0; j < d_vs.get('operation').size; j++){
+                if ( d_vs.getIn(['operation', j]) == vid ){
+                  sections_state = sections_state.setIn([temp_s_i, 'decleared_variables', 'operation', j], null);
+                }
+              }
+              //Remove variable from operation array
+              for (let j = 0; j < d_vs.get('output').size; j++){
+                console.log(`output vid: s${i}, a${j}, ${d_vs.getIn(['output', j])}`)
+                if ( d_vs.getIn(['output', j]) == vid ){
+                  sections_state = sections_state.setIn([temp_s_i, 'decleared_variables', 'output', j], null);
+                }
+              }
+            }
+          }
+          computeResults(s_i, sections_state.toJS(), variables_state);
+      }
+      
       return Object.assign(
         {},
         state,
-        {sections: sections(state.sections, action)}
+        {variables: variables_state},
+        {sections: sections_state.toJS()}
       );
     case TYPE.DO_SELECT_VARIABLE:
       return Object.assign(
