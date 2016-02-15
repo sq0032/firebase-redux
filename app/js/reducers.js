@@ -52,7 +52,7 @@ export const mockup = {
         decleared_variables:{
           question: [],
           input: [],
-          operation: [],
+          operation: [3],
           output: []          
         },
         player: null,
@@ -66,7 +66,7 @@ export const mockup = {
         text: 'How many apples remained on the tree on day 1 after Mark ollected his apples?',
         default_variables: {
           question: [],
-          result: [],
+          result: [6],
         },
         decleared_variables:{
           question: [],
@@ -109,7 +109,7 @@ export const mockup = {
     variables:[
       {
         vid: 0,
-        value: 5,
+        value: null,
         name: null,
         type: VARIABLETYPE.DEFAULT
       },
@@ -302,25 +302,45 @@ export function game(state = mockup.gamestate, action){
           sections_state = sections(state.sections, action);
           
           //Compute new result
-          var operation_id_arr = sections_state[s_i].decleared_variables.operation;
-          var result_id = sections_state[s_i].default_variables.result[0];
-          variables_state[result_id].value = 0;
-          for (let i = 0; i < operation_id_arr.length; i++){
-            const operation = variables_state[operation_id_arr[i]];
-            if (operation.value == null){
-              variables_state[result_id].value = null;
-              break;
-            } else {
-              variables_state[result_id].value = variables_state[result_id].value + operation.value;
+          const begin_order = sections_state[s_i].order;
+          //Go through each section by order
+          for (let m = begin_order; m < sections_state.length; m++){
+            //Find the coresponding section
+            for (let n = 0; n < sections_state.length; n++){
+              if (sections_state[n].order != m){continue;}
+              //Compute new result
+              var operation_id_arr = sections_state[n].decleared_variables.operation;
+              var result_id = sections_state[n].default_variables.result[0];
+              variables_state[result_id].value = 0;
+              for (let i = 0; i < operation_id_arr.length; i++){
+                const operation = variables_state[operation_id_arr[i]];
+                if (operation.value == null){
+                  variables_state[result_id].value = null;
+                  break;
+                } else {
+                  variables_state[result_id].value = variables_state[result_id].value + operation.value;
+                }
+              }
             }
           }
-          //Do nothing
           break;
         case VARIABLETYPE.OUTPUT:
-          //Do nothing
+          //Add the operation variable
+          sections_state = sections(state.sections, action);
+          
+          //Add input variables in the next section
+          const order = sections_state[s_i].order;
+          for (let n = 0; n < sections_state.length; n++){
+            if (sections_state[n].order == order+1){
+              sections_state[n].decleared_variables.input = [
+                ...sections_state[s_i].decleared_variables.output
+              ]
+            }
+          }
+          
           break;
       }
-              console.log(variables_state);
+//            console.log(variables_state);
       return Object.assign(
         {},
         state,
