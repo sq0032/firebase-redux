@@ -3,6 +3,7 @@ import { enableNextScreen } from '../../actions';
 import { connect } from 'react-redux';
 
 import SectionButton from './SectionButton';
+import Board from './Board';
 
 function select(state) {
   return {
@@ -25,22 +26,15 @@ export default class Do extends Component {
     
     return SectionButtons;
   }
-  renderSection(){
-    const {game, user} = this.props;
-    return (
-      <div>{game.sections[user.cur_section].text}</div>
-    );
-  }
   render() {
     const SectionButtons = this.renderSectionButtons();
-    const Section = this.renderSection();
     return (
       <div>
         <div style={style.section_buttons}>
           {SectionButtons}
         </div>
         <div style={style.section}>
-          {Section}
+          <Board/>
         </div>
       </div>
     )
