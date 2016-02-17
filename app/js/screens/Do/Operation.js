@@ -25,7 +25,7 @@ export default class Operation extends Component {
           key={i} 
           line_num={i+1}
           dec_vid={dec_vid}
-          type='operation'/>
+          field_type='operation'/>
       );
     }
     return VariableSelectors;
