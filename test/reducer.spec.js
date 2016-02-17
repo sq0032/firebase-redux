@@ -27,8 +27,9 @@ describe('Reducers', () => {
         //Adding an non-pre-decleared variable
         //should create a new variable and add the id into question variable array
         var length = state.variables.length;
+        vid = state.variables[length-1].vid;
         state = game(state, actions.addVariable(0, 5, actions.VARIABLETYPE.QUESTION, undefined));
-        vid = state.variables[length].vid;
+        vid = vid+1;
         expect(state.variables.length).to.equal(length+1);
         expect(state.sections[0].decleared_variables.question[4]).to.equal(vid);
       });
