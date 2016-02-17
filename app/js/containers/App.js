@@ -7,7 +7,7 @@ import Nav from '../components/Nav';
 
   
 class App extends Component {
-  
+    
   renderScreen() {
     const offset = this.props.gameScreen.cur_screen;
     const Screens = GameScreens.map((screen, index)=>{
