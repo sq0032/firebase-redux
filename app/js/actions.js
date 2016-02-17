@@ -13,7 +13,7 @@ export const TYPE = {
   //PLAN
   PLAN_SELECT_ANSWER: 'PLAN_SELECT_ANSWER',
   PLAN_ASSIGN_PLAYER: 'PLAN_ASSIGN_PLAYER',
-  PLAN_ENABLE_OUTPUT: 'PLAN_ENABLE_OUTPUT',
+  PLAN_SET_OUTPUT_NUMBER: 'PLAN_SET_OUTPUT_NUMBER',
   //DO
   DO_SWITCH_SECTION: 'DO_SWITCH_SECTION',
   DO_ADD_VARIABLE: 'DO_ADD_VARIABLE',
@@ -120,9 +120,9 @@ export function assignPlayer(section_index, player_id){
     player_id: player_id,
   }
 }
-export function enableOutput(section_index, output_number){
+export function setOutputNumber(section_index, output_number){
   return {
-    type: TYPE.PLAN_ENABLE_OUTPUT,
+    type: TYPE.PLAN_SET_OUTPUT_NUMBER,
     section_index: section_index,
     output_number: output_number,
   }

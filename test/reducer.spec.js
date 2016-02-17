@@ -4,6 +4,9 @@ import immutable from 'immutable';
 import expect from 'expect.js';
 
 var mockup = {
+  gameConfig: {
+    max_num_outputs: 4
+  },  
   //gameScreens reducer
   gameScreens: {
     cur_screen: 0,
@@ -38,7 +41,8 @@ var mockup = {
         player: null,
         question: null,
         answer: null,
-        watcher: []
+        watcher: [],
+        num_outputs: 0
       },
       {
         index: 1,
@@ -57,7 +61,8 @@ var mockup = {
         player: null,
         question: null,
         answer: null,
-        watcher: []
+        watcher: [],
+        num_outputs: 0
       },
       {
         index: 2,
@@ -76,7 +81,8 @@ var mockup = {
         player: null,
         question: null,
         answer: null,
-        watcher: []
+        watcher: [],
+        num_outputs: 0
       }
     ],
     answers: [
@@ -171,8 +177,20 @@ var mockup = {
   }
 };
 
-describe('Reducers', () => {
-  describe('sections', () => {
+describe('App', () => {
+  describe('PLAN', () => {
+    describe('User can set number of outputs to pass data to other players', () => {
+      let state = null;
+      beforeEach(() => {
+        state = game(mockup.gameState, {});
+      });
+      xit('should set number of outputs ', () => {
+//        state = game(state, actions.)
+      });
+      xit('should remove outputs when discrese number of outputs ', () => {});
+    });
+  });  
+  describe('DO', () => {
     it('should return initial state', () => {
       expect(
         game(mockup.gamestate, {}).sections.length
@@ -299,4 +317,5 @@ describe('Reducers', () => {
       });
     });
   });
+
 });

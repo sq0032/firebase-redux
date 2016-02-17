@@ -5,6 +5,9 @@ import immutable from 'immutable';
 
   
 export const mockup = {
+  gameConfig: {
+    max_num_outputs: 4
+  },
   //gameScreens reducer
   gameScreens: {
     cur_screen: 0,
@@ -39,7 +42,8 @@ export const mockup = {
         player: null,
         question: null,
         answer: null,
-        watcher: []
+        watcher: [],
+        num_outputs: 0
       },
       {
         index: 1,
@@ -58,7 +62,8 @@ export const mockup = {
         player: null,
         question: null,
         answer: null,
-        watcher: []
+        watcher: [],
+        num_outputs: 0
       },
       {
         index: 2,
@@ -77,7 +82,8 @@ export const mockup = {
         player: null,
         question: null,
         answer: null,
-        watcher: []
+        watcher: [],
+        num_outputs: 0
       }
     ],
     answers: [
