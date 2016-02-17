@@ -39,7 +39,7 @@ const style = {
     top:'100px',
     bottom: '0px',
     border: '1px solid black',
-    position: 'absolute'
+    position: 'absolute',
   }
 }
 

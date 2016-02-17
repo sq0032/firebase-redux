@@ -3,19 +3,186 @@ import * as actions from '../app/js/actions';
 import immutable from 'immutable';
 import expect from 'expect.js';
 
+var mockup = {
+  //gameScreens reducer
+  gameScreens: {
+    cur_screen: 0,
+    enable_screens: {
+      0: true,   //Intro
+      1: false,  //Read
+      2: false,  //Plan
+      3: true,  //Do
+      4: false   //Test
+    }
+  },
+  //gameState reducer
+  gamestate: {
+    statement: {
+      text: "There were 10 apples on the tree on day 1",
+    },
+    sections: [
+      {
+        index: 0,
+        order: 0,
+        text: 'How many apples did Mark get if he colleted [5] apples and added them to [2] he already had?',
+        default_variables: {
+          question: [1,2],
+          result: [3],
+        },
+        decleared_variables:{
+          input: [],
+          question: [],
+          operation: [],
+          output: []
+        },
+        player: null,
+        question: null,
+        answer: null,
+        watcher: []
+      },
+      {
+        index: 1,
+        order: 1,
+        text: 'How many apples did Seid have if he already had [4] and Mark gave him all his apples?',
+        default_variables: {
+          question: [4],
+          result: [5],
+        },
+        decleared_variables:{
+          question: [],
+          input: [],
+          operation: [3],
+          output: []          
+        },
+        player: null,
+        question: null,
+        answer: null,
+        watcher: []
+      },
+      {
+        index: 2,
+        order: 2,
+        text: 'How many apples remained on the tree on day 1 after Mark ollected his apples?',
+        default_variables: {
+          question: [],
+          result: [6],
+        },
+        decleared_variables:{
+          question: [],
+          input: [],
+          operation: [],
+          output: []          
+        },
+        player: null,
+        question: null,
+        answer: null,
+        watcher: []
+      }
+    ],
+    answers: [
+      {index: 1, text: "Mark got # apples"},
+      {index: 2, text: "Mark got # chairs"},
+      {index: 3, text: "Mark got # starts"},
+      {index: 4, text: "Seid got # apples"},
+      {index: 5, text: "Seid got # charis"},
+      {index: 6, text: "Seid got # stars"},
+      {index: 7, text: "On the tree # apples remained"},
+      {index: 8, text: "On the tree # charis remained"},
+      {index: 9, text: "On the tree # stars remained"}
+    ],
+    varable_names:{
+      first: [
+        {index: 1, text: "Mark's"},
+        {index: 2, text: "Seid's"},
+      ],
+      middle: [
+        {index: 1, text: "existing"},
+        {index: 2, text: "total"},
+        {index: 3, text: "colleted"},
+      ],
+      last: [
+        {index: 1, text: "apples"},
+        {index: 2, text: "chairs"},
+      ]
+    },
+    variables:[
+      {
+        vid: 0,
+        value: null,
+        name: null
+      },
+      {
+        vid: 1,
+        value: 5,
+        name: {
+          first: "Mark's",
+          middle: "colleted",
+          last: "apples"
+        }
+      },
+      {
+        vid: 2,
+        value: 6,
+        name: null
+      },
+      {
+        vid: 3,
+        value: null,
+        name: {
+          first: "Mark's",
+          middle: "total",
+          last: "apples"
+        }
+      },
+      {
+        vid: 4,
+        value: 2,
+        name: null
+      },
+      {
+        vid: 5,
+        value: null,
+        name: {
+          first: "Seid's",
+          middle: "total",
+          last: "apples"
+        }
+      },
+      {
+        vid: 6,
+        value: null,
+        name: null
+      },
+      {
+        vid: 7,
+        value: null,
+        name: null
+      },
+    ]
+  },
+  //read reducer
+  read: {
+    slots: []
+  },
+  //intro reducer
+  intro: {
+    message: 'this is intro message',
+    is_envelop_opened: false,
+  }
+};
 
 describe('Reducers', () => {
   describe('sections', () => {
     it('should return initial state', () => {
       expect(
-        game(undefined, {}).sections.length
+        game(mockup.gamestate, {}).sections.length
       ).to.equal(3);
     });
     
     describe('ADD_VARIABLE', () => {
       var state = null;
       beforeEach(()=>{
-        state = game(undefined, {});
+        state = game(mockup.gamestate, {});
       });
       it('should handle adding a question variable', () => {
         //Adding an pre-decleared variable
@@ -76,7 +243,7 @@ describe('Reducers', () => {
       var state = null;
       beforeEach(()=>{
         //Setup testing enviroment
-        state = game(undefined, {});
+        state = game(mockup.gamestate, {});
         state.sections[0].decleared_variables.question = [1, null, null, 7];  //1 is 5, 7 is null
         state.sections[0].decleared_variables.operation = [1, 7];
         state.sections[0].decleared_variables.output = [1, 3];  //3 is result, default vaule is null

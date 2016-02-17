@@ -38,8 +38,6 @@ export default class Question extends Component {
     const cur_section = user.cur_section;
     const dec_vs = game.sections[user.cur_section].decleared_variables.question;
     const Values = dec_vs.map((id, index)=>{
-      console.log(id);
-      console.log(typeof(id)=='undefined');
       if (typeof(id)=='undefined'||id==null){
         console.log('return null');
         return (<div style={style.item} key={index}>-</div>);

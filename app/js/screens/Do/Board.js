@@ -21,7 +21,7 @@ export default class Board extends Component {
   render() {
     const {game, user} = this.props;
     return (
-      <div>
+      <div style={style.base}>
         {game.sections[user.cur_section].text}
         <Input/>
         <Question/>
@@ -39,6 +39,6 @@ Board.propTypes = {
 
 const style = {
   base: {
-    border: '1px solid black',
+    border: '1px solid red',
   },
 }

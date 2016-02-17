@@ -15,15 +15,16 @@ export default class Input extends Component {
   renderSelector() {
     const {user, game} = this.props;
     const cur_section = user.cur_section;
-//    const var_ids = game.sections[cur_section].decleared_variables.input;
-    const var_ids = [1,2,3]
-    const Options = var_ids.map((id)=>{
+    const var_ids = game.sections[cur_section].decleared_variables.input;
+    const Options = var_ids.map((id, index)=>{
       const name = game.variables[id].name;
-      let first = name ? (name.first ? name.first : '???') : '???';
-      let middle = name ? (name.middle ? name.middle : '???') : '???';
-      let last = name ? (name.last ? name.last : '???') : '???';
+      const first = name ? (name.first ? name.first : '???') : '???';
+      const middle = name ? (name.middle ? name.middle : '???') : '???';
+      const last = name ? (name.last ? name.last : '???') : '???';
       return (
-        <div key={game.variables[id].vid}>{game.variables[id].vid}:{first}/{middle}/{last}</div>
+        <div key={index}>
+          {game.variables[id].vid}
+        </div>
       );
     });
     return (
@@ -33,12 +34,14 @@ export default class Input extends Component {
   renderDisplay() {
     const {user, game} = this.props;
     const cur_section = user.cur_section;
-//    const var_ids = game.sections[cur_section].decleared_variables.input;
-    const var_ids = [1,2,3]
-    const Values = var_ids.map((id)=>{
-      let name = game.variables[id].name ? game.variables[id].name : 'null';
+    const dec_vs = game.sections[cur_section].decleared_variables.input;
+    const Values = dec_vs.map((id, index)=>{
+      if (typeof(id) == 'undefined' || id == null){
+        return (<div style={style.item} key={index}>--</div>);
+      }
+      let value = game.variables[id].value ? game.variables[id].value : 'null';
       return (
-        <div key={game.variables[id].vid}>{name}</div>
+        <div style={style.item} key={index}>{value}</div>
       );
     });    
     return (

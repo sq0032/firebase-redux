@@ -52,7 +52,7 @@ export const mockup = {
         decleared_variables:{
           question: [],
           input: [],
-          operation: [3],
+          operation: [],
           output: []          
         },
         player: null,
@@ -116,7 +116,11 @@ export const mockup = {
       {
         vid: 1,
         value: 5,
-        name: null,
+        name: {
+          first: "Mark's",
+          middle: "colleted",
+          last: "apples"
+        },
         type: VARIABLETYPE.DEFAULT
       },
       {
@@ -128,7 +132,11 @@ export const mockup = {
       {
         vid: 3,
         value: null,
-        name: null,
+        name: {
+          first: "Mark's",
+          middle: "total",
+          last: "apples"
+        },
         type: VARIABLETYPE.RESULT
       },
       {
@@ -140,7 +148,11 @@ export const mockup = {
       {
         vid: 5,
         value: null,
-        name: null,
+        name: {
+          first: "Seid's",
+          middle: "total",
+          last: "apples"
+        },
         type: VARIABLETYPE.RESULT
       },
       {
@@ -167,14 +179,12 @@ export const mockup = {
     is_envelop_opened: false,
   }
 };
-  
 const intro_init = {
   message: 'this is intro message',
   is_envelop_opened: false,
 //  is_able_go_next: false,
 //  is_able_go_previous: false
 };
-  
 function intro(state = intro_init, action){
   switch (action.type) {
     case TYPE.INTRO_OPEN_ENVELOP:
@@ -185,11 +195,9 @@ function intro(state = intro_init, action){
       return state
   }
 }
-
 const read_init = {
   slots: []
 }
-
 function read(state = read_init, action){
   switch (action.type){
     case TYPE.DROP_PARAGRAPH:
@@ -200,7 +208,6 @@ function read(state = read_init, action){
       return state
   }
 }
-
 function section(state, action, vid){
   switch (action.type){
     case TYPE.DROP_PARAGRAPH:
@@ -242,7 +249,6 @@ function section(state, action, vid){
       return state
   }
 }
-
 function sections(state, action, vid){
   switch (action.type){
     case TYPE.DROP_PARAGRAPH:
@@ -263,7 +269,6 @@ function sections(state, action, vid){
       return state
   }
 }
-
 export function computeResults(section_index, sections, variables){
     //Compute new result
     const begin_order = sections[section_index].order;
@@ -291,7 +296,6 @@ export function computeResults(section_index, sections, variables){
     }
     return variables;
 }
-
 export function game(state = mockup.gamestate, action){
   var s_i, l, v_type = null;
   switch (action.type){
@@ -488,13 +492,11 @@ export function game(state = mockup.gamestate, action){
       return state
   }
 }
-
 const user_dic = {
   id: 1,
   name: 'Mark',
   cur_section: 0,
 }
-
 function players(state = [user_dic], action){
   switch (action.type){
 //    case TYPE.JOIN_GAME:
@@ -505,7 +507,6 @@ function players(state = [user_dic], action){
       return state
   }
 }
-
 function user(state = user_dic, action){
   switch (action.type){
 //    case TYPE.JOIN_GAME:
@@ -522,7 +523,6 @@ function user(state = user_dic, action){
       return state
   }  
 }
-
 const gameScreens_init = {
   cur_screen: 3,
   enable_screens: {
@@ -533,7 +533,6 @@ const gameScreens_init = {
     4: false   //Test
   }
 };
-
 function gameScreens(state = gameScreens_init, action){
   switch (action.type) {
     case TYPE.GO_NEXT_SCREEN:
@@ -559,7 +558,6 @@ function gameScreens(state = gameScreens_init, action){
       return state
   }
 }
-
 
 
 const gameApp = combineReducers({

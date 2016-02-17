@@ -63,6 +63,7 @@ const style = {
     border: '1px solid black',
     position: 'absolute',
     backgroundColor: '#CCC',
-    padding: '40px'
+    padding: '40px',
+    overflowY: 'auto'
   }
 }
