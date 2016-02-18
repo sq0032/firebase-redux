@@ -5,9 +5,6 @@ import immutable from 'immutable';
 
   
 export const mockup = {
-  gameConfig: {
-    max_num_outputs: 4
-  },
   //gameScreens reducer
   gameScreens: {
     cur_screen: 0,
@@ -21,6 +18,9 @@ export const mockup = {
   },
   //gameState reducer
   gamestate: {
+    config: {
+      max_num_outputs: 4
+    },    
     statement: {
       text: "There were 10 apples on the tree on day 1",
     },
