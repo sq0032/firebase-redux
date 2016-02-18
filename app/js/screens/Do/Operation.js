@@ -54,8 +54,7 @@ export default class Operation extends Component {
     const Display = this.renderDisplay();
     return (
       <div style={style.base}>
-        <p style={{clear:'both'}}>Operation</p>
-        <div style={style.label}>Operation</div>
+        <div style={style.label}>OPERATION</div>
         <div style={style.selector}>{VariableEditors}</div>
         {Display}
         <div style={{clear:'both'}}></div>
@@ -74,17 +73,17 @@ const style = {
     minHeight: '100px'
   },
   label: {
-    border: '1px solid black',
+//    border: '1px solid black',
     width: '20%',
     float: 'left',
   },
   selector: {
-    border: '1px solid black',
+//    border: '1px solid black',
     width: '35%',
     float: 'left',
   },
   display: {
-    border: '1px solid black',
+//    border: '1px solid black',
     width: '35%',
     float: 'left',
   },

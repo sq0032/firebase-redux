@@ -54,7 +54,6 @@ export default class Result extends Component {
     const Display = this.renderDisplay();
     return (
       <div style={style.base}>
-        <div style={{clear:'both'}}>RESULT</div>
         <div style={style.label}>RESULT</div>
         {Selector}
         {Display}
@@ -80,17 +79,17 @@ const style = {
     minHeight: '100px'
   },
   label: {
-    border: '1px solid black',
+//    border: '1px solid black',
     width: '20%',
     float: 'left',
   },
   selector: {
-    border: '1px solid black',
+//    border: '1px solid black',
     width: '35%',
     float: 'left',
   },
   display: {
-    border: '1px solid black',
+//    border: '1px solid black',
     width: '35%',
     float: 'left',
   },

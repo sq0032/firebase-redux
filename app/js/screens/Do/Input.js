@@ -23,7 +23,7 @@ export default class Input extends Component {
       const last = name ? (name.last ? name.last : '???') : '???';
       return (
         <div key={index}>
-          {game.variables[id].vid}
+          {game.variables[id].vid}:{first}/{middle}/{last}
         </div>
       );
     });
@@ -54,7 +54,6 @@ export default class Input extends Component {
     const Display = this.renderDisplay();
     return (
       <div style={style.base}>
-        <div style={{clear:'both'}}>INPUT</div>
         <div style={style.label}>INPUT</div>
         {Selector}
         {Display}
@@ -74,17 +73,17 @@ const style = {
     minHeight: '100px'
   },
   label: {
-    border: '1px solid black',
+//    border: '1px solid black',
     width: '20%',
     float: 'left',
   },
   selector: {
-    border: '1px solid black',
+//    border: '1px solid black',
     width: '35%',
     float: 'left',
   },
   display: {
-    border: '1px solid black',
+//    border: '1px solid black',
     width: '35%',
     float: 'left',
   },
