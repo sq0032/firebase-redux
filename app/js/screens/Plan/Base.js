@@ -26,11 +26,15 @@ export default class Plan extends Component {
     const that = this;
     
     var Sections = [];
-    console.log(game);
     for (let i = 0; i < game.sections.length; i++){
-      Sections[game.sections[i].order] = (
-        <Section key={i} index={game.sections[i].index}/>
-      );
+      let section = game.sections.filter(s=>s.order==i);
+      if (section.length == 1){
+        Sections[i] = (
+          <Section key={i} section_index={section[0].index}/>
+        );
+      } else {
+        Sections[i] = null;
+      }
     }
     return Sections;
   }

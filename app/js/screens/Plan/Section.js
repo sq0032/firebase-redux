@@ -12,27 +12,25 @@ function select(state) {
 @connect(select)
 export default class Section extends Component {
   selectAnswer(event){
-    const {dispatch, index} = this.props;
+    const {dispatch, section_index} = this.props;
     dispatch(selectAnswer(
-      index,
+      section_index, 
       parseInt(event.target.value)
     ));
   }
   assignPlayer(event){
-    const {dispatch, index} = this.props;
-//    console.log('assignPlayer');
-//    console.log(event.target.value);
+    const {dispatch, section_index} = this.props;
     dispatch(assignPlayer(
-      index, 
+      section_index, 
       parseInt(event.target.value)
     ));
   }
   setOutputNumber(event){
-    const {dispatch, index} = this.props;
-    dispatch(setOutputNumber(index, parseInt(event.target.value)));
+    const {dispatch, section_index} = this.props;
+    dispatch(setOutputNumber(section_index, parseInt(event.target.value)));
   }
   renderAnswerSelector(){
-    const {index, game} = this.props;
+    const {section_index, game} = this.props;
     const that = this;
     
     var AnswerOptions = game.answers.map(answer=>(
@@ -43,16 +41,17 @@ export default class Section extends Component {
       AnswerOptions
     ];
        
+    const section = game.sections.filter(s=>s.index==section_index)[0];
     return (
       <select 
-        value={game.sections[index].answer}
+        value={section.answer}
         onChange={this.selectAnswer.bind(this)}>
         {AnswerOptions}
       </select>
     );
   }
   renderPlayerSelector(){
-    const {index, players, game} = this.props;
+    const {section_index, players, game} = this.props;
     const that = this;
       
     var PlayerOptions = players.map(player=>(
@@ -63,16 +62,17 @@ export default class Section extends Component {
       PlayerOptions
     ];
     
+    const section = game.sections.filter(s=>s.index==section_index)[0];
     return (
       <select 
-        value={game.sections[index].player}
+        value={section.player}
         onChange={this.selectAnswer.bind(this)}>
         {PlayerOptions}
       </select>
     );
   }
   renderOutputSetter() {
-    const {index, players, game} = this.props;
+    const {section_index, players, game} = this.props;
     const that = this;
     var NumberOptions = [];
     for (let i = 0; i <= game.config.max_num_outputs; i++){
@@ -81,22 +81,24 @@ export default class Section extends Component {
       );
     }
     
+    const section = game.sections.filter(s=>s.index==section_index)[0];
     return (
       <select 
-        value={game.sections[index].num_outputs}
+        value={section.num_outputs}
         onChange={this.setOutputNumber.bind(this)}>
         {NumberOptions}
       </select>
     );
   }
   render() {
-    const {index, game} = this.props;
+    const {section_index, game} = this.props;
     const AnswerSelector = this.renderAnswerSelector();
     const PlayerSelector = this.renderPlayerSelector();
     const OutputSetter = this.renderOutputSetter();
+    const section = game.sections.filter(s=>s.index==section_index)[0];
     return (
       <div>
-        <p>{game.sections[index].text}</p>
+        <p>{section_index}:{section.text}</p>
         <label>Answer:</label>
           {AnswerSelector}
         <br/>
@@ -112,6 +114,7 @@ export default class Section extends Component {
 }
 
 Section.propTypes = {
+  section_index: PropTypes.number.isRequired
 }
 
 

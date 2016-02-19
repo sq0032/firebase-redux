@@ -16,14 +16,13 @@ function select(state) {
 export default class Do extends Component {
   renderSectionButtons(){
     const {game} = this.props;
-    const SectionButtons = game.sections.sort(
-      (a,b)=>(a.order-b.order)
-    ).map((section, index)=>{
-      return (
-        <SectionButton key={index} index={index} section_index={section.index} />
+    const SectionButtons = [];
+    for (let i = 0; i < game.sections.length; i++){
+      const section = game.sections.filter(s => s.order == i)[0]
+      SectionButtons.push(
+        <SectionButton key={i} order={i} section_index={section.index} />
       );
-    });
-    
+    }
     return SectionButtons;
   }
   render() {

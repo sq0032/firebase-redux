@@ -18,38 +18,29 @@ function select(state) {
 @DragDropContext(HTML5Backend)
 export default class Read extends Component {
   validateWork() {
-    const {game, read, dispatch} = this.props;
-    const num_filled_slots = read.slots.filter(
-      s=>typeof(s)!='undefined'
+    const {game, dispatch} = this.props;
+    const num_unfilled_slots = game.sections.filter(
+      s => s.order == null
     ).length
     
-    if (game.sections.length == num_filled_slots){
+    if (num_unfilled_slots == 0){
       dispatch(enableNextScreen());
     }
   }
   renderSlots() {
-    const {game, read} = this.props;
+    const {game} = this.props;
     const validateWork = this.validateWork.bind(this);
     var Slots = [];
     for (let i = 0; i < game.sections.length; i++){
       const section = game.sections.filter(section => section.order == i);
-      if (section.length != 0){
-        Slots[i] = (
-          <DroppableSlot
-            key={i}
-            order={i}
-            validateWork={validateWork}
-            paragraph={section[0].text}/>
-        );
-      } else {
-        Slots[i] = (
-          <DroppableSlot
-            key={i} 
-            order={i}
-            validateWork={validateWork}
-            paragraph='Drop Here'/>
-        )
-      }
+      const section_index = (section.length == 0) ? null : parseInt(section[0].index);
+      Slots[i] = (
+        <DroppableSlot
+          key={i}
+          order={i}
+          section_index={section_index}
+          validateWork={validateWork}/>
+      );
     }
     return Slots;
   }

@@ -9,7 +9,7 @@ export const TYPE = {
   //INTRO
   INTRO_OPEN_ENVELOP: 'INTRO_OPEN_ENVELOP',
   //READ
-  DROP_PARAGRAPH: 'DROP_PARAGRAPH',
+  READ_ORDER_SECTION: 'READ_ORDER_SECTION',
   //PLAN
   PLAN_SELECT_ANSWER: 'PLAN_SELECT_ANSWER',
   PLAN_ASSIGN_PLAYER: 'PLAN_ASSIGN_PLAYER',
@@ -95,12 +95,11 @@ export function openEnvelop(){
 /*
  * Read actions
  */
-export function dropParagraph(payload){
+export function orderSection(section_index, section_order){
   return {
-    type: TYPE.DROP_PARAGRAPH,
-    paragraph: payload.paragraph,
-    index: payload.index,
-    order: payload.order,
+    type: TYPE.READ_ORDER_SECTION,
+    section_index: section_index,
+    section_order: section_order,
   }
 }
 /*
