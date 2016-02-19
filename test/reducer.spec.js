@@ -178,8 +178,34 @@ const mockup = {
 };
 
 describe('App', () => {
+  describe('READ', () => {
+    describe('When player orders a game section', () => {
+      let state = null;
+      beforeEach(() => {
+        //Setup testing enviroment
+        state = game(mockup.gamestate, {});
+        state = immutable.fromJS(state);
+        state = state.toJS();
+        state.sections[0].order = null;
+        state.sections[1].order = null;
+        state.sections[2].order = null;
+      });
+      it('should change the section order', () => {
+        state = game(state, actions.orderSection(2,1));
+        expect(state.sections[2].order).to.equal(1);
+      });
+      it('should clear the section order if the section has been overwritten', () => {
+        state = game(state, actions.orderSection(2,1));
+        state = game(state, actions.orderSection(2,0));
+        state = game(state, actions.orderSection(1,1));
+        state = game(state, actions.orderSection(1,0));
+        expect(state.sections[1].order).to.equal(0);
+        expect(state.sections[2].order).to.equal(null);
+      });
+    });
+  });
   describe('PLAN', () => {
-    describe('When player sets a output number', () => {
+    describe('When player sets an output number', () => {
       let state = null;
       beforeEach(() => {
         //Setup testing enviroment
@@ -201,18 +227,18 @@ describe('App', () => {
         state.sections[2].num_outputs = 0;
         state.variables = computeResults(0, state.sections, state.variables);
       });
-      it('should add more output slots if number increased', () => {
+      it('should add more output slots if the number increased', () => {
         expect(state.sections[0].num_outputs).to.equal(2);
         state = game(state, actions.setOutputNumber(0,3));
         expect(state.sections[0].num_outputs).to.equal(3);
       });
-      it('should reduce slots and update new result when number decreased', () => {
+      it('should reduce slots and update new result if the number decreased', () => {
         state = game(state, actions.setOutputNumber(0,0));
         expect(state.sections[0].decleared_variables.output).to.have.length(0);
         expect(state.variables[5].value).to.equal(2);
       });
     });
-  });  
+  });
   describe('DO', () => {
     it('should return initial state', () => {
       expect(
@@ -225,7 +251,7 @@ describe('App', () => {
       beforeEach(()=>{
         state = game(mockup.gamestate, {});
       });
-      it('should handle adding a question variable', () => {
+      it('should add the question variable', () => {
         //Adding an pre-decleared variable
         //should add the variable id into question variable array
         var vid = state.sections[0].default_variables.question[1];
@@ -241,7 +267,7 @@ describe('App', () => {
         expect(state.variables.length).to.equal(length+1);
         expect(state.sections[0].decleared_variables.question[4]).to.equal(vid);
       });
-      it('should handle selecting an operation variable and update result', () => {
+      it('should select the operation variable and update result', () => {
         //Adding an validated variable (number)
         //Should add the variable id into operation variable array and update answer value (number)`
         
@@ -272,7 +298,7 @@ describe('App', () => {
         expect(state.sections[0].decleared_variables.operation[2]).to.equal(vid);
         expect(result.value).to.equal(null);
       });
-      it('should handle selecting output variable', () => {
+      it('should select the output variable', () => {
         //Adding a variable
         //Should add the variable id into output variable array,
         //and add the variable id into the input variable array of the next section
@@ -306,7 +332,7 @@ describe('App', () => {
         expect(state.variables[6].value).to.equal(12);
         expect(state.variables[3].value).to.equal(null);
       });
-      it('should handle removing a question variable and update result', () => {
+      it('should remove the question variable and update result', () => {
         //Remove an pre-decleared variable
         //should remove the variable id from question variable array
         expect(state.variables[3].value).to.equal(null);
@@ -320,7 +346,7 @@ describe('App', () => {
         expect(state.sections[2].decleared_variables.operation[0]).to.equal(null);
         expect(state.variables[6].value).to.equal(2)
       });
-      it('should handle removing an operation variable and update result', () => {
+      it('should remove the operation variable and update result', () => {
         //Remove an validated variable (number)
         //should remove the variable id from operation variable array
         expect(state.variables[3].value).to.equal(null);
@@ -332,7 +358,7 @@ describe('App', () => {
         state = game(state, actions.removeVariable(1,2,actions.VARIABLETYPE.OPERATION));
         expect(state.variables[6].value).to.equal(10);
       });
-      it('should handle removing output variable and update result', () => {
+      it('should remove the output variable and update result', () => {
         //Remove an output variable (number)
         state = game(state, actions.removeVariable(0,1,actions.VARIABLETYPE.OUTPUT));
         expect(state.sections[0].decleared_variables.question[0]).to.equal(1);

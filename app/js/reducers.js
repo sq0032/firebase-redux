@@ -206,7 +206,7 @@ const read_init = {
 }
 function read(state = read_init, action){
   switch (action.type){
-    case TYPE.DROP_PARAGRAPH:
+    case TYPE.READ_ORDER_SECTION:
       var slots = JSON.parse(JSON.stringify(state.slots));
       slots[action.index] = action.paragraph;
       return Object.assign({}, state, {slots:slots})
@@ -216,12 +216,12 @@ function read(state = read_init, action){
 }
 function section(state, action, vid){
   switch (action.type){
-    case TYPE.DROP_PARAGRAPH:
-      if (state.order == action.order &&
-          state.index != action.index){
+    case TYPE.READ_ORDER_SECTION:
+      if (state.order == action.section_order &&
+          state.index != action.section_index){
         return Object.assign({}, state, {order:null});
-      } else if (state.index == action.index){
-        return Object.assign({}, state, {order:action.order});
+      } else if (state.index == action.section_index){
+        return Object.assign({}, state, {order:action.section_order});
       } else {
         return state;
       }
@@ -257,7 +257,7 @@ function section(state, action, vid){
 }
 function sections(state, action, vid){
   switch (action.type){
-    case TYPE.DROP_PARAGRAPH:
+    case TYPE.READ_ORDER_SECTION:
       return state.map(s=>section(s,action));
     case TYPE.PLAN_SELECT_ANSWER:
       return state.map(s=>section(s,action));
@@ -307,7 +307,7 @@ export function computeResults(section_index, sections, variables){
 export function game(state = mockup.gamestate, action){
   var s_i, l, v_type = null;
   switch (action.type){
-    case TYPE.DROP_PARAGRAPH:
+    case TYPE.READ_ORDER_SECTION:
       return Object.assign(
         {}, 
         state,
@@ -594,7 +594,7 @@ function user(state = user_dic, action){
   }  
 }
 const gameScreens_init = {
-  cur_screen: 3,
+  cur_screen: 1,
   enable_screens: {
     0: true,   //Intro
     1: false,  //Read

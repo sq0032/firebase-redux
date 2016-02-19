@@ -1,16 +1,13 @@
 import React, { Component, PropTypes } from 'react';
-import { DNDTYPE, dropParagraph } from '../actions';
+import { DNDTYPE, orderSection } from '../actions';
 import { connect } from 'react-redux';
 import { DropTarget } from 'react-dnd';
 
 const squareTarget = {
   drop(props, monitor) {
-    const payload = {
-      paragraph: monitor.getItem().paragraph,
-      index: monitor.getItem().index,
-      order: props.order,
-    }
-    props.dispatch(dropParagraph(payload));
+    const section_index = monitor.getItem().index;
+    const section_order = props.order;
+    props.dispatch(orderSection(section_index, section_order));
     props.validateWork();
   }
 };
@@ -23,17 +20,24 @@ function collect(connect, monitor) {
   };
 }
 
-@connect()
+function select(state) {
+  return {
+    game: state.game
+  }
+}
+
+@connect(select)
 @DropTarget(DNDTYPE.DROPPABLE_SLOT, squareTarget, collect)
 export default class DroppableSlot extends Component {
   render() {
-    const { paragraph, connectDropTarget, canDrop, isOver, dispatch } = this.props;
+    const { connectDropTarget, canDrop, isOver, dispatch, game, section_index } = this.props;
     var backgroundColor = canDrop ? 'gray': null;
     backgroundColor = isOver ? 'yellow': backgroundColor;
+    const text = (section_index != null) ? game.sections[section_index].text : 'Drop Here';
     const that = this;
     return connectDropTarget(
       <div style={{...style.base, backgroundColor}}>
-        <p style={style.text}>{paragraph}</p>
+        <p style={style.text}>{section_index}:{text}</p>
       </div>
     )
   }
@@ -41,7 +45,8 @@ export default class DroppableSlot extends Component {
 
 DroppableSlot.propTypes = {
   validateWork: PropTypes.func.isRequired,
-  paragraph: PropTypes.string.isRequired
+  order: PropTypes.number,
+  section_index: PropTypes.number.isRequired
 }
 
 const style = {

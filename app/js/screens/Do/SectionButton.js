@@ -27,7 +27,7 @@ export default class SectionButton extends Component {
     dispatch(switchSection(section_index));
   }
   renderSections(){
-    const {index, players, game} = this.props;
+    const {players, game} = this.props;
     const that = this;
       
     const Sections = game.sections.map(section=>(
@@ -41,14 +41,14 @@ export default class SectionButton extends Component {
     return Sections;
   }
   render() {
-    const {index, section_index, game, user} = this.props;
+    const {order, section_index, game, user} = this.props;
     const backgroundColor = (user.cur_section == section_index) ? 'yellow' : null;
 //    const Sections = this.renderSections();
     return (
       <div 
         onClick={this.switchSection.bind(this)}
         style={{...style.base, backgroundColor}}>
-        {index}
+        {order}
       </div>
     )
   }
