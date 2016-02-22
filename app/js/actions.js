@@ -1,5 +1,6 @@
-import Firebase from 'firebase';
-var rootRef = new Firebase('https://blazing-fire-2123.firebaseio.com');
+//import Firebase from 'firebase';
+//var rootRef = new Firebase('https://blazing-fire-2123.firebaseio.com');
+
 
 /* Action types */
 export const TYPE = {
@@ -22,6 +23,10 @@ export const TYPE = {
   DO_SELECT_VARIABLE: 'DO_SELECT_VARIABLE',
   
   DO_REMOVE_OUTPUT: 'DO_REMOVE_OUTPUT',
+  
+  //REALTIME
+  FETCH_GAME_STATE: 'FETCH_GAME_STATE',
+  UPDATE_GAME_STATE: 'UPDATE_GAME_STATE'
 //  DO_NAME_VARIABLE: 'DO_NAME_VARIABLE',
 //  DO_SELECT_FUNCTION: 'DO_SELECT_FUNCTION',
 //  DO_PASS_FUNCTION_PARAMETER: 'DO_PASS_FUNCTION_PARAMETER',
@@ -145,3 +150,19 @@ export function removeOutput(section_index, line_num){
     line_num: line_num
   }
 }
+/* Real-time actions */
+export function fetchGameState(game_state){
+  return {
+    type: TYPE.FETCH_GAME_STATE,
+    game_state: game_state
+  }
+}
+/* Real-time actions */
+export function updateGameState(game_state){
+  return {
+    type: TYPE.UPDATE_GAME_STATE,
+    game_state: game_state
+  }
+}
+  
+  

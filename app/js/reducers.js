@@ -117,7 +117,7 @@ export const mockup = {
         vid: 0,
         value: null,
         name: null,
-        type: VARIABLETYPE.DEFAULT
+        type: VARIABLETYPE.QUESTION
       },
       {
         vid: 1,
@@ -127,13 +127,13 @@ export const mockup = {
           middle: "colleted",
           last: "apples"
         },
-        type: VARIABLETYPE.DEFAULT
+        type: VARIABLETYPE.QUESTION
       },
       {
         vid: 2,
         value: 6,
         name: null,
-        type: VARIABLETYPE.DEFAULT
+        type: VARIABLETYPE.QUESTION
       },
       {
         vid: 3,
@@ -149,7 +149,7 @@ export const mockup = {
         vid: 4,
         value: 2,
         name: null,
-        type: VARIABLETYPE.DEFAULT
+        type: VARIABLETYPE.QUESTION
       },
       {
         vid: 5,
@@ -251,6 +251,8 @@ function section(state, action, vid){
       var section = immutable.fromJS(state);
       section = section.setIn(['decleared_variables',action.variable_type,action.line_num-1], action.vid);
       return section.toJS();
+    case TYPE.UPDATE_GAME_STATE:
+      
     default:
       return state
   }
@@ -270,6 +272,8 @@ function sections(state, action, vid){
     case TYPE.DO_SELECT_VARIABLE:
       return state.map(s=>section(s,action));
     case TYPE.DO_REMOVE_OUTPUT:
+      return state.map(s=>section(s,action));
+    case TYPE.UPDATE_GAME_STATE:
       return state.map(s=>section(s,action));
     default:
       return state
@@ -558,6 +562,17 @@ export function game(state = mockup.gamestate, action){
         state,
         {sections: sections(state.sections, action)}
       );
+    case TYPE.UPDATE_GAME_STATE:
+      console.log('REALTIME UPDATE');
+//      var sections_state = [];
+//      for (let key in action.game_state){
+//        sections_state[key] = action.game_state.sections[key];
+//      }
+      return Object.assign(
+        {},
+        state,
+        {sections: sections(state.sections, action)}
+      );
     default:
       return state
   }
@@ -639,5 +654,9 @@ const gameApp = combineReducers({
   user
 })
 
+import Firebase from 'firebase';
+var rootRef = new Firebase('https://blazing-fire-2123.firebaseio.com');
+var gameRef = rootRef.child('game');
+gameRef.set(mockup.gamestate);
 
 export default gameApp

@@ -177,6 +177,166 @@ const mockup = {
   }
 };
 
+const game_state_firebase_mockup = {
+  statement: {
+    text: "There were 10 apples on the tree on day 1",
+  },
+  sections: {
+    0: {
+      index: 0,
+      order: 0,
+      text: 'How many apples did Mark get if he colleted [5] apples and added them to [2] he already had?',
+      default_variables: {
+        question: {
+          0: 1,
+          1: 2
+        },
+        result: {
+          0: 3
+        },
+      },
+      decleared_variables:{
+        input: {},
+        question: {},
+        operation: {
+          4: 8  //add one variable
+        },
+        output: {}
+      },
+      player: null,
+      question: null,
+      answer: null,
+      watcher: {},
+      num_outputs: 0
+    },
+    1: {
+      index: 1,
+      order: 1,
+      text: 'How many apples did Seid have if he already had [4] and Mark gave him all his apples?',
+      default_variables: {
+        question: {0: 4},
+        result: {0: 5},
+      },
+      decleared_variables:{
+        question: {},
+        input: {},
+        operation: {0:3},
+        output: {},         
+      },
+      player: null,
+      question: null,
+      answer: null,
+      watcher: {},
+      num_outputs: 0
+    },
+    2: {
+      index: 2,
+      order: 2,
+      text: 'How many apples remained on the tree on day 1 after Mark ollected his apples?',
+      default_variables: {
+        question: {},
+        result: {0:6}
+      },
+      decleared_variables:{
+        question: {},
+        input: {},
+        operation: {},
+        output: {}          
+      },
+      player: null,
+      question: null,
+      answer: null,
+      watcher: {},
+      num_outputs: 0
+    }
+  },
+  answers: {
+    0: {index: 1, text: "Mark got # apples"},
+    1: {index: 2, text: "Mark got # chairs"},
+    2: {index: 3, text: "Mark got # starts"},
+    3: {index: 4, text: "Seid got # apples"},
+    4: {index: 5, text: "Seid got # charis"},
+    5: {index: 6, text: "Seid got # stars"},
+    6: {index: 7, text: "On the tree # apples remained"},
+    7: {index: 8, text: "On the tree # charis remained"},
+    8: {index: 9, text: "On the tree # stars remained"}
+  },
+  varable_names:{
+    first: {
+      0: {index: 1, text: "Mark's"},
+      1: {index: 2, text: "Seid's"},
+    },
+    middle: {
+      0: {index: 1, text: "existing"},
+      1: {index: 2, text: "total"},
+      2: {index: 3, text: "colleted"},
+    },
+    last: {
+      0: {index: 1, text: "apples"},
+      1: {index: 2, text: "chairs"}
+    }
+  },
+  variables: {
+    0: {
+      vid: 0,
+      value: null,
+      name: null
+    },
+    1: {
+      vid: 1,
+      value: 5,
+      name: {
+        first: "Mark's",
+        middle: "colleted",
+        last: "apples"
+      }
+    },
+    2: {
+      vid: 2,
+      value: 6,
+      name: null
+    },
+    3: {
+      vid: 3,
+      value: 7, //update varibale value from null to 7
+      name: {
+        first: "Mark's",
+        middle: "total",
+        last: "apples"
+      }
+    },
+    4: {
+      vid: 4,
+      value: 2,
+      name: null
+    },
+    5: {
+      vid: 5,
+      value: null,
+      name: {
+        first: "Seid's",
+        middle: "total",
+        last: "apples"
+      }
+    },
+    6: {
+      vid: 6,
+      value: null,
+      name: null
+    },
+    7: {
+      vid: 7,
+      value: null,
+      name: null
+    },
+    8: {  //add one definede variable
+      vid: 8,
+      value: null,
+      name: null
+    }
+  }
+};
+
 describe('App', () => {
   describe('READ', () => {
     describe('When player orders a game section', () => {
@@ -370,5 +530,21 @@ describe('App', () => {
       });
     });
   });
-
+  describe('REALTIME', ()=>{
+    describe('When receive a real-time update from Firebase', () => {
+      let state = null;
+      beforeEach(()=>{
+        state = game(mockup.gamestate, {});
+      });
+      it('should convert variable objects to array ', () => {
+        //Remove an output variable (number)
+        state = game(state, actions.updateGameState(game_state_firebase_mockup));
+        expect(state.sections).to.be.an('array');
+        expect(state.sections[0].decleared_variables.operation).to.be.an('array');
+        expect(state.sections[0].decleared_variables.operation[0]).to.equal(3);
+        expect(state.variables).to.be.an('array');
+        expect(state.variables[8].value).to.equal(null);
+      });
+    });
+  });
 });
