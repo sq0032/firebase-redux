@@ -1,6 +1,7 @@
-/*
- * action types
- */
+import Firebase from 'firebase';
+var rootRef = new Firebase('https://blazing-fire-2123.firebaseio.com');
+
+/* Action types */
 export const TYPE = {
   //GENERAL
   GO_NEXT_SCREEN: 'GO_NEXT_SCREEN', 
@@ -30,8 +31,6 @@ export const TYPE = {
 //  DO_SELECT_MIDDLE_NAME: 'DO_SELECT_MIDDLE_NAME',
 //  DO_SELECT_LAST_NAME: 'DO_SELECT_LAST_NAME',
 }
-
-
 export const VARIABLETYPE = {
   INPUT: 'input',
   OUTPUT: 'output',
@@ -39,20 +38,12 @@ export const VARIABLETYPE = {
   OPERATION: 'operation',
   QUESTION: 'question',
 }
-
-/*
- * component types (for DnD)
- */
+/* Component types (for DnD) */
 export const DNDTYPE = {
   DRAGABLE_PARAGRAPH: 'DRAGABLE_PARAGRAPH',
   DROPPABLE_SLOT: 'DROPPABLE_SLOT',
 }
-
-
-/*
- * other constants
- */
-
+/* Other constants */
 export const GameScreens = [
   'INTRO',
   'READ',
@@ -60,13 +51,7 @@ export const GameScreens = [
   'DO',
   'TEST',
 ]
-
-/*
- * action creators
- */
-/*
- * General actions
- */
+/* General actions */
 export function goNextScreen(cur_screen){
   return {
     type: TYPE.GO_NEXT_SCREEN,
@@ -84,17 +69,13 @@ export function enableNextScreen(){
     type: TYPE.ENABLE_NEXT_SCREEN
   }
 }
-/*
- * Intro actions
- */
+/* Intro actions */
 export function openEnvelop(){
   return {
     type: TYPE.INTRO_OPEN_ENVELOP
   }
 }
-/*
- * Read actions
- */
+/* Read actions */
 export function orderSection(section_index, section_order){
   return {
     type: TYPE.READ_ORDER_SECTION,
@@ -102,9 +83,7 @@ export function orderSection(section_index, section_order){
     section_order: section_order,
   }
 }
-/*
- * Plan actions
- */
+/* Plan actions */
 export function selectAnswer(section_index, answer_index){
   return {
     type: TYPE.PLAN_SELECT_ANSWER,
@@ -126,10 +105,7 @@ export function setOutputNumber(section_index, output_number){
     output_number: output_number,
   }
 }
-  
-/*
- * Do actions
- */
+/* Do actions */
 export function switchSection(section_index){
   return {
     type: TYPE.DO_SWITCH_SECTION,
