@@ -1,5 +1,5 @@
 import React, { Component, PropTypes } from 'react';
-import { addVariable, removeVariable } from '../../actions';
+import { addAndUpdateVariable, removeAndUpdateVariable } from '../../actions';
 import { connect } from 'react-redux';
 
 function select(state) {
@@ -16,15 +16,15 @@ export default class VariableEditor extends Component {
     const {dispatch, user, line_num, type, def_vid} = this.props;
     const section_id = user.cur_section;
     if (def_vid){
-      dispatch(addVariable(section_id, line_num, type, def_vid));
+      dispatch(addAndUpdateVariable(section_id, line_num, type, def_vid));
     } else {
-      dispatch(addVariable(section_id, line_num, type));
+      dispatch(addAndUpdateVariable(section_id, line_num, type));
     }
   }
   handleRemoveVariable() {
     const {dispatch, user, line_num, type} = this.props;
     const section_id = user.cur_section;
-    dispatch(removeVariable(section_id, line_num, type));
+    dispatch(removeAndUpdateVariable(section_id, line_num, type));
   }
   renderEditor() {
     const {def_vid, dec_vid, line_num, type, user, game} = this.props;

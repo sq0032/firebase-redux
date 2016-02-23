@@ -60,12 +60,6 @@ export default class Result extends Component {
         <div style={{clear:'both'}}></div>
       </div>
     );        
-//    const {game, user} = this.props;
-//    return (
-//      <div style={style.base}>
-//        Result
-//      </div>
-//    );
   }
 }
 

@@ -1,5 +1,5 @@
 import React, { Component, PropTypes } from 'react';
-import { addVariable, removeVariable } from '../../actions';
+import { addAndUpdateVariable, removeAndUpdateVariable } from '../../actions';
 import { connect } from 'react-redux';
 
 function select(state) {
@@ -17,9 +17,9 @@ export default class VariableSelector extends Component {
     const section_id = user.cur_section;
     const vid = e.target.value;
     if (vid == 'default'){
-      dispatch(removeVariable(section_id, line_num, field_type));
+      dispatch(removeAndUpdateVariable(section_id, line_num, field_type));
     } else {
-      dispatch(addVariable(section_id, line_num, field_type, vid));
+      dispatch(addAndUpdateVariable(section_id, line_num, field_type, vid));
     }
   }
   renderOptions(type) {

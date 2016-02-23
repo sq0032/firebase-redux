@@ -267,10 +267,10 @@ function section(state, action, vid){
         for(let key in new_section.decleared_variables[variable_types[i]]){
           variables[key] = new_section.decleared_variables[variable_types[i]][key];
         }
-        section = section.setIn(['decleared_variable',variable_types[i]], immutable.fromJS(variables));
+        section = section.setIn(['decleared_variables',variable_types[i]], immutable.fromJS(variables));
       }
       //Update player
-      section = section.set('player', new_section.player);
+      section = section.set('player', typeof(new_section.player) == 'undefined' ? null : new_section.player);
       section = section.set('num_outputs', new_section.num_outputs);
       section = section.set('order', new_section.order);
       

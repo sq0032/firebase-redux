@@ -132,12 +132,11 @@ export function addVariable(section_index, line_num, variable_type, variable_id)
     variable_id: variable_id
   }
 }
-export function R_addVariable(section_index, line_num, variable_type, variable_id){
-//  return function (dispatch, getState){
-//    dispatch(addVariable(section_index, line_num, variable_type, variable_id));
-//    
-//    return 
-//  }
+export function addAndUpdateVariable(section_index, line_num, variable_type, variable_id){
+  return function (dispatch, getState){
+    dispatch(addVariable(section_index, line_num, variable_type, variable_id));
+    return rootRef.child('game').update(getState().game);
+  }
 }
 export function removeVariable(section_index, line_num, variable_type){
   return {
@@ -145,6 +144,12 @@ export function removeVariable(section_index, line_num, variable_type){
     section_index: section_index,
     line_num: line_num,
     variable_type: variable_type
+  }
+}
+export function removeAndUpdateVariable(section_index, line_num, variable_type){
+  return function (dispatch, getState){
+    dispatch(removeVariable(section_index, line_num, variable_type));
+    return rootRef.child('game').update(getState().game);
   }
 }
 export function selectVariable(section_index, line_num, variable_type, vid){
