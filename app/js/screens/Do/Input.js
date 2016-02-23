@@ -16,17 +16,29 @@ export default class Input extends Component {
     const {user, game} = this.props;
     const cur_section = user.cur_section;
     const var_ids = game.sections[cur_section].decleared_variables.input;
-    const Options = var_ids.map((id, index)=>{
-      const name = game.variables[id].name;
+//    const Options = var_ids.map((id, index)=>{
+//      const name = game.variables[id].name;
+//      const first = name ? (name.first ? name.first : '???') : '???';
+//      const middle = name ? (name.middle ? name.middle : '???') : '???';
+//      const last = name ? (name.last ? name.last : '???') : '???';
+//      return (
+//        <div key={index}>
+//          {game.variables[id].vid}:{first}/{middle}/{last}
+//        </div>
+//      );
+//    });
+    var Options = [];
+    for (let key in var_ids){
+      const name = game.variables[var_ids[key]].name;
       const first = name ? (name.first ? name.first : '???') : '???';
       const middle = name ? (name.middle ? name.middle : '???') : '???';
       const last = name ? (name.last ? name.last : '???') : '???';
-      return (
+      Options.push(
         <div key={index}>
           {game.variables[id].vid}:{first}/{middle}/{last}
         </div>
       );
-    });
+    }
     return (
       <div style={style.selector}>{Options}</div>
     );
@@ -35,15 +47,25 @@ export default class Input extends Component {
     const {user, game} = this.props;
     const cur_section = user.cur_section;
     const dec_vs = game.sections[cur_section].decleared_variables.input;
-    const Values = dec_vs.map((id, index)=>{
-      if (typeof(id) == 'undefined' || id == null){
-        return (<div style={style.item} key={index}>--</div>);
+
+//    const Values = dec_vs.map((id, index)=>{
+//      if (typeof(id) == 'undefined' || id == null){
+//        return (<div style={style.item} key={index}>--</div>);
+//      }
+//      let value = game.variables[id].value ? game.variables[id].value : 'null';
+//      return (
+//        <div style={style.item} key={index}>{value}</div>
+//      );
+//    });
+    var Values = [];
+    for (let i = 0; i < Object.keys(dec_vs).length; i++){
+      if (dec_vs.hasOwnProperty(i)){
+        let value = game.variables[dec_vs[i]].value ? game.variables[dec_vs[i]].value : 'null';
+        Values.push(<div style={style.item} key={index}>{value}</div>);
+      } else {
+        Values.push(<div style={style.item} key={index}>-</div>);
       }
-      let value = game.variables[id].value ? game.variables[id].value : 'null';
-      return (
-        <div style={style.item} key={index}>{value}</div>
-      );
-    });    
+    }    
     return (
       <div style={style.display}>{Values}</div>
     );

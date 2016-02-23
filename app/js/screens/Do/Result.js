@@ -16,17 +16,29 @@ export default class Result extends Component {
     const {user, game} = this.props;
     const cur_section = user.cur_section;
     const var_ids = game.sections[cur_section].default_variables.result;
-    const Options = var_ids.map((id)=>{
-      const name = game.variables[id].name;
+//    const Options = var_ids.map((id)=>{
+//      const name = game.variables[id].name;
+//      let first = name ? (name.first ? name.first : '???') : '???';
+//      let middle = name ? (name.middle ? name.middle : '???') : '???';
+//      let last = name ? (name.last ? name.last : '???') : '???';
+//      return (
+//        <div key={game.variables[id].vid}>
+//          {game.variables[id].vid}:{first}/{middle}/{last}
+//        </div>
+//      );
+//    });
+    var Options = [];
+    for (let key in var_ids){
+      const name = game.variables[key].name;
       let first = name ? (name.first ? name.first : '???') : '???';
       let middle = name ? (name.middle ? name.middle : '???') : '???';
-      let last = name ? (name.last ? name.last : '???') : '???';
-      return (
-        <div key={game.variables[id].vid}>
-          {game.variables[id].vid}:{first}/{middle}/{last}
+      let last = name ? (name.last ? name.last : '???') : '???';      
+      Options.push(
+        <div key={var_ids[key]}>
+          {var_ids[key]}:{first}/{middle}/{last}
         </div>
       );
-    });
+    }
     return (
       <div style={style.selector}>{Options}</div>
     );
@@ -35,15 +47,24 @@ export default class Result extends Component {
     const {user, game} = this.props;
     const cur_section = user.cur_section;
     const dec_vs = game.sections[cur_section].default_variables.result;
-    const Values = dec_vs.map((id, index)=>{
-      if (typeof(id) == 'undefined' || id == null){
-        return (<div style={style.item} key={index}>--</div>);
+//    const Values = dec_vs.map((id, index)=>{
+//      if (typeof(id) == 'undefined' || id == null){
+//        return (<div style={style.item} key={index}>--</div>);
+//      }
+//      let value = game.variables[id].value ? game.variables[id].value : 'null';
+//      return (
+//        <div style={style.item} key={index}>{value}</div>
+//      );
+//    });
+    var Values = [];
+    for (let i = 0; i < 6; i++){
+      if (dec_vs.hasOwnProperty(i)){
+        let value = game.variables[dec_vs[i]].value ? game.variables[dec_vs[i]].value : 'null';
+        Values.push(<div style={style.item} key={i}>{value}</div>);
+      } else {
+        Values.push(<div style={style.item} key={i}>-</div>);
       }
-      let value = game.variables[id].value ? game.variables[id].value : 'null';
-      return (
-        <div style={style.item} key={index}>{value}</div>
-      );
-    });    
+    }    
     return (
       <div style={style.display}>{Values}</div>
     );

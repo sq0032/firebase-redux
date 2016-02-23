@@ -25,21 +25,38 @@ export default class VariableSelector extends Component {
   renderOptions(type) {
     const {user, game} = this.props;
     const cate = (type == 'result') ? 'default_variables' : 'decleared_variables';
-    const InputOptions = game.sections[user.cur_section][cate][type].map((vid)=>{
-      if (!vid){return null;}
-      if (typeof(game.variables[vid].name) == 'undefined'){
-        return (
+    const variables = game.sections[user.cur_section][cate][type];
+    var InputOptions = [];
+    for(let key in variables){
+      if (typeof(game.variables[key].name) == 'undefined'){
+        InputOptions.push(
           <option value={vid} key={type+vid}>??? ??? ???</option>     
         );
-      }      
-      const name = game.variables[vid].name;
-      let first = name ? (name.first ? name.first : '???') : '???';
-      let middle = name ? (name.middle ? name.middle : '???') : '???';
-      let last = name ? (name.last ? name.last : '???') : '???';        
-      return (
-        <option value={vid} key={type+vid}>{first} {middle} {last}</option>
-      );
-    });
+      } else {
+        const name = game.variables[key].name;
+        let first = name ? (name.first ? name.first : '???') : '???';
+        let middle = name ? (name.middle ? name.middle : '???') : '???';
+        let last = name ? (name.last ? name.last : '???') : '???';
+        InputOptions.push(
+          <option value={key} key={type+key}>{first} {middle} {last}</option>
+        );
+      }
+    }
+//    const InputOptions = game.sections[user.cur_section][cate][type].map((vid)=>{
+//      if (!vid){return null;}
+//      if (typeof(game.variables[vid].name) == 'undefined'){
+//        return (
+//          <option value={vid} key={type+vid}>??? ??? ???</option>     
+//        );
+//      }      
+//      const name = game.variables[vid].name;
+//      let first = name ? (name.first ? name.first : '???') : '???';
+//      let middle = name ? (name.middle ? name.middle : '???') : '???';
+//      let last = name ? (name.last ? name.last : '???') : '???';        
+//      return (
+//        <option value={vid} key={type+vid}>{first} {middle} {last}</option>
+//      );
+//    });
     return InputOptions;
   }
   renderSelector() {
