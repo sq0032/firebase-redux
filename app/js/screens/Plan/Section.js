@@ -1,6 +1,8 @@
 import React, { Component, PropTypes } from 'react';
 import { selectAnswer, assignPlayer, enableNextScreen, setOutputNumber } from '../../actions';
 import { connect } from 'react-redux';
+import Firebase from 'firebase';
+var rootRef = new Firebase('https://blazing-fire-2123.firebaseio.com');
 
 function select(state) {
   return {
@@ -27,7 +29,16 @@ export default class Section extends Component {
   }
   setOutputNumber(event){
     const {dispatch, section_index} = this.props;
-    dispatch(setOutputNumber(section_index, parseInt(event.target.value)));
+    const num_outputs = parseInt(event.target.value);
+    rootRef.child(`game/sections/${section_index}`).update({
+      num_outputs: num_outputs
+    }, error => {
+      if (error) {
+        dispatch(reportError('Set Output Number Error'));
+      } else {
+        dispatch(setOutputNumber(section_index, num_outputs));
+      }
+    });    
   }
   renderAnswerSelector(){
     const {section_index, game} = this.props;

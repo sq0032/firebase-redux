@@ -27,6 +27,11 @@ export default class VariableSelector extends Component {
     const cate = (type == 'result') ? 'default_variables' : 'decleared_variables';
     const InputOptions = game.sections[user.cur_section][cate][type].map((vid)=>{
       if (!vid){return null;}
+      if (typeof(game.variables[vid].name) == 'undefined'){
+        return (
+          <option value={vid} key={type+vid}>??? ??? ???</option>     
+        );
+      }      
       const name = game.variables[vid].name;
       let first = name ? (name.first ? name.first : '???') : '???';
       let middle = name ? (name.middle ? name.middle : '???') : '???';

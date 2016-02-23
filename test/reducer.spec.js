@@ -539,10 +539,7 @@ describe('App', () => {
       it('should convert variable objects to array ', () => {
         //Remove an output variable (number)
         state = game(state, actions.updateGameState(game_state_firebase_mockup));
-        expect(state.sections).to.be.an('array');
-        expect(state.sections[0].decleared_variables.operation).to.be.an('array');
-        expect(state.sections[0].decleared_variables.operation[0]).to.equal(3);
-        expect(state.variables).to.be.an('array');
+        expect(state.sections[1].decleared_variables.operation[0]).to.equal(3);
         expect(state.variables[8].value).to.equal(null);
       });
     });

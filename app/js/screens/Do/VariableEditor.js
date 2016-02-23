@@ -35,8 +35,18 @@ export default class VariableEditor extends Component {
           Add variable
         </button>
       );
-//    }
     } else {
+      if (typeof(game.variables[dec_vid].name) == 'undefined'){
+        return (
+          <span>
+            ???/???/???
+            <button 
+              onClick={this.handleRemoveVariable.bind(this)}>
+              Romove
+            </button>
+          </span>        
+        );
+      }
       const name = game.variables[dec_vid].name;
       let first = name ? (name.first ? name.first : '???') : '???';
       let middle = name ? (name.middle ? name.middle : '???') : '???';

@@ -252,7 +252,29 @@ function section(state, action, vid){
       section = section.setIn(['decleared_variables',action.variable_type,action.line_num-1], action.vid);
       return section.toJS();
     case TYPE.UPDATE_GAME_STATE:
+      const section_index = state.index;
+      const new_section = action.game_state.sections[section_index];
+      var section = immutable.fromJS(state);
+      //Update decleared_variables
+      var variable_types = ['input','question','operation','output'];
+      for(let i = 0; i < variable_types.length; i++){
+        var variables = [];
+        if (typeof(new_section.decleared_variables) == 'undefined' ||
+            typeof(new_section.decleared_variables[variable_types[i]]) == 'undefined'){
+          section = section.setIn(['decleared_variables',variable_types[i]], immutable.List());
+          continue;
+        }
+        for(let key in new_section.decleared_variables[variable_types[i]]){
+          variables[key] = new_section.decleared_variables[variable_types[i]][key];
+        }
+        section = section.setIn(['decleared_variable',variable_types[i]], immutable.fromJS(variables));
+      }
+      //Update player
+      section = section.set('player', new_section.player);
+      section = section.set('num_outputs', new_section.num_outputs);
+      section = section.set('order', new_section.order);
       
+      return section.toJS();
     default:
       return state
   }
@@ -275,6 +297,19 @@ function sections(state, action, vid){
       return state.map(s=>section(s,action));
     case TYPE.UPDATE_GAME_STATE:
       return state.map(s=>section(s,action));
+    default:
+      return state
+  }
+}
+function variables(state, action){
+  switch (action.type){
+    case TYPE.UPDATE_GAME_STATE:
+      const new_variables = action.game_state.variables;
+      var new_variables_arr = [];
+      for (let key in new_variables){
+        new_variables_arr[key] = new_variables[key];
+      }
+      return new_variables_arr;
     default:
       return state
   }
@@ -564,13 +599,10 @@ export function game(state = mockup.gamestate, action){
       );
     case TYPE.UPDATE_GAME_STATE:
       console.log('REALTIME UPDATE');
-//      var sections_state = [];
-//      for (let key in action.game_state){
-//        sections_state[key] = action.game_state.sections[key];
-//      }
       return Object.assign(
         {},
         state,
+        {variables: variables(state.variables, action)},
         {sections: sections(state.sections, action)}
       );
     default:
@@ -609,7 +641,7 @@ function user(state = user_dic, action){
   }  
 }
 const gameScreens_init = {
-  cur_screen: 1,
+  cur_screen: 2,
   enable_screens: {
     0: true,   //Intro
     1: false,  //Read

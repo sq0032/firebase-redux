@@ -1,10 +1,10 @@
-//import Firebase from 'firebase';
-//var rootRef = new Firebase('https://blazing-fire-2123.firebaseio.com');
-
+import Firebase from 'firebase';
+var rootRef = new Firebase('https://blazing-fire-2123.firebaseio.com');
 
 /* Action types */
 export const TYPE = {
   //GENERAL
+  ERROR: 'ERROR',
   GO_NEXT_SCREEN: 'GO_NEXT_SCREEN', 
   GO_PREVIOUS_SCREEN: 'GO_PREVIOUS_SCREEN', 
   ENABLE_NEXT_SCREEN: 'ENABLE_NEXT_SCREEN',
@@ -57,6 +57,12 @@ export const GameScreens = [
   'TEST',
 ]
 /* General actions */
+export function reportError(message){
+  return {
+    type: TYPE.ERROR,
+    message: message,
+  };
+}
 export function goNextScreen(cur_screen){
   return {
     type: TYPE.GO_NEXT_SCREEN,
@@ -126,6 +132,13 @@ export function addVariable(section_index, line_num, variable_type, variable_id)
     variable_id: variable_id
   }
 }
+export function R_addVariable(section_index, line_num, variable_type, variable_id){
+//  return function (dispatch, getState){
+//    dispatch(addVariable(section_index, line_num, variable_type, variable_id));
+//    
+//    return 
+//  }
+}
 export function removeVariable(section_index, line_num, variable_type){
   return {
     type: TYPE.DO_REMOVE_VARIABLE,
@@ -157,12 +170,9 @@ export function fetchGameState(game_state){
     game_state: game_state
   }
 }
-/* Real-time actions */
 export function updateGameState(game_state){
   return {
     type: TYPE.UPDATE_GAME_STATE,
     game_state: game_state
   }
 }
-  
-  
