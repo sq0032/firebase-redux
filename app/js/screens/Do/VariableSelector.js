@@ -30,7 +30,7 @@ export default class VariableSelector extends Component {
     for(let key in variables){
       if (typeof(game.variables[key].name) == 'undefined'){
         InputOptions.push(
-          <option value={vid} key={type+vid}>??? ??? ???</option>     
+          <option value={key} key={type+key}>??? ??? ???</option>     
         );
       } else {
         const name = game.variables[key].name;
