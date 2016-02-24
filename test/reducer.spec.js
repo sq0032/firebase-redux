@@ -403,7 +403,7 @@ const game_state_firebase_mockup = {
       decleared_variables:{
         question: {},
         input: {},
-        operation: {0:3},
+        operation: [3],
         output: {},         
       },
       player: null,
@@ -659,12 +659,12 @@ describe('App', () => {
         state = game(mockup.gamestate, {});
         state = immutable.fromJS(state);
         state = state.toJS();
-        state.sections[0].decleared_variables.question = {0:1, 1:null, 2:null, 3:7};  //1 is 5, 7 is null
+        state.sections[0].decleared_variables.question = {0:1, 1:null, 3:7};  //1 is 5, 7 is null
         state.sections[0].decleared_variables.operation = {0:1, 1:7};
         state.sections[0].decleared_variables.output = {0:1, 1:3};  //3  is result, default vaule is null
         
         state.sections[1].decleared_variables.input = {0:1, 1:3};
-        state.sections[1].decleared_variables.operation = {0:1, 1:4}; //4 is 2
+        state.sections[1].decleared_variables.operation = {0:1, 4:4}; //4 is 2
         state.sections[1].decleared_variables.output = {0:1, 1:5}; //5 is result, default value is 5+2=7
         
         state.sections[2].decleared_variables.input = {0:1, 1:5};
@@ -681,8 +681,14 @@ describe('App', () => {
         //should remove the variable id from question variable array
         expect(state.variables[3].value).to.equal(null);
         state = game(state, actions.removeVariable(0,4,actions.VARIABLETYPE.QUESTION));
+        expect(state.sections[0].decleared_variables.question[3]).to.equal(null);
         expect(state.variables[3].value).to.equal(5);
         
+        state = game(state, actions.addVariable(0,5,actions.VARIABLETYPE.QUESTION));
+        expect(state.sections[0].decleared_variables.question[4]).to.equal(8);
+        state = game(state, actions.removeVariable(0,5,actions.VARIABLETYPE.QUESTION));
+        expect(state.sections[0].decleared_variables.question[4]).to.equal(null);
+
         //should remove all the variable ids from the following sections
         //and update reaults
         state = game(state, actions.removeVariable(0,1,actions.VARIABLETYPE.QUESTION));
@@ -699,7 +705,7 @@ describe('App', () => {
         
         //should remove all the variables from the following sections
         //and update results
-        state = game(state, actions.removeVariable(1,2,actions.VARIABLETYPE.OPERATION));
+        state = game(state, actions.removeVariable(1,5,actions.VARIABLETYPE.OPERATION));
         expect(state.variables[6].value).to.equal(10);
       });
       it('should remove the output variable and update result', () => {
@@ -723,7 +729,9 @@ describe('App', () => {
       it('should convert variable objects to array ', () => {
         //Remove an output variable (number)
         state = game(state, actions.updateGameState(game_state_firebase_mockup));
+        expect(state.sections[1].decleared_variables.operation).to.not.be.an('array');
         expect(state.sections[1].decleared_variables.operation[0]).to.equal(3);
+        expect(state.variables).to.not.be.an('array');
         expect(state.variables[8].value).to.equal(null);
       });
     });

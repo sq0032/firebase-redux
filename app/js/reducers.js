@@ -67,8 +67,8 @@ export const mockup = {
         decleared_variables:{
           question: {},
           input: {},
-          operation: {0: 3},
-          output: {}   
+          operation: {},
+          output: {}
         },
         player: null,
         question: null,
@@ -141,7 +141,11 @@ export const mockup = {
       2: {
         vid: 2,
         value: 6,
-        name: null
+        name: {
+          first: "Mark's",
+          middle: "existed",
+          last: "apples"
+        }
       },
       3: {
         vid: 3,
@@ -155,7 +159,11 @@ export const mockup = {
       4: {
         vid: 4,
         value: 2,
-        name: null
+        name: {
+          first: "Seid's",
+          middle: "existed",
+          last: "apples"
+        }
       },
       5: {
         vid: 5,
@@ -169,7 +177,11 @@ export const mockup = {
       6: {
         vid: 6,
         value: null,
-        name: null
+        name: {
+          first: "Tree's",
+          middle: "remained",
+          last: "apples"
+        }
       },
       7: {
         vid: 7,
@@ -438,8 +450,6 @@ export function section(state, action, vid){
     case TYPE.UPDATE_GAME_STATE:
       const section_index = state.index;
       const new_section = action.game_state.sections[section_index];
-      console.log(`new section - ${section_index}`);
-      console.log(new_section);
       var section = immutable.fromJS(state);
       //Update decleared_variables
       var variable_types = ['input','question','operation','output'];
@@ -449,14 +459,11 @@ export function section(state, action, vid){
           section = section.setIn(['decleared_variables',variable_types[i]], immutable.Map());
           continue;
         }
-        var variables = new_section.decleared_variables[variable_types[i]];
-      console.log('variables');
-      console.log(variables);        
-//        for(let key in new_section.decleared_variables[variable_types[i]]){
-//          variables[key] = new_section.decleared_variables[variable_types[i]][key];
-//        }
+        var variables = {};
+        for (let key in new_section.decleared_variables[variable_types[i]]){
+          variables[key] = new_section.decleared_variables[variable_types[i]][key]
+        }
         section = section.setIn(['decleared_variables',variable_types[i]], immutable.fromJS(variables));
-        console.log(section);
       }
       //Update player
       section = section.set('player', typeof(new_section.player) == 'undefined' ? null : new_section.player);
@@ -495,17 +502,13 @@ export function variables(state, action){
   switch (action.type){
     case TYPE.UPDATE_GAME_STATE:
       const new_variables = action.game_state.variables;
-      var new_variables_arr = [];
+      var new_variables_arr = {};
       for (let key in new_variables){
-        console.log(`key: ${key}`);
-        console.log(new_variables[key]);
-        console.log(typeof(new_variables[key].value == 'undefined'));
         new_variables_arr[key] = {};
         new_variables_arr[key].vid = new_variables[key].vid;
         new_variables_arr[key].value = typeof(new_variables[key].value) == 'undefined' ? null : new_variables[key].value;
         new_variables_arr[key].name = typeof(new_variables[key].name) == 'undefined' ? null : new_variables[key].name;
       }
-      console.log(new_variables_arr);
       return new_variables_arr;
     default:
       return state
@@ -515,9 +518,6 @@ export function computeResults(section_index, sections, variables){
     //Compute new result
     variables = immutable.fromJS(variables);
     variables = variables.toJS();
-//  console.log('variables')
-//  console.log(variables[1]);
-//  console.log(sections[0].decleared_variables);
     const begin_order = sections[section_index].order;
     //Go through each section by order
     for (let m = begin_order; m < sections.length; m++){
@@ -527,7 +527,6 @@ export function computeResults(section_index, sections, variables){
         //Compute new result
         var operation_id_arr = sections[n].decleared_variables.operation;
         var result_id = sections[n].default_variables.result[0];
-//        console.log(`result_id: ${result_id}`);
         variables[result_id].value = 0;
         for (let key in operation_id_arr){
           const operation = variables[operation_id_arr[key]];
@@ -541,7 +540,6 @@ export function computeResults(section_index, sections, variables){
         }
       }
     }
-//  console.log(variables[3]);
     return variables;
 }
 export function game(state = mockup.gamestate, action){
@@ -677,35 +675,35 @@ export function game(state = mockup.gamestate, action){
           var order = sections_state.getIn([s_i, 'order']);
           var vid = sections_state.getIn([s_i, 'decleared_variables', v_type, (l-1).toString()]);
           for (let i = order; i < sections_state.size; i++){
-            var temp_s_i = sections_state.findIndex(s => s.get('order')==i);
+            var temp_s_i = sections_state.findIndex(s => s.get('order') == i);
             var d_vs = sections_state.getIn([temp_s_i, 'decleared_variables']);
             if (i > order){
               //Remove variable from input array
-              for (let j = 0; j < d_vs.get('input').size; j++){
-                if ( d_vs.getIn(['input', j.toString()]) == vid ){
-                  sections_state = sections_state.setIn([temp_s_i, 'decleared_variables', 'input', j.toString()], null);
+              for (let key in d_vs.get('input').toJS()){
+                if ( d_vs.getIn(['input', key]) == vid ){
+                  sections_state = sections_state.setIn([temp_s_i, 'decleared_variables', 'input', key], null);
                 }
-              }
+              }              
             }
             if (i >= order){
               //Remove variable from question array
-              for (let j = 0; j < d_vs.get('question').size; j++){
-                if ( d_vs.getIn(['question', j.toString()]) == vid ){
-                  sections_state = sections_state.setIn([temp_s_i, 'decleared_variables', 'question', j.toString()], null);
+              for (let key in d_vs.get('question').toJS()){
+                if ( d_vs.getIn(['question', key]) == vid ){
+                  sections_state = sections_state.setIn([temp_s_i, 'decleared_variables', 'question', key], null);
                 }
               }
               //Remove variable from operation array
-              for (let j = 0; j < d_vs.get('operation').size; j++){
-                if ( d_vs.getIn(['operation', j.toString()]) == vid ){
-                  sections_state = sections_state.setIn([temp_s_i, 'decleared_variables', 'operation', j.toString()], null);
+              for (let key in d_vs.get('operation').toJS()){
+                if ( d_vs.getIn(['operation', key]) == vid ){
+                  sections_state = sections_state.setIn([temp_s_i, 'decleared_variables', 'operation', key], null);
                 }
-              }
+              }              
               //Remove variable from operation array
-              for (let j = 0; j < d_vs.get('output').size; j++){
-                if ( d_vs.getIn(['output', j.toString()]) == vid ){
-                  sections_state = sections_state.setIn([temp_s_i, 'decleared_variables', 'output', j.toString()], null);
+              for (let key in d_vs.get('output').toJS()){
+                if ( d_vs.getIn(['output', key]) == vid ){
+                  sections_state = sections_state.setIn([temp_s_i, 'decleared_variables', 'output', key], null);
                 }
-              }
+              }                    
             }
           }
           break;
@@ -717,29 +715,29 @@ export function game(state = mockup.gamestate, action){
             var d_vs = sections_state.getIn([temp_s_i, 'decleared_variables']);
             if (i > order){
               //Remove variable from input array
-              for (let j = 0; j < d_vs.get('input').size; j++){
-                if ( d_vs.getIn(['input', j.toString()]) == vid ){
-                  sections_state = sections_state.setIn([temp_s_i, 'decleared_variables', 'input', j.toString()], null);
+              for (let key in d_vs.get('input').toJS()){
+                if ( d_vs.getIn(['input', key]) == vid ){
+                  sections_state = sections_state.setIn([temp_s_i, 'decleared_variables', 'input', key], null);
                 }
               }
               //Remove variable from question array
-              for (let j = 0; j < d_vs.get('question').size; j++){
-                if ( d_vs.getIn(['question', j.toString()]) == vid ){
-                  sections_state = sections_state.setIn([temp_s_i, 'decleared_variables', 'question', j.toString()], null);
+              for (let key in d_vs.get('question').toJS()){
+                if ( d_vs.getIn(['question', key]) == vid ){
+                  sections_state = sections_state.setIn([temp_s_i, 'decleared_variables', 'question', key], null);
                 }
               }
             }
             if (i >= order){
               //Remove variable from operation array
-              for (let j = 0; j < d_vs.get('operation').size; j++){
-                if ( d_vs.getIn(['operation', j.toString()]) == vid ){
-                  sections_state = sections_state.setIn([temp_s_i, 'decleared_variables', 'operation', j.toString()], null);
+              for (let key in d_vs.get('operation').toJS()){
+                if ( d_vs.getIn(['operation', key]) == vid ){
+                  sections_state = sections_state.setIn([temp_s_i, 'decleared_variables', 'operation', key], null);
                 }
-              }
+              } 
               //Remove variable from operation array
-              for (let j = 0; j < d_vs.get('output').size; j++){
-                if ( d_vs.getIn(['output', j.toString()]) == vid ){
-                  sections_state = sections_state.setIn([temp_s_i, 'decleared_variables', 'output', j.toString()], null);
+              for (let key in d_vs.get('output').toJS()){
+                if ( d_vs.getIn(['output', key]) == vid ){
+                  sections_state = sections_state.setIn([temp_s_i, 'decleared_variables', 'output', key], null);
                 }
               }
             }
@@ -753,29 +751,29 @@ export function game(state = mockup.gamestate, action){
             var d_vs = sections_state.getIn([temp_s_i, 'decleared_variables']);
             if (i > order){
               //Remove variable from input array
-              for (let j = 0; j < d_vs.get('input').size; j++){
-                if ( d_vs.getIn(['input', j.toString()]) == vid ){
-                  sections_state = sections_state.setIn([temp_s_i, 'decleared_variables', 'input', j.toString()], null);
+              for (let key in d_vs.get('input').toJS()){
+                if ( d_vs.getIn(['input', key]) == vid ){
+                  sections_state = sections_state.setIn([temp_s_i, 'decleared_variables', 'input', key], null);
                 }
               }
               //Remove variable from question array
-              for (let j = 0; j < d_vs.get('question').size; j++){
-                if ( d_vs.getIn(['question', j.toString()]) == vid ){
-                  sections_state = sections_state.setIn([temp_s_i, 'decleared_variables', 'question', j.toString()], null);
+              for (let key in d_vs.get('question').toJS()){
+                if ( d_vs.getIn(['question', key]) == vid ){
+                  sections_state = sections_state.setIn([temp_s_i, 'decleared_variables', 'question', key], null);
                 }
               }
               //Remove variable from operation array
-              for (let j = 0; j < d_vs.get('operation').size; j++){
-                if ( d_vs.getIn(['operation', j.toString()]) == vid ){
-                  sections_state = sections_state.setIn([temp_s_i, 'decleared_variables', 'operation', j.toString()], null);
+              for (let key in d_vs.get('operation').toJS()){
+                if ( d_vs.getIn(['operation', key]) == vid ){
+                  sections_state = sections_state.setIn([temp_s_i, 'decleared_variables', 'operation', key], null);
                 }
-              }
+              } 
             }
             if (i >= order){
               //Remove variable from operation array
-              for (let j = 0; j < d_vs.get('output').size; j++){
-                if ( d_vs.getIn(['output', j.toString()]) == vid ){
-                  sections_state = sections_state.setIn([temp_s_i, 'decleared_variables', 'output', j.toString()], null);
+              for (let key in d_vs.get('output').toJS()){
+                if ( d_vs.getIn(['output', key]) == vid ){
+                  sections_state = sections_state.setIn([temp_s_i, 'decleared_variables', 'output', key], null);
                 }
               }
             }
@@ -804,7 +802,6 @@ export function game(state = mockup.gamestate, action){
         {sections: sections(state.sections, action)}
       );
     case TYPE.UPDATE_GAME_STATE:
-      console.log('REALTIME UPDATE');
       return Object.assign(
         {},
         state,

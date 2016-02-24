@@ -51,10 +51,10 @@ export default class Question extends Component {
     for (let i = 0; i < 6; i++){
       if (dec_vs.hasOwnProperty(i)){
         console.log(`i: ${i}`);
-        console.log(dec_vs);
+        console.log(dec_vs[i]);
         console.log(game.variables[dec_vs[i]]);
         let value = game.variables[dec_vs[i]].value ? game.variables[dec_vs[i]].value : 'null';
-        Values.push(<div style={style.item} key={i}>{value}</div>);
+        Values.push(<div style={style.item} key={i}>vid:{dec_vs[i]}, value:{value}</div>);
       } else {
         Values.push(<div style={style.item} key={i}>-</div>);
       }
