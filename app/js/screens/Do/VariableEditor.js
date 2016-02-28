@@ -67,11 +67,13 @@ export default class VariableEditor extends Component {
     const Editor = this.renderEditor();
     return (
       <div style={style.base}>
-        {line_num}:{Editor}
+        <div style={style.line}>{line_num}</div>
+        <div style={style.selector_td}>{Editor}</div>      
       </div>
     );    
   }
 }
+
 
 VariableEditor.propTypes = {
 //  line_num
@@ -83,7 +85,29 @@ VariableEditor.propTypes = {
 
 const style = {
   base: {
-//    border: '1px solid black',
-//    minHeight: '100px'
+//   background: 'url(http://i62.tinypic.com/15xvbd5.png) no-repeat 96% 0',
+   display: 'table-row',
+   height: '29px',
+   overflow: 'hidden',
+   width: '240px',
+                   
+   backgroundColor: 'rgb(239, 235, 171)',
+   borderBottom: '1px solid black',
   },
+  line: {
+    padding: '4px',
+    borderRight: '1px solid red',
+    display: 'table-cell'
+  },
+  selector_td: {
+    display: 'table-cell'
+  },
+  select: {
+   background: 'transparent',
+   border: 'none',
+   fontSize: '14px',
+   height: '29px',
+   padding: '5px',
+   width: '268px',
+  }
 }

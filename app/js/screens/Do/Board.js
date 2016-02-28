@@ -22,14 +22,17 @@ export default class Board extends Component {
     const {game, user} = this.props;
     return (
       <div style={style.base}>
-        {game.sections[user.cur_section].text}
-        <Input/>
         <Question/>
         <Operation/>
         <Result/>
-        <Output/>
       </div>
-    );    
+    );
+//    return (
+//      <div style={style.base}>
+//        <Input/>
+//        <Output/>
+//      </div>
+//    );
   }
 }
 
@@ -40,5 +43,7 @@ Board.propTypes = {
 const style = {
   base: {
     border: '1px solid red',
+    display: 'table',
+    width: '100%'
   },
 }

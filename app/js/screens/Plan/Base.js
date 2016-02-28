@@ -11,16 +11,6 @@ function select(state) {
 }
 @connect(select)
 export default class Plan extends Component {
-//  selectAnswer(event){
-//    console.log('selectAnswer');
-//    console.log(event.target.value);
-//    this.props.dispatch(selectAnswer());
-//  }
-//  assignPlayer(event){
-//    console.log('assignPlayer');
-//    console.log(event.target.value);
-//    
-//  }
   renderSections(){
     const {game, players} = this.props;
     const that = this;

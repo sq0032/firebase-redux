@@ -43,9 +43,7 @@ export default class Operation extends Component {
         Values.push(<div style={style.item} key={i}>-</div>);
       }
     }
-    return (
-      <div style={style.display}>{Values}</div>
-    );
+    return Values;
   }
   render() {
     const {game, user} = this.props;
@@ -53,9 +51,15 @@ export default class Operation extends Component {
     const Display = this.renderDisplay();
     return (
       <div style={style.base}>
-        <div style={style.label}>OPERATION</div>
-        <div style={style.selector}>{VariableEditors}</div>
-        {Display}
+        <div style={style.display}>{Display}</div>
+        <div style={style.label_wrap}>
+          <div style={style.label}>OPERATION</div>
+        </div>
+        <div style={style.selector}>
+          <div style={style.selector_table}>
+            {VariableEditors}
+          </div>
+        </div>
         <div style={{clear:'both'}}></div>
       </div>
     ); 
@@ -68,22 +72,37 @@ Operation.propTypes = {
 
 const style = {
   base: {
-    border: '1px solid black',
-    minHeight: '100px'
-  },
-  label: {
-//    border: '1px solid black',
-    width: '20%',
-    float: 'left',
-  },
-  selector: {
-//    border: '1px solid black',
-    width: '35%',
-    float: 'left',
+    minHeight: '100px',
+    width: '100%',
+    position: 'relative',
+    display: 'table-row'
   },
   display: {
-//    border: '1px solid black',
-    width: '35%',
-    float: 'left',
+    width: '40%',
+    display: 'table-cell',
+    verticalAlign: 'middle',
+    padding: '20px'
+  },
+  label_wrap:{
+    display: 'table-cell',
+    verticalAlign: 'middle',
+    textAlign: 'center'
+  },
+  selector: {
+    width: '40%',
+    display: 'table-cell',
+    padding: '20px'
+  },
+  selector_table: {
+    display: 'table'
+  },
+  label: {
+    border: '1px solid black',
+    borderRadius: '50%',
+    lineHeight: '100px',
+    textAlign: 'center',
+    width: '100px',
+    height: '100px',
+    display: 'inline-block'
   },
 }

@@ -43,21 +43,6 @@ export default class VariableSelector extends Component {
         );
       }
     }
-//    const InputOptions = game.sections[user.cur_section][cate][type].map((vid)=>{
-//      if (!vid){return null;}
-//      if (typeof(game.variables[vid].name) == 'undefined'){
-//        return (
-//          <option value={vid} key={type+vid}>??? ??? ???</option>     
-//        );
-//      }      
-//      const name = game.variables[vid].name;
-//      let first = name ? (name.first ? name.first : '???') : '???';
-//      let middle = name ? (name.middle ? name.middle : '???') : '???';
-//      let last = name ? (name.last ? name.last : '???') : '???';        
-//      return (
-//        <option value={vid} key={type+vid}>{first} {middle} {last}</option>
-//      );
-//    });
     return InputOptions;
   }
   renderSelector() {
@@ -77,10 +62,10 @@ export default class VariableSelector extends Component {
         QuestionDivider,
         QuestionOptions,
         ResultDivider,
-        ResultOptions            
+        ResultOptions
       ]
       return (
-        <select onChange={this.handleSelectVariable.bind(this)} value={dec_vid ? dec_vid : 'default'}>
+        <select style={style.select} onChange={this.handleSelectVariable.bind(this)} value={dec_vid ? dec_vid : 'default'}>
           {Options}
         </select>
       );
@@ -90,7 +75,8 @@ export default class VariableSelector extends Component {
     const Selector = this.renderSelector();
     return (
       <div style={style.base}>
-        {line_num}:{Selector}
+        <div style={style.line}>{line_num}</div>
+        <div style={style.selector_td}>{Selector}</div>
       </div>
     );
   }
@@ -102,7 +88,29 @@ VariableSelector.propTypes = {
 
 const style = {
   base: {
-//    border: '1px solid black',
-//    minHeight: '100px'
+//   background: 'url(http://i62.tinypic.com/15xvbd5.png) no-repeat 96% 0',
+   display: 'table-row',
+   height: '29px',
+   overflow: 'hidden',
+   width: '240px',
+                   
+   backgroundColor: 'rgb(239, 235, 171)',
+   borderBottom: '1px solid black',
   },
+  line: {
+    padding: '4px',
+    borderRight: '1px solid red',
+    display: 'table-cell'
+  },
+  selector_td: {
+    display: 'table-cell'
+  },
+  select: {
+   background: 'transparent',
+   border: 'none',
+   fontSize: '14px',
+   height: '29px',
+   padding: '5px',
+   width: '268px',
+  }
 }

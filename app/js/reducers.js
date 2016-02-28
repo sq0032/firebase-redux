@@ -844,7 +844,7 @@ export function user(state = user_dic, action){
   }  
 }
 export const gameScreens_init = {
-  cur_screen: 2,
+  cur_screen: 3,
   enable_screens: {
     0: true,   //Intro
     1: false,  //Read

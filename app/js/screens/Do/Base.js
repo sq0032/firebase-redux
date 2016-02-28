@@ -28,7 +28,7 @@ export default class Do extends Component {
   render() {
     const SectionButtons = this.renderSectionButtons();
     return (
-      <div>
+      <div style={style.base}>
         <div style={style.section_buttons}>
           {SectionButtons}
         </div>
@@ -44,11 +44,21 @@ Do.propTypes = {
 }
 
 const style = {
+  base: {
+    position: 'relative',
+    width: '1024px',
+    marginLeft: 'auto',
+    marginRight: 'auto',
+  },
   section: {
     position: 'absolute',
-    top: '50px',
-    left: '150px',
-    right: '20px',
+    top: '120px',
+    left: '0px',
+    right: '0px',
     border: '1px solid black',
+  },
+  section_buttons :{
+    textAlign: 'center',
+//    position: 'absolute',
   }
 }

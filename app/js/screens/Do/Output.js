@@ -64,9 +64,9 @@ export default class Output extends Component {
     const Display = this.renderDisplay();
     return (
       <div style={style.base}>
+        {Display}
         <div style={style.label}>OUTPUT</div>
         <div style={style.selector}>{VariableEditors}</div>
-        {Display}
         <div style={{clear:'both'}}></div>
       </div>
     );  
@@ -80,20 +80,25 @@ Output.propTypes = {
 const style = {
   base: {
     border: '1px solid black',
-    minHeight: '100px'
+    minHeight: '100px',
+    display: 'table-row'
   },
   label: {
-//    border: '1px solid black',
-    width: '20%',
+    border: '1px solid black',
+    borderRadius: '50%',
+    lineHeight: '100px',
+    textAlign: 'center',
+    width: '100px',
+    height: '100px',
     float: 'left',
   },
   selector: {
-//    border: '1px solid black',
+    border: '1px solid black',
     width: '35%',
-    float: 'left',
+    float: 'right',
   },
   display: {
-//    border: '1px solid black',
+    border: '1px solid black',
     width: '35%',
     float: 'left',
   },
