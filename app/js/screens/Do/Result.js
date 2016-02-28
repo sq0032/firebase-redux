@@ -62,7 +62,7 @@ export default class Result extends Component {
         {Selector}
         <div style={{clear:'both'}}></div>
       </div>
-    );        
+    );
   }
 }
 

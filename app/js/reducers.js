@@ -50,7 +50,12 @@ export const mockup = {
         question: null,
         answer: null,
         watcher: {},
-        num_outputs: 0
+        num_outputs: 0,
+        is_input_opened: false,
+        is_question_opened: false,
+        is_operation_opened: false,
+        is_result_opened: false,
+        is_output_opened: false,
       },
       {
         index: 1,
@@ -74,7 +79,12 @@ export const mockup = {
         question: null,
         answer: null,
         watcher: {},
-        num_outputs: 0
+        num_outputs: 0,
+        is_input_opened: false,
+        is_question_opened: false,
+        is_operation_opened: false,
+        is_result_opened: false,
+        is_output_opened: false,        
       },
       {
         index: 2,
@@ -94,7 +104,12 @@ export const mockup = {
         question: null,
         answer: null,
         watcher: {},
-        num_outputs: 0
+        num_outputs: 0,
+        is_input_opened: false,
+        is_question_opened: false,
+        is_operation_opened: false,
+        is_result_opened: false,
+        is_output_opened: false,        
       }
     ],
     answers: [
@@ -109,19 +124,21 @@ export const mockup = {
       {index: 9, text: "On the tree # stars remained"}
     ],
     varable_names:{
-      first: [
-        {index: 1, text: "Mark's"},
-        {index: 2, text: "Seid's"},
-      ],
-      middle: [
-        {index: 1, text: "existing"},
-        {index: 2, text: "total"},
-        {index: 3, text: "colleted"},
-      ],
-      last: [
-        {index: 1, text: "apples"},
-        {index: 2, text: "chairs"},
-      ]
+      first: {
+        0: {text: "Mark's"},
+        1: {text: "Seid's"},
+        2: {text: "Tree's"}
+      },
+      middle: {
+        0: {text: "existing"},
+        1: {text: "total"},
+        2: {text: "colleted"},
+        3: {text: "remained"}
+      },
+      last: {
+        0: {text: "apples"},
+        1: {text: "chairs"}
+      }
     },
     variables: {
       0: {
@@ -133,54 +150,54 @@ export const mockup = {
         vid: 1,
         value: 5,
         name: {
-          first: "Mark's",
-          middle: "colleted",
-          last: "apples"
+          first: 0,
+          middle: 2,
+          last: 0
         }
       },
       2: {
         vid: 2,
         value: 6,
         name: {
-          first: "Mark's",
-          middle: "existed",
-          last: "apples"
+          first: 0,
+          middle: 0,
+          last: 0
         }
       },
       3: {
         vid: 3,
         value: null,
         name: {
-          first: "Mark's",
-          middle: "total",
-          last: "apples"
+          first: 0,
+          middle: 1,
+          last: 0
         }
       },
       4: {
         vid: 4,
         value: 2,
         name: {
-          first: "Seid's",
-          middle: "existed",
-          last: "apples"
+          first: 1,
+          middle: 0,
+          last: 0
         }
       },
       5: {
         vid: 5,
         value: null,
         name: {
-          first: "Seid's",
-          middle: "total",
-          last: "apples"
+          first: 1,
+          middle: 1,
+          last: 0
         }
       },
       6: {
         vid: 6,
         value: null,
         name: {
-          first: "Tree's",
-          middle: "remained",
-          last: "apples"
+          first: 2,
+          middle: 3,
+          last: 0
         }
       },
       7: {
