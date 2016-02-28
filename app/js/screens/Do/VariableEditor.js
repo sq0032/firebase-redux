@@ -26,38 +26,72 @@ export default class VariableEditor extends Component {
     const section_id = user.cur_section;
     dispatch(removeAndUpdateVariable(section_id, line_num, type));
   }
+  renderNameOptions(name_section) {
+    const {game} = this.props;
+    var NameOptions = [];
+    NameOptions.push(
+      <option value={null} key={null}>-</option>
+    );
+    console.log(`name_section: ${game.variable_names[name_section][0]}`);
+    for(let key in game.variable_names[name_section]){
+      console.log(key);
+      NameOptions.push(
+        <option value={key} key={key}>{game.variable_names[name_section][key]}</option>
+      );
+    }
+    return NameOptions
+  }
+  renderNameSelector() {
+    const {dec_vid, game} = this.props;
+    const first_name_id = game.variables[dec_vid].name.first;
+    const middle_name_id = game.variables[dec_vid].name.middle;
+    const last_name_id = game.variables[dec_vid].name.last;
+    
+    const FirstNameOptions = this.renderNameOptions('first');
+    const MiddleNameOptions = this.renderNameOptions('middle');
+    const LastNameOptions = this.renderNameOptions('last');
+    
+    const FirstNameSelector = (
+      <select
+        style={style.select}
+        value={first_name_id}
+      >{FirstNameOptions}</select>
+    );
+    const MiddleNameSelector = (
+      <select
+        style={style.select}
+        value={middle_name_id}
+      >{MiddleNameOptions}</select>
+    );
+    const LastNameSelector = (
+      <select
+        style={style.select}
+        value={last_name_id}
+      >{LastNameOptions}</select>
+    );
+    
+    return (
+      <div>
+        {FirstNameSelector}
+        {MiddleNameSelector}
+        {LastNameSelector}
+      </div>
+    )
+  }
   renderEditor() {
     const {def_vid, dec_vid, line_num, type, user, game} = this.props;
     if (dec_vid == null){
       return (
-        <button 
+        <button
+          style={style.button}
           onClick={this.handleAddVariable.bind(this)}>
-          Add variable
         </button>
       );
     } else {
-      if (typeof(game.variables[dec_vid].name) == 'undefined'){
-        return (
-          <span>
-            ???/???/???
-            <button 
-              onClick={this.handleRemoveVariable.bind(this)}>
-              Romove
-            </button>
-          </span>        
-        );
-      }
-      const name = game.variables[dec_vid].name;
-      let first = name ? (name.first ? name.first : '???') : '???';
-      let middle = name ? (name.middle ? name.middle : '???') : '???';
-      let last = name ? (name.last ? name.last : '???') : '???';
+      const NameSelector = this.renderNameSelector();
       return (
         <span>
-          {first}/{middle}/{last}
-          <button 
-            onClick={this.handleRemoveVariable.bind(this)}>
-            Romove
-          </button>
+          {NameSelector}
         </span>
       );
     }
@@ -68,7 +102,8 @@ export default class VariableEditor extends Component {
     return (
       <div style={style.base}>
         <div style={style.line}>{line_num}</div>
-        <div style={style.selector_td}>{Editor}</div>      
+        <div style={style.selector_td}>{Editor}</div>     
+        <div style={style.remove} onClick={this.handleRemoveVariable.bind(this)}>x</div>
       </div>
     );    
   }
@@ -102,12 +137,24 @@ const style = {
   selector_td: {
     display: 'table-cell'
   },
+  remove: {
+    display: 'table-cell',
+    color: 'red'
+  },
   select: {
-   background: 'transparent',
-   border: 'none',
-   fontSize: '14px',
-   height: '29px',
-   padding: '5px',
-   width: '268px',
+    background: 'transparent',
+    border: 'none',
+    fontSize: '14px',
+//    height: '29px',
+//    padding: '5px',
+//    width: '268px',
+  },
+  button: {
+    background: 'transparent',
+    border: 'none',
+    fontSize: '14px',
+//    height: '29px',
+    padding: '5px',
+    width: '268px',    
   }
 }

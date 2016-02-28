@@ -21,7 +21,7 @@ export const TYPE = {
   DO_ADD_VARIABLE: 'DO_ADD_VARIABLE',
   DO_REMOVE_VARIABLE: 'DO_REMOVE_VARIABLE',
   DO_SELECT_VARIABLE: 'DO_SELECT_VARIABLE',
-  
+  DO_NAME_VARIABLE: 'DO_NAME_VARIABLE',
   DO_REMOVE_OUTPUT: 'DO_REMOVE_OUTPUT',
   
   //REALTIME
@@ -158,6 +158,15 @@ export function selectVariable(section_index, line_num, variable_type, vid){
     section_index: section_index,
     line_num: line_num,
     variable_type: variable_type,
+    vid: vid
+  }
+}
+export function nameVariable(first_name_id, middle_name_id, last_name_id, vid){
+  return {
+    type: TYPE.DO_NAME_VARIABLE,
+    first_name_id: first_name_id,
+    middle_name_id: middle_name_id,
+    last_name_id: last_name_id,
     vid: vid
   }
 }

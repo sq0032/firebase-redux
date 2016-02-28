@@ -27,8 +27,8 @@ render(
   rootElement
 )
 
-const rootRef = new Firebase("https://blazing-fire-2123.firebaseio.com/");
-rootRef.child("game").on("value", snapshot => {
-//  console.log(snapshot.val());
-  store.dispatch(updateGameState(snapshot.val()));
-});
+//const rootRef = new Firebase("https://blazing-fire-2123.firebaseio.com/");
+//rootRef.child("game").on("value", snapshot => {
+////  console.log(snapshot.val());
+//  store.dispatch(updateGameState(snapshot.val()));
+//});

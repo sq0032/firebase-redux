@@ -77,6 +77,7 @@ export default class VariableSelector extends Component {
       <div style={style.base}>
         <div style={style.line}>{line_num}</div>
         <div style={style.selector_td}>{Selector}</div>
+        <div style={style.remove}>x</div>
       </div>
     );
   }
@@ -105,6 +106,10 @@ const style = {
   selector_td: {
     display: 'table-cell'
   },
+  remove: {
+    display: 'table-cell',
+    color: 'red'
+  },  
   select: {
    background: 'transparent',
    border: 'none',

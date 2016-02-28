@@ -123,21 +123,21 @@ export const mockup = {
       {index: 8, text: "On the tree # charis remained"},
       {index: 9, text: "On the tree # stars remained"}
     ],
-    varable_names:{
+    variable_names:{
       first: {
-        0: {text: "Mark's"},
-        1: {text: "Seid's"},
-        2: {text: "Tree's"}
+        0: "Mark's",
+        1: "Seid's",
+        2: "Tree's"
       },
       middle: {
-        0: {text: "existing"},
-        1: {text: "total"},
-        2: {text: "colleted"},
-        3: {text: "remained"}
+        0: "existing",
+        1: "total",
+        2: "colleted",
+        3: "remained"
       },
       last: {
-        0: {text: "apples"},
-        1: {text: "chairs"}
+        0: "apples",
+        1: "chairs"
       }
     },
     variables: {
@@ -515,8 +515,30 @@ export function sections(state, action, vid){
       return state
   }
 }
+export function variable(state, action){
+  switch (action.type){
+    case TYPE.DO_NAME_VARIABLE:
+      const name = {
+        first: action.first_name_id,
+        middle: action.middle_name_id,
+        last: action.last_name_id
+      };
+      return {...state, name: name};
+  }
+}
 export function variables(state, action){
   switch (action.type){
+    case TYPE.DO_NAME_VARIABLE:
+      var variables = {};
+      for (let key in state){
+        if (key == action.vid){
+          variables[key] = variable(state[key], action);
+        } else {
+          variables[key] = state[key];
+        }
+      }
+      return variables;
+      break;
     case TYPE.UPDATE_GAME_STATE:
       const new_variables = action.game_state.variables;
       var new_variables_arr = {};
@@ -649,7 +671,11 @@ export function game(state = mockup.gamestate, action){
             variables_state[action.variable_id] = {
               vid: action.variable_id, 
               value: null, 
-              name: null
+              name: {
+                first: null,
+                middle: null,
+                last: null
+              }
             };
           }
           sections_state = sections(state.sections, action);
@@ -680,6 +706,13 @@ export function game(state = mockup.gamestate, action){
         {variables: variables_state},
         {sections: sections_state}
       );
+    case TYPE.DO_NAME_VARIABLE:
+      return Object.assign(
+        {},
+        state,
+        {variables: variables(state.variables, action)}
+      );
+      break;
     case TYPE.DO_REMOVE_VARIABLE:
       s_i = action.section_index;
       l = action.line_num;

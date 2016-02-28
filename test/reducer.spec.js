@@ -177,7 +177,7 @@ const mockup_dic = {
   }
 };
 
-const mockup = {
+export const mockup = {
   gameConfig: {
     max_num_outputs: 4
   },  
@@ -194,6 +194,9 @@ const mockup = {
   },
   //gameState reducer
   gamestate: {
+    config: {
+      max_num_outputs: 4
+    },    
     statement: {
       text: "There were 10 apples on the tree on day 1",
     },
@@ -221,7 +224,12 @@ const mockup = {
         question: null,
         answer: null,
         watcher: {},
-        num_outputs: 0
+        num_outputs: 0,
+        is_input_opened: false,
+        is_question_opened: false,
+        is_operation_opened: false,
+        is_result_opened: false,
+        is_output_opened: false,
       },
       {
         index: 1,
@@ -238,14 +246,19 @@ const mockup = {
         decleared_variables:{
           question: {},
           input: {},
-          operation: {0: 3},
-          output: {}   
+          operation: {},
+          output: {}
         },
         player: null,
         question: null,
         answer: null,
         watcher: {},
-        num_outputs: 0
+        num_outputs: 0,
+        is_input_opened: false,
+        is_question_opened: false,
+        is_operation_opened: false,
+        is_result_opened: false,
+        is_output_opened: false,        
       },
       {
         index: 2,
@@ -265,7 +278,12 @@ const mockup = {
         question: null,
         answer: null,
         watcher: {},
-        num_outputs: 0
+        num_outputs: 0,
+        is_input_opened: false,
+        is_question_opened: false,
+        is_operation_opened: false,
+        is_result_opened: false,
+        is_output_opened: false,        
       }
     ],
     answers: [
@@ -280,19 +298,21 @@ const mockup = {
       {index: 9, text: "On the tree # stars remained"}
     ],
     varable_names:{
-      first: [
-        {index: 1, text: "Mark's"},
-        {index: 2, text: "Seid's"},
-      ],
-      middle: [
-        {index: 1, text: "existing"},
-        {index: 2, text: "total"},
-        {index: 3, text: "colleted"},
-      ],
-      last: [
-        {index: 1, text: "apples"},
-        {index: 2, text: "chairs"},
-      ]
+      first: {
+        0: {text: "Mark's"},
+        1: {text: "Seid's"},
+        2: {text: "Tree's"}
+      },
+      middle: {
+        0: {text: "existing"},
+        1: {text: "total"},
+        2: {text: "colleted"},
+        3: {text: "remained"}
+      },
+      last: {
+        0: {text: "apples"},
+        1: {text: "chairs"}
+      }
     },
     variables: {
       0: {
@@ -304,43 +324,55 @@ const mockup = {
         vid: 1,
         value: 5,
         name: {
-          first: "Mark's",
-          middle: "colleted",
-          last: "apples"
+          first: 0,
+          middle: 2,
+          last: 0
         }
       },
       2: {
         vid: 2,
         value: 6,
-        name: null
+        name: {
+          first: 0,
+          middle: 0,
+          last: 0
+        }
       },
       3: {
         vid: 3,
         value: null,
         name: {
-          first: "Mark's",
-          middle: "total",
-          last: "apples"
+          first: 0,
+          middle: 1,
+          last: 0
         }
       },
       4: {
         vid: 4,
         value: 2,
-        name: null
+        name: {
+          first: 1,
+          middle: 0,
+          last: 0
+        }
       },
       5: {
         vid: 5,
         value: null,
         name: {
-          first: "Seid's",
-          middle: "total",
-          last: "apples"
+          first: 1,
+          middle: 1,
+          last: 0
         }
       },
       6: {
         vid: 6,
         value: null,
-        name: null
+        name: {
+          first: 2,
+          middle: 3,
+          last: 0
+        }
       },
       7: {
         vid: 7,
@@ -593,6 +625,7 @@ describe('App', () => {
       let state = null;
       beforeEach(()=>{
         state = game(mockup.gamestate, {});
+        state.sections[1].decleared_variables.operation = {0: 3};
       });
       it('should add the question variable', () => {
         //Adding an pre-decleared variable
@@ -605,7 +638,6 @@ describe('App', () => {
         //should create a new variable and add the id into question variable array
         var length = Object.keys(state.variables).length;
         vid = Math.max(...Object.keys(state.variables));
-//        vid = state.variables[length-1].vid;
         state = game(state, actions.addVariable(0, 5, actions.VARIABLETYPE.QUESTION, undefined));
         vid = vid+1;
         expect(Object.keys(state.variables)).to.have.length(length+1);
@@ -650,6 +682,18 @@ describe('App', () => {
         state = game(state, actions.addVariable(0, 1, actions.VARIABLETYPE.OUTPUT, vid));
         expect(state.sections[0].decleared_variables.output[0]).to.equal(vid);
         expect(state.sections[1].decleared_variables.input[0]).to.equal(vid);
+      });
+    });
+    describe('When player name a variable', () => {
+      let state = null;
+      beforeEach(()=>{
+        state = game(mockup.gamestate, {});
+      });      
+      it('should change variable name', () => {
+        state = game(state, actions.nameVariable(1, 2, 1, 7));
+        expect(state.variables[7].name.first).to.equal(1);
+        expect(state.variables[7].name.middle).to.equal(2);
+        expect(state.variables[7].name.last).to.equal(1);
       });
     });
     describe('When player removes a variable', () => {
