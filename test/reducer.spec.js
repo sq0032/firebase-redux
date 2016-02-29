@@ -218,6 +218,7 @@ export const mockup = {
           input: {},
           question: {},
           operation: {},
+          result: {},
           output: {}
         },
         player: null,
@@ -248,6 +249,7 @@ export const mockup = {
           question: {},
           input: {},
           operation: {},
+          result: {},
           output: {}
         },
         player: null,
@@ -274,6 +276,7 @@ export const mockup = {
           question: {},
           input: {},
           operation: {},
+          result: {},
           output: {}          
         },
         player: null,
@@ -289,17 +292,17 @@ export const mockup = {
         is_output_opened: false,        
       }
     ],
-    answers: [
-      {index: 1, text: "Mark got # apples"},
-      {index: 2, text: "Mark got # chairs"},
-      {index: 3, text: "Mark got # starts"},
-      {index: 4, text: "Seid got # apples"},
-      {index: 5, text: "Seid got # charis"},
-      {index: 6, text: "Seid got # stars"},
-      {index: 7, text: "On the tree # apples remained"},
-      {index: 8, text: "On the tree # charis remained"},
-      {index: 9, text: "On the tree # stars remained"}
-    ],
+    answers: {
+      0: "Mark got # apples",
+      1: "Mark got # chairs",
+      2: "Mark got # starts",
+      3: "Seid got # apples",
+      4: "Seid got # charis",
+      5: "Seid got # stars",
+      6: "On the tree # apples remained",
+      7: "On the tree # charis remained",
+      8: "On the tree # stars remained",
+    },
     varable_names:{
       first: {
         0: {text: "Mark's"},
@@ -385,8 +388,8 @@ export const mockup = {
           middle: null,
           last: null
         }
-      }
-    }.
+      },
+    },
     operations: {
       0: 'ADDITION',
       1: 'SUBTRACTION'
@@ -638,7 +641,7 @@ describe('App', () => {
         state = game(mockup.gamestate, {});
         state.sections[1].decleared_variables.operation = {0: 3};
       });
-      it('should add the question variable', () => {
+      it('should declear the question variable', () => {
         //Adding an pre-decleared variable
         //should add the variable id into question variable array
         var vid = state.sections[0].default_variables.question[1];
@@ -685,6 +688,24 @@ describe('App', () => {
         expect(state.sections[0].decleared_variables.operation[2]).to.equal(vid);
         expect(result.value).to.equal(null);
       });
+      it('should declear result variable', () => {
+        //Adding an validated variable (number)
+        //Should add the variable id into operation variable array and update answer value (number)`
+        
+        //Add the first variable
+        state = game(state, actions.addVariable(0, 4, actions.VARIABLETYPE.RESULT, undefined));
+        var result_id = state.sections[0].decleared_variables.result[3];
+        var result = state.variables[result_id];
+        expect(result_id).to.equal(8);
+        expect(result.value).to.equal(null);
+        expect(result.name.first).to.equal(null);
+        
+        //Add the second variable
+        const vid = 3;
+        state = game(state, actions.addVariable(0, 1, actions.VARIABLETYPE.RESULT, vid));
+        result = state.variables[result_id];
+        expect(state.sections[0].decleared_variables.result[0]).to.equal(vid);
+      });      
       it('should select the output variable', () => {
         //Adding a variable
         //Should add the variable id into output variable array,
@@ -747,19 +768,22 @@ describe('App', () => {
         state = state.toJS();
         state.sections[0].decleared_variables.question = {0:1, 1:null, 3:7};  //1 is 5, 7 is null
         state.sections[0].decleared_variables.operation = {0:1, 1:7};
-        state.sections[0].decleared_variables.output = {0:1, 1:3};  //3  is result, default vaule is null
+        state.sections[0].decleared_variables.result = {0:3};  //3 is result, default vaule is null
+        state.sections[0].decleared_variables.output = {0:1, 1:3};
         
         state.sections[1].decleared_variables.input = {0:1, 1:3};
         state.sections[1].decleared_variables.operation = {0:1, 4:4}; //4 is 2
-        state.sections[1].decleared_variables.output = {0:1, 1:5}; //5 is result, default value is 5+2=7
+        state.sections[1].decleared_variables.result = {0:5}; //5 is result, default value is 5+2=7
+        state.sections[1].decleared_variables.output = {0:1, 1:5, 2:3};
         
-        state.sections[2].decleared_variables.input = {0:1, 1:5};
-        state.sections[2].decleared_variables.operation = {0:1, 1:5}; //result is 5+7=12
+        state.sections[2].decleared_variables.input = {0:1, 1:5, 2:3};
+        state.sections[2].decleared_variables.operation = {0:1, 1:5, 2:3}; 
+        state.sections[2].decleared_variables.result = {0:6}; //result is 5+7+null=null
         state.variables = computeResults(0, state.sections, state.variables);
       });
       
-      it('should output 12 as initial mocked result', () => {
-        expect(state.variables[6].value).to.equal(12);
+      it('should output nulls as initial mocked result', () => {
+        expect(state.variables[6].value).to.equal(null);
         expect(state.variables[3].value).to.equal(null);
       });
       it('should remove the question variable and update result', () => {
@@ -792,7 +816,15 @@ describe('App', () => {
         //should remove all the variables from the following sections
         //and update results
         state = game(state, actions.removeVariable(1,5,actions.VARIABLETYPE.OPERATION));
-        expect(state.variables[6].value).to.equal(10);
+        expect(state.variables[6].value).to.equal(15);
+      });
+      it('should remove the result variable and update result', () => {
+        //Remove an pre-decleared variable
+        //should remove the variable id from question variable array
+        expect(state.variables[3].value).to.equal(null);
+        state = game(state, actions.removeVariable(0,1,actions.VARIABLETYPE.RESULT));
+        expect(state.sections[0].decleared_variables.result[0]).to.equal(null);
+        expect(state.variables[6].value).to.equal(12);
       });
       it('should remove the output variable and update result', () => {
         //Remove an output variable (number)
@@ -802,7 +834,7 @@ describe('App', () => {
         //should also remove all the variables from the following sections
         //and update results
         expect(state.sections[2].decleared_variables.input[0]).to.equal(null);
-        expect(state.variables[6].value).to.equal(2);
+        expect(state.variables[6].value).to.equal(null);
       });
     });
   });

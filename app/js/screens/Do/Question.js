@@ -78,6 +78,7 @@ export default class Question extends Component {
             <div style={style.label}>?</div>
           </div>
           <div style={style.selector}>
+            <div style={style.selector_header}>QUESTION</div>
             <div style={style.selector_table}>
               {VariableEditors}
             </div>
@@ -135,7 +136,10 @@ const style = {
   },
   selector_table: {
     display: 'table'
-  },  
+  },
+  selector_header: {
+    
+  },
   label: {
     border: '1px solid black',
     borderRadius: '50%',

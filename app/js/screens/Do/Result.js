@@ -1,6 +1,7 @@
 import React, { Component, PropTypes } from 'react';
-import { switchSection } from '../../actions';
+import { openSection, SECTIONTYPE } from '../../actions';
 import { connect } from 'react-redux';
+import VariableEditor from './VariableEditor';
 
 function select(state) {
   return {
@@ -12,26 +13,41 @@ function select(state) {
 
 @connect(select)
 export default class Result extends Component {
+  constructor(props){
+    super(props);
+    this.state = {
+      is_mouse_hover_label: false
+    }
+  }
+  handleOpenSection() {
+    const {dispatch, user} = this.props;
+    dispatch(openSection(user.cur_section, SECTIONTYPE.RESULT));
+  }
+  handleMouseEnterLabel() {
+    this.setState({is_mouse_hover_label:true});
+  }
+  handleMouseLeaveLabel() {
+    this.setState({is_mouse_hover_label:false});
+  }  
   renderSelector() {
     const {user, game} = this.props;
-    const cur_section = user.cur_section;
-    const var_ids = game.sections[cur_section].default_variables.result;
-    var Options = [];
-    for (let key in var_ids){
-      const name = game.variables[var_ids[key]].name;
-      let first = name ? (name.first ? name.first : '???') : '???';
-      let middle = name ? (name.middle ? name.middle : '???') : '???';
-      let last = name ? (name.last ? name.last : '???') : '???';      
-      Options.push(
-        <div key={var_ids[key]}>
-          {var_ids[key]}:{first}/{middle}/{last}
-        </div>
+    const def_vs = game.sections[user.cur_section].default_variables.result;
+    const dec_vs = game.sections[user.cur_section].decleared_variables.result;
+    var VariableEditors = [];
+    for (let i = 0; i < 6; i++){
+      let def_vid = def_vs.hasOwnProperty(i) ? def_vs[i] : null;
+      let dec_vid = dec_vs.hasOwnProperty(i) ? dec_vs[i] : null;
+      VariableEditors.push(
+        <VariableEditor 
+          key={i} 
+          line_num={i+1}
+          def_vid={def_vid}
+          dec_vid={dec_vid}
+          type='result'/>
       );
     }
-    return (
-      <div style={style.selector}>{Options}</div>
-    );
-  }
+    return VariableEditors;
+  }  
   renderDisplay() {
     const {user, game} = this.props;
     const cur_section = user.cur_section;
@@ -51,18 +67,42 @@ export default class Result extends Component {
   }  
   render() {
     const {game, user} = this.props;
-    const Selector = this.renderSelector();
-    const Display = this.renderDisplay();
-    return (
-      <div style={style.base}>
-        {Display}
-        <div style={style.label_wrap}>
-          <div style={style.label}>RESULT</div>
+    if (game.sections[user.cur_section].is_result_opened){
+      const VariableEditors = this.renderSelector();
+      const Display = this.renderDisplay();
+      return (
+        <div style={style.base}>
+          <div style={style.display}>{Display}</div>
+          <div style={style.label_wrap}>
+            <div style={style.label}>!</div>
+          </div>
+          <div style={style.selector}>
+            <div style={style.selector_header}>RESULT</div>
+            <div style={style.selector_table}>
+              {VariableEditors}
+            </div>
+          </div>
+          <div style={{clear:'both'}}></div>
         </div>
-        {Selector}
-        <div style={{clear:'both'}}></div>
-      </div>
-    );
+      );    
+    } else {
+      const hover_label = this.state.is_mouse_hover_label ? style.label_hover : null;
+      return (
+        <div style={style.base}>
+          <div style={style.display}></div>
+          <div style={style.label_wrap}>
+            <div style={{...style.label, ...hover_label}}
+              onClick={this.handleOpenSection.bind(this)}
+              onMouseEnter={this.handleMouseEnterLabel.bind(this)}
+              onMouseLeave={this.handleMouseLeaveLabel.bind(this)}>
+            </div>
+          </div>
+          <div style={style.selector}>
+          </div>
+          <div style={{clear:'both'}}></div>
+        </div>
+      );
+    }
   }
 }
 
@@ -93,13 +133,21 @@ const style = {
     display: 'table-cell',
     padding: '20px'
   },
+  selector_table: {
+    display: 'table'
+  },  
   label: {
     border: '1px solid black',
     borderRadius: '50%',
+    fontSize: '400%',
     lineHeight: '100px',
     textAlign: 'center',
     width: '100px',
     height: '100px',
     display: 'inline-block'
   },
+  label_hover:{
+    backgroundColor: 'yellow',
+    cursor: 'pointer'
+  },  
 }

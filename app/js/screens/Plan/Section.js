@@ -44,9 +44,11 @@ export default class Section extends Component {
     const {section_index, game} = this.props;
     const that = this;
     
-    var AnswerOptions = game.answers.map(answer=>(
-      <option key={answer.index} value={answer.index}>{answer.text}</option>
-    ));
+    var AnswerOptions = [];
+    for (let key in game.answers){
+      AnswerOptions.push(<option key={key} value={key}>{game.answers[key]}</option>);
+      
+    }
     AnswerOptions = [
       (<option key={0} value="select">Select an resonable answer</option>),
       AnswerOptions
