@@ -23,6 +23,8 @@ export const TYPE = {
   DO_SELECT_VARIABLE: 'DO_SELECT_VARIABLE',
   DO_NAME_VARIABLE: 'DO_NAME_VARIABLE',
   DO_REMOVE_OUTPUT: 'DO_REMOVE_OUTPUT',
+  DO_OPEN_SECTION: 'DO_OPEN_SECTION',
+  DO_SELECT_OPERATION: 'DO_SELECT_OPERATION',
   
   //REALTIME
   FETCH_GAME_STATE: 'FETCH_GAME_STATE',
@@ -49,6 +51,17 @@ export const DNDTYPE = {
   DROPPABLE_SLOT: 'DROPPABLE_SLOT',
 }
 /* Other constants */
+export const SECTIONTYPE = {
+  INPUT: 'INPUT',
+  OPERATION: 'OPERATION',
+  QUESTION: 'QUESTION',
+  RESULT: 'RESULT',
+  OUTPUT: 'OUTPUT'
+}
+export const OPERATIONTYPE = {
+  ADDITION: 'ADDITION',
+  SUBTRACTION: 'SUBTRACTION'
+}
 export const GameScreens = [
   'INTRO',
   'READ',
@@ -122,7 +135,7 @@ export function switchSection(section_index){
     type: TYPE.DO_SWITCH_SECTION,
     section_index: section_index,
   }
-}  
+}
 export function addVariable(section_index, line_num, variable_type, variable_id){
   return {
     type: TYPE.DO_ADD_VARIABLE,
@@ -161,12 +174,11 @@ export function selectVariable(section_index, line_num, variable_type, vid){
     vid: vid
   }
 }
-export function nameVariable(first_name_id, middle_name_id, last_name_id, vid){
+export function nameVariable(name_id, name_section, vid){
   return {
     type: TYPE.DO_NAME_VARIABLE,
-    first_name_id: first_name_id,
-    middle_name_id: middle_name_id,
-    last_name_id: last_name_id,
+    name_id: name_id,
+    name_section: name_section,
     vid: vid
   }
 }
@@ -176,6 +188,20 @@ export function removeOutput(section_index, line_num){
     section_index: section_index,
     line_num: line_num
   }
+}
+export function openSection(section_index, section_name){
+  return {
+    type: TYPE.DO_OPEN_SECTION,
+    section_index: section_index,
+    section_name: section_name
+  }
+}
+export function selectOperation(section_index, operation){
+  return {
+    type: TYPE.DO_SELECT_OPERATION,
+    section_index: section_index,
+    operation: operation
+  }  
 }
 /* Real-time actions */
 export function fetchGameState(game_state){

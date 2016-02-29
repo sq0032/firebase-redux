@@ -12,8 +12,20 @@ function select(state) {
 
 @connect(select)
 export default class VariableSelector extends Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      is_selector_hover: false
+    };
+  }
+  handleMouseEnterSelector() {
+    this.setState({is_selector_hover: true});
+  }
+  handleMouseLeaveSelector() {
+    this.setState({is_selector_hover: false});
+  }  
   handleSelectVariable(e) {
-    const {dispatch, user, line_num, field_type, dec_vid} = this.props;
+    const {dispatch, user, line_num, field_type} = this.props;
     const section_id = user.cur_section;
     const vid = e.target.value;
     if (vid == 'default'){
@@ -22,6 +34,11 @@ export default class VariableSelector extends Component {
       dispatch(addAndUpdateVariable(section_id, line_num, field_type, vid));
     }
   }
+  handleRemoveVariable(){
+    const {dispatch, user, line_num, field_type} = this.props;
+    const section_id = user.cur_section;
+    dispatch(removeAndUpdateVariable(section_id, line_num, field_type));
+  }
   renderOptions(type) {
     const {user, game} = this.props;
     const cate = (type == 'result') ? 'default_variables' : 'decleared_variables';
@@ -29,19 +46,16 @@ export default class VariableSelector extends Component {
     var InputOptions = [];
     for(let key in variables){
       const vid = variables[key];
-      if (typeof(game.variables[vid].name) == 'undefined'){
-        InputOptions.push(
-          <option value={vid} key={type+vid}>??? ??? ???</option>     
-        );
-      } else {
-        const name = game.variables[vid].name;
-        let first = name ? (name.first ? name.first : '???') : '???';
-        let middle = name ? (name.middle ? name.middle : '???') : '???';
-        let last = name ? (name.last ? name.last : '???') : '???';
-        InputOptions.push(
-          <option value={vid} key={type+vid}>{first} {middle} {last}</option>
-        );
-      }
+      if (vid == null || typeof(game.variables[vid].name) == 'undefined'){continue;}
+      const name = game.variables[vid].name;
+      console.log(game.variable_names.first[name.first]);
+      if (name == null || name.first == null || name.middle == null || name.last == null){continue;}
+      let first = game.variable_names.first[name.first];
+      let middle = game.variable_names.middle[name.middle];
+      let last = game.variable_names.last[name.last];
+      InputOptions.push(
+        <option value={vid} key={type+vid}>{first} {middle} {last}</option>
+      );
     }
     return InputOptions;
   }
@@ -71,13 +85,20 @@ export default class VariableSelector extends Component {
       );
   }  
   render() {
-    const {line_num, game, user} = this.props;
+    const {line_num, game, user, dec_vid} = this.props;
     const Selector = this.renderSelector();
+    const RemoveBtn = dec_vid == null ? null : (<button style={style.remove_btn} onClick={this.handleRemoveVariable.bind(this)}>x</button>);
+    const selector_hover = this.state.is_selector_hover ? style.selector_hover : null;
     return (
       <div style={style.base}>
         <div style={style.line}>{line_num}</div>
-        <div style={style.selector_td}>{Selector}</div>
-        <div style={style.remove}>x</div>
+        <div style={{...style.selector_td, ...selector_hover}}
+             onMouseEnter={this.handleMouseEnterSelector.bind(this)}
+             onMouseLeave={this.handleMouseLeaveSelector.bind(this)}>
+              {Selector}</div>
+        <div style={style.remove}>
+          {RemoveBtn}
+        </div>
       </div>
     );
   }
@@ -106,10 +127,16 @@ const style = {
   selector_td: {
     display: 'table-cell'
   },
+  selector_hover: {
+    border: '1px solid red'
+  },    
   remove: {
     display: 'table-cell',
-    color: 'red'
-  },  
+    padding: '0px 4px 0px 4px',
+  },
+  remove_btn: {
+    color: 'red',
+  }, 
   select: {
    background: 'transparent',
    border: 'none',
@@ -117,5 +144,6 @@ const style = {
    height: '29px',
    padding: '5px',
    width: '268px',
+   cursor: 'pointer'
   }
 }

@@ -1,5 +1,5 @@
 import { combineReducers } from 'redux';
-import { TYPE, VARIABLETYPE, GameScreens } from './actions';
+import { TYPE, VARIABLETYPE, SECTIONTYPE, GameScreens } from './actions';
 import immutable from 'immutable';
 //import lodash from 'lodash';
 
@@ -49,6 +49,7 @@ export const mockup = {
         player: null,
         question: null,
         answer: null,
+        operation: null,
         watcher: {},
         num_outputs: 0,
         is_input_opened: false,
@@ -78,6 +79,7 @@ export const mockup = {
         player: null,
         question: null,
         answer: null,
+        operation: null,
         watcher: {},
         num_outputs: 0,
         is_input_opened: false,
@@ -103,6 +105,7 @@ export const mockup = {
         player: null,
         question: null,
         answer: null,
+        operation: null,
         watcher: {},
         num_outputs: 0,
         is_input_opened: false,
@@ -205,6 +208,10 @@ export const mockup = {
         value: null,
         name: null
       }
+    },
+    operations: {
+      0: 'ADDITION',
+      1: 'SUBTRACTION'
     }
   },
   //read reducer
@@ -438,6 +445,25 @@ export function section(state, action, vid){
       } else {
         return state;
       }
+    case TYPE.DO_OPEN_SECTION:
+      if (state.index == action.section_index){
+        if (action.section_name == SECTIONTYPE.INPUT){
+          return {...state, is_input_opened: true};
+        } else if (action.section_name == SECTIONTYPE.QUESTION){
+          return {...state, is_question_opened: true};
+        } else if (action.section_name == SECTIONTYPE.OPERATION){
+          return {...state, is_operation_opened: true};
+        } else if (action.section_name == SECTIONTYPE.RESULT){
+          return {...state, is_result_opened: true};
+        } else if (action.section_name == SECTIONTYPE.OUTPUT){
+          return {...state, is_output_opened: true};
+        } else {
+          return state
+        }
+      } else {
+        return state
+      }
+      break;
     case TYPE.PLAN_SELECT_ANSWER:
       if (state.index == action.section_index){
         return Object.assign({}, state, {answer:action.answer_index});
@@ -497,6 +523,8 @@ export function sections(state, action, vid){
   switch (action.type){
     case TYPE.READ_ORDER_SECTION:
       return state.map(s=>section(s,action));
+    case TYPE.DO_OPEN_SECTION:
+      return state.map(s=>section(s, action));
     case TYPE.PLAN_SELECT_ANSWER:
       return state.map(s=>section(s,action));
     case TYPE.PLAN_ASSIGN_PLAYER:
@@ -519,9 +547,9 @@ export function variable(state, action){
   switch (action.type){
     case TYPE.DO_NAME_VARIABLE:
       const name = {
-        first: action.first_name_id,
-        middle: action.middle_name_id,
-        last: action.last_name_id
+        first: action.name_section == 'first' ? action.name_id : state.name.first,
+        middle: action.name_section == 'middle' ? action.name_id : state.name.middle,
+        last: action.name_section == 'last' ? action.name_id : state.name.last
       };
       return {...state, name: name};
   }
@@ -590,6 +618,9 @@ export function game(state = mockup.gamestate, action){
         state,
         {sections: sections(state.sections, action)}
       );
+    case TYPE.DO_OPEN_SECTION:
+      return {...state, sections: sections(state.sections, action)};
+      break;
     case TYPE.PLAN_SELECT_ANSWER:
       return Object.assign(
         {}, 

@@ -1,5 +1,5 @@
 import React, { Component, PropTypes } from 'react';
-import { switchSection } from '../../actions';
+import { openSection, SECTIONTYPE } from '../../actions';
 import { connect } from 'react-redux';
 
 import VariableEditor from './VariableEditor';
@@ -14,6 +14,22 @@ function select(state) {
 
 @connect(select)
 export default class Question extends Component {
+  constructor(props){
+    super(props);
+    this.state = {
+      is_mouse_hover_label: false
+    }
+  }
+  handleOpenSection() {
+    const {dispatch, user} = this.props;
+    dispatch(openSection(user.cur_section, SECTIONTYPE.QUESTION));
+  }
+  handleMouseEnterLabel() {
+    this.setState({is_mouse_hover_label:true});
+  }
+  handleMouseLeaveLabel() {
+    this.setState({is_mouse_hover_label:false});
+  }
   renderSelector() {
     const {user, game} = this.props;
     const def_vs = game.sections[user.cur_section].default_variables.question;
@@ -52,22 +68,41 @@ export default class Question extends Component {
   }
   render() {
     const {game, user} = this.props;
-    const VariableEditors = this.renderSelector();
-    const Display = this.renderDisplay();
-    return (
-      <div style={style.base}>
-        <div style={style.display}>{game.sections[user.cur_section].text}</div>
-        <div style={style.label_wrap}>
-          <div style={style.label}>QUESTION</div>
-        </div>
-        <div style={style.selector}>
-          <div style={style.selector_table}>
-            {VariableEditors}
+    if (game.sections[user.cur_section].is_question_opened){
+      const VariableEditors = this.renderSelector();
+      const Display = this.renderDisplay();
+      return (
+        <div style={style.base}>
+          <div style={style.display}>{game.sections[user.cur_section].text}</div>
+          <div style={style.label_wrap}>
+            <div style={style.label}>?</div>
           </div>
+          <div style={style.selector}>
+            <div style={style.selector_table}>
+              {VariableEditors}
+            </div>
+          </div>
+          <div style={{clear:'both'}}></div>
         </div>
-        <div style={{clear:'both'}}></div>
-      </div>
-    );    
+      );    
+    } else {
+      const hover_label = this.state.is_mouse_hover_label ? style.label_hover : null;
+      return (
+        <div style={style.base}>
+          <div style={style.display}></div>
+          <div style={style.label_wrap}>
+            <div style={{...style.label, ...hover_label}}
+              onClick={this.handleOpenSection.bind(this)}
+              onMouseEnter={this.handleMouseEnterLabel.bind(this)}
+              onMouseLeave={this.handleMouseLeaveLabel.bind(this)}>
+            </div>
+          </div>
+          <div style={style.selector}>
+          </div>
+          <div style={{clear:'both'}}></div>
+        </div>
+      );
+    }
   }
 }
 
@@ -104,11 +139,16 @@ const style = {
   label: {
     border: '1px solid black',
     borderRadius: '50%',
+    fontSize: '400%',
     lineHeight: '100px',
     textAlign: 'center',
     width: '100px',
     height: '100px',
     display: 'inline-block'
+  },
+  label_hover:{
+    backgroundColor: 'yellow',
+    cursor: 'pointer'
   },
   item: {
     height: '21px',

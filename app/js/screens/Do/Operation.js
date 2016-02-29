@@ -36,7 +36,7 @@ export default class Operation extends Component {
     const dec_vs = game.sections[user.cur_section].decleared_variables.operation;
     var Values = [];
     for (let i = 0; i < 6; i++){
-      if (dec_vs.hasOwnProperty(i)){
+      if (dec_vs.hasOwnProperty(i) && dec_vs[i] != null){
         let value = game.variables[dec_vs[i]].value ? game.variables[dec_vs[i]].value : 'null';
         Values.push(<div style={style.item} key={i}>vid:{dec_vs[i]}, value:{value}</div>);
       } else {

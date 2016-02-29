@@ -1,5 +1,5 @@
 import React, { Component, PropTypes } from 'react';
-import { addAndUpdateVariable, removeAndUpdateVariable } from '../../actions';
+import { addAndUpdateVariable, removeAndUpdateVariable, nameVariable } from '../../actions';
 import { connect } from 'react-redux';
 
 function select(state) {
@@ -12,6 +12,18 @@ function select(state) {
 
 @connect(select)
 export default class VariableEditor extends Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      is_editor_hover: false
+    };
+  }
+  handleMouseEnterEditor() {
+    this.setState({is_editor_hover: true});
+  }
+  handleMouseLeaveEditor() {
+    this.setState({is_editor_hover: false});
+  }
   handleAddVariable() {
     const {dispatch, user, line_num, type, def_vid} = this.props;
     const section_id = user.cur_section;
@@ -26,11 +38,26 @@ export default class VariableEditor extends Component {
     const section_id = user.cur_section;
     dispatch(removeAndUpdateVariable(section_id, line_num, type));
   }
+  handleSelectFirstName(e) {
+    const {dispatch, dec_vid} = this.props;
+    const first_name_id = e.target.value == '' ? null : e.target.value;
+    dispatch(nameVariable(first_name_id, 'first', dec_vid));
+  }
+  handleSelectMiddleName(e) {
+    const {dispatch, dec_vid} = this.props;
+    const middle_name_id = e.target.value == '' ? null : e.target.value;
+    dispatch(nameVariable(middle_name_id, 'middle', dec_vid));
+  }
+  handleSelectLastName(e) {
+    const {dispatch, dec_vid} = this.props;
+    const last_name_id = e.target.value == '' ? null : e.target.value;
+    dispatch(nameVariable(last_name_id, 'last', dec_vid));
+  }
   renderNameOptions(name_section) {
     const {game} = this.props;
     var NameOptions = [];
     NameOptions.push(
-      <option value={null} key={null}>-</option>
+      <option value={''} key={null}>-</option>
     );
     console.log(`name_section: ${game.variable_names[name_section][0]}`);
     for(let key in game.variable_names[name_section]){
@@ -53,18 +80,21 @@ export default class VariableEditor extends Component {
     
     const FirstNameSelector = (
       <select
+        onChange={this.handleSelectFirstName.bind(this)}
         style={style.select}
         value={first_name_id}
       >{FirstNameOptions}</select>
     );
     const MiddleNameSelector = (
       <select
+        onChange={this.handleSelectMiddleName.bind(this)}
         style={style.select}
         value={middle_name_id}
       >{MiddleNameOptions}</select>
     );
     const LastNameSelector = (
       <select
+        onChange={this.handleSelectLastName.bind(this)}
         style={style.select}
         value={last_name_id}
       >{LastNameOptions}</select>
@@ -97,13 +127,21 @@ export default class VariableEditor extends Component {
     }
   }
   render() {
-    const {game, user, line_num} = this.props;
+    const {game, user, line_num, dec_vid} = this.props;
     const Editor = this.renderEditor();
+    const RemoveBtn = dec_vid == null ? null : (<button style={style.remove_btn} onClick={this.handleRemoveVariable.bind(this)}>x</button>);
+    const editor_hover = this.state.is_editor_hover ? style.selector_hover : null;
     return (
       <div style={style.base}>
         <div style={style.line}>{line_num}</div>
-        <div style={style.selector_td}>{Editor}</div>     
-        <div style={style.remove} onClick={this.handleRemoveVariable.bind(this)}>x</div>
+        <div style={{...style.selector_td, ...editor_hover}}
+             onMouseEnter={this.handleMouseEnterEditor.bind(this)}
+             onMouseLeave={this.handleMouseLeaveEditor.bind(this)}>      
+              {Editor}
+        </div>
+        <div style={style.remove}>
+          {RemoveBtn}
+        </div>
       </div>
     );    
   }
@@ -135,26 +173,31 @@ const style = {
     display: 'table-cell'
   },
   selector_td: {
-    display: 'table-cell'
+    display: 'table-cell',
+    verticalAlign: 'middle',
   },
+  selector_hover: {
+    border: '1px solid red'
+  },  
   remove: {
     display: 'table-cell',
-    color: 'red'
+    padding: '0px 4px 0px 4px',
+  },
+  remove_btn: {
+    color: 'red',
   },
   select: {
     background: 'transparent',
     border: 'none',
     fontSize: '14px',
-//    height: '29px',
-//    padding: '5px',
-//    width: '268px',
   },
   button: {
     background: 'transparent',
     border: 'none',
     fontSize: '14px',
-//    height: '29px',
-    padding: '5px',
-    width: '268px',    
-  }
+    height: '100%',
+    padding: '0px',
+    width: '268px',
+    cursor: 'pointer',
+  },
 }

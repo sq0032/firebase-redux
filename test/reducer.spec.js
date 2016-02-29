@@ -223,6 +223,7 @@ export const mockup = {
         player: null,
         question: null,
         answer: null,
+        operation: null,
         watcher: {},
         num_outputs: 0,
         is_input_opened: false,
@@ -252,6 +253,7 @@ export const mockup = {
         player: null,
         question: null,
         answer: null,
+        operation: null,
         watcher: {},
         num_outputs: 0,
         is_input_opened: false,
@@ -277,6 +279,7 @@ export const mockup = {
         player: null,
         question: null,
         answer: null,
+        operation: null,
         watcher: {},
         num_outputs: 0,
         is_input_opened: false,
@@ -377,8 +380,16 @@ export const mockup = {
       7: {
         vid: 7,
         value: null,
-        name: null
+        name: {
+          first: null,
+          middle: null,
+          last: null
+        }
       }
+    }.
+    operations: {
+      0: 'ADDITION',
+      1: 'SUBTRACTION'
     }
   },
   //read reducer
@@ -690,12 +701,43 @@ describe('App', () => {
         state = game(mockup.gamestate, {});
       });      
       it('should change variable name', () => {
-        state = game(state, actions.nameVariable(1, 2, 1, 7));
+        state = game(state, actions.nameVariable(1, 'first', 7));
         expect(state.variables[7].name.first).to.equal(1);
+        state = game(state, actions.nameVariable(2, 'middle', 7));
         expect(state.variables[7].name.middle).to.equal(2);
+        state = game(state, actions.nameVariable(1, 'last', 7));
         expect(state.variables[7].name.last).to.equal(1);
       });
     });
+    describe('When player open a section', () => {
+      let state = null;
+      beforeEach(()=>{
+        state = game(mockup.gamestate, {});
+      });       
+      it('should show section content', () => {
+        expect(state.sections[0].is_question_opened).to.equal(false);
+        state = game(state, actions.openSection(0, actions.SECTIONTYPE.QUESTION));
+        expect(state.sections[0].is_question_opened).to.equal(true);
+        
+        state = game(state, actions.openSection(1, actions.SECTIONTYPE.QUESTION));
+        state = game(state, actions.openSection(1, actions.SECTIONTYPE.OPERATION));
+        state = game(state, actions.openSection(1, actions.SECTIONTYPE.OUTPUT));
+        expect(state.sections[1].is_input_opened).to.equal(false);
+        expect(state.sections[1].is_question_opened).to.equal(true);
+        expect(state.sections[1].is_operation_opened).to.equal(true);
+        expect(state.sections[1].is_result_opened).to.equal(false);
+        expect(state.sections[1].is_output_opened).to.equal(true);
+      });
+    });
+    describe('When player select or change an operation method', () => {
+      let state = null;
+      beforeEach(()=>{
+        state = game(mockup.gamestate, {});
+      });
+      it('should update operation method and calculate/re-calculate result', () => {
+//        expect
+      });
+    })
     describe('When player removes a variable', () => {
       let state = null;
       beforeEach(()=>{
