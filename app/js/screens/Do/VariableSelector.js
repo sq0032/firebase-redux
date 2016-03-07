@@ -125,7 +125,8 @@ const style = {
     display: 'table-cell'
   },
   selector_td: {
-    display: 'table-cell'
+    display: 'table-cell',
+    minWidth: '250px'
   },
   selector_hover: {
     border: '1px solid red'
@@ -136,6 +137,7 @@ const style = {
   },
   remove_btn: {
     color: 'red',
+    cursor: 'pointer'
   }, 
   select: {
    background: 'transparent',

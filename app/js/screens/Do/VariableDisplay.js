@@ -15,24 +15,25 @@ export default class VariableDisplay extends Component {
   renderDisplay() {
     const {vid, line_num, user, game} = this.props;
     if (vid == null){
-      return (
-        <div>no variable</div>
-      );
+      return null;
     } else {
+      const name = game.variables[vid].name;
+      const first = game.variable_names.first[name.first];
+      const middle = game.variable_names.middle[name.middle];
+      const last = game.variable_names.last[name.last];
       return (
-        <div>vid</div>
+        <div>{first} {middle} {last}</div>
       );
     }
   }
   render() {
     const {game, user, line_num, vid} = this.props;
     const Display = this.renderDisplay();
+    console.log(`VariableDisplay vid: ${vid}`);
     return (
       <div style={style.base}>
         <div style={style.line}>{line_num}</div>
-        <div style={style.selector_td}
-            {Display}
-        </div>
+        <div style={style.selector_td}>{Display}</div>
         <div style={style.remove}>
         </div>
       </div>
@@ -43,7 +44,7 @@ export default class VariableDisplay extends Component {
 
 VariableDisplay.propTypes = {
   line_num: React.PropTypes.number.isRequired,
-  vid: React.PropTypes.number.isRequired,
+  vid: React.PropTypes.number,
 }
 
 
@@ -66,6 +67,7 @@ const style = {
   selector_td: {
     display: 'table-cell',
     verticalAlign: 'middle',
+    minWidth: '250px'
   },
   selector_hover: {
     border: '1px solid red'

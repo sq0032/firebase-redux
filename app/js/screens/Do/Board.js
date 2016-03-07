@@ -22,14 +22,15 @@ export default class Board extends Component {
     const {game, user} = this.props;
     return (
       <div style={style.base}>
+        <Input/>
         <Question/>
         <Operation/>
         <Result/>
+        <Output/>
       </div>
     );
 //    return (
 //      <div style={style.base}>
-//        <Input/>
 //        <Output/>
 //      </div>
 //    );

@@ -27,6 +27,7 @@ export default class VariableEditor extends Component {
   handleAddVariable() {
     const {dispatch, user, line_num, type, def_vid} = this.props;
     const section_id = user.cur_section;
+    console.log(`vid: ${def_vid}`);
     if (def_vid){
       dispatch(addAndUpdateVariable(section_id, line_num, type, def_vid));
     } else {
@@ -59,9 +60,7 @@ export default class VariableEditor extends Component {
     NameOptions.push(
       <option value={''} key={null}>-</option>
     );
-    console.log(`name_section: ${game.variable_names[name_section][0]}`);
     for(let key in game.variable_names[name_section]){
-      console.log(key);
       NameOptions.push(
         <option value={key} key={key}>{game.variable_names[name_section][key]}</option>
       );
@@ -127,7 +126,10 @@ export default class VariableEditor extends Component {
     }
   }
   render() {
-    const {game, user, line_num, dec_vid} = this.props;
+    const {type, game, user, line_num, dec_vid} = this.props;
+    
+//    console.log(`type: ${type}`);
+//    console.log(`dec_vid: ${dec_vid}`);
     const Editor = this.renderEditor();
     const RemoveBtn = dec_vid == null ? null : (<button style={style.remove_btn} onClick={this.handleRemoveVariable.bind(this)}>x</button>);
     const editor_hover = this.state.is_editor_hover ? style.selector_hover : null;
@@ -175,6 +177,7 @@ const style = {
   selector_td: {
     display: 'table-cell',
     verticalAlign: 'middle',
+    minWidth: '250px',
   },
   selector_hover: {
     border: '1px solid red'
@@ -185,6 +188,7 @@ const style = {
   },
   remove_btn: {
     color: 'red',
+    cursor: 'pointer'
   },
   select: {
     background: 'transparent',

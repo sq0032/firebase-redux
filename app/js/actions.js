@@ -5,8 +5,8 @@ var rootRef = new Firebase('https://blazing-fire-2123.firebaseio.com');
 export const TYPE = {
   //GENERAL
   ERROR: 'ERROR',
-  GO_NEXT_SCREEN: 'GO_NEXT_SCREEN', 
-  GO_PREVIOUS_SCREEN: 'GO_PREVIOUS_SCREEN', 
+  GO_NEXT_SCREEN: 'GO_NEXT_SCREEN',
+  GO_PREVIOUS_SCREEN: 'GO_PREVIOUS_SCREEN',
   ENABLE_NEXT_SCREEN: 'ENABLE_NEXT_SCREEN',
   //INTRO
   INTRO_OPEN_ENVELOP: 'INTRO_OPEN_ENVELOP',
@@ -25,18 +25,11 @@ export const TYPE = {
   DO_REMOVE_OUTPUT: 'DO_REMOVE_OUTPUT',
   DO_OPEN_SECTION: 'DO_OPEN_SECTION',
   DO_SELECT_OPERATION: 'DO_SELECT_OPERATION',
+  DO_ADD_COMMENT: 'DO_ADD_COMMENT',
   
   //REALTIME
   FETCH_GAME_STATE: 'FETCH_GAME_STATE',
   UPDATE_GAME_STATE: 'UPDATE_GAME_STATE'
-//  DO_NAME_VARIABLE: 'DO_NAME_VARIABLE',
-//  DO_SELECT_FUNCTION: 'DO_SELECT_FUNCTION',
-//  DO_PASS_FUNCTION_PARAMETER: 'DO_PASS_FUNCTION_PARAMETER',
-//  DO_OUTPUT_VARIABLE: 'DO_OUTPUT_VARIABLE',
-//  DO_SELECT_OUTPUT_VARIABLE: 'DO_SELECT_OUTPUT_VARIABLE',
-//  DO_SELECT_FIRST_NAME: 'DO_SELECT_FIRST_NAME',
-//  DO_SELECT_MIDDLE_NAME: 'DO_SELECT_MIDDLE_NAME',
-//  DO_SELECT_LAST_NAME: 'DO_SELECT_LAST_NAME',
 }
 export const VARIABLETYPE = {
   INPUT: 'input',
@@ -136,7 +129,7 @@ export function switchSection(section_index){
     section_index: section_index,
   }
 }
-export function addVariable(section_index, line_num, variable_type, variable_id){
+export function addVariable(section_index, line_num, variable_type, variable_id = null){
   return {
     type: TYPE.DO_ADD_VARIABLE,
     section_index: section_index,
@@ -145,10 +138,11 @@ export function addVariable(section_index, line_num, variable_type, variable_id)
     variable_id: variable_id
   }
 }
-export function addAndUpdateVariable(section_index, line_num, variable_type, variable_id){
+export function addAndUpdateVariable(section_index, line_num, variable_type, variable_id = null){
   return function (dispatch, getState){
     dispatch(addVariable(section_index, line_num, variable_type, variable_id));
-    return rootRef.child('game').update(getState().game);
+//    return rootRef.child('game').update(getState().game);
+    return null;
   }
 }
 export function removeVariable(section_index, line_num, variable_type){
@@ -162,7 +156,8 @@ export function removeVariable(section_index, line_num, variable_type){
 export function removeAndUpdateVariable(section_index, line_num, variable_type){
   return function (dispatch, getState){
     dispatch(removeVariable(section_index, line_num, variable_type));
-    return rootRef.child('game').update(getState().game);
+//    return rootRef.child('game').update(getState().game);
+    return null;
   }
 }
 export function selectVariable(section_index, line_num, variable_type, vid){
@@ -201,7 +196,14 @@ export function selectOperation(section_index, operation){
     type: TYPE.DO_SELECT_OPERATION,
     section_index: section_index,
     operation: operation
-  }  
+  }
+}
+export function addComment(comment, vid){
+  return {
+    type: TYPE.DO_ADD_COMMENT,
+    comment: comment,
+    vid: vid
+  }
 }
 /* Real-time actions */
 export function fetchGameState(game_state){

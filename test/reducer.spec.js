@@ -324,7 +324,8 @@ export const mockup = {
       0: {
         vid: 0,
         value: null,
-        name: null
+        name: null,
+        comment: null
       },
       1: {
         vid: 1,
@@ -333,7 +334,8 @@ export const mockup = {
           first: 0,
           middle: 2,
           last: 0
-        }
+        },
+        comment: null
       },
       2: {
         vid: 2,
@@ -342,7 +344,8 @@ export const mockup = {
           first: 0,
           middle: 0,
           last: 0
-        }
+        },
+        comment: null
       },
       3: {
         vid: 3,
@@ -351,7 +354,8 @@ export const mockup = {
           first: 0,
           middle: 1,
           last: 0
-        }
+        },
+        comment: null
       },
       4: {
         vid: 4,
@@ -360,7 +364,8 @@ export const mockup = {
           first: 1,
           middle: 0,
           last: 0
-        }
+        },
+        comment: null
       },
       5: {
         vid: 5,
@@ -369,7 +374,8 @@ export const mockup = {
           first: 1,
           middle: 1,
           last: 0
-        }
+        },
+        comment: null
       },
       6: {
         vid: 6,
@@ -378,7 +384,8 @@ export const mockup = {
           first: 2,
           middle: 3,
           last: 0
-        }
+        },
+        comment: null
       },
       7: {
         vid: 7,
@@ -387,12 +394,20 @@ export const mockup = {
           first: null,
           middle: null,
           last: null
-        }
+        },
+        comment: null
       },
     },
     operations: {
-      0: 'ADDITION',
-      1: 'SUBTRACTION'
+      0: {
+        name: actions.OPERATIONTYPE.ADDITION,
+        description: 'The addition of two whole numbers is the total amount of those quantities combined.',
+        symbol: '+'
+      },
+      1: {
+        name: actions.OPERATIONTYPE.SUBTRACTION,
+        symbol: '-'
+      }
     }
   },
   //read reducer
@@ -572,7 +587,7 @@ describe('App', () => {
       let state = null;
       beforeEach(() => {
         //Setup testing enviroment
-        state = game(mockup.gamestate, {});
+        state = immutable.fromJS(game(mockup.gamestate, {})).toJS();
         state = immutable.fromJS(state);
         state = state.toJS();
         state.sections[0].order = null;
@@ -598,23 +613,26 @@ describe('App', () => {
       let state = null;
       beforeEach(() => {
         //Setup testing enviroment
-        state = game(mockup.gamestate, {});
+        state = immutable.fromJS(game(mockup.gamestate, {})).toJS();
         state = immutable.fromJS(state);
         state = state.toJS();
         state.sections[0].decleared_variables.question = [1, null, null, 7];  //1 is 5, 7 is null
         state.sections[0].decleared_variables.operation = [1, 7];
         state.sections[0].decleared_variables.output = [3, 1];  //3 is result, default vaule is null
         state.sections[0].num_outputs = 2;
+        state.sections[0].operation = 0;
         
         state.sections[1].decleared_variables.input = [1, 3];
         state.sections[1].decleared_variables.operation = [1, 4]; //4 is 2
         state.sections[1].decleared_variables.output = [1, 5]; //5 is result, default value is 5+2=7
         state.sections[1].num_outputs = 2;
+        state.sections[1].operation = 0;
         
         state.sections[2].decleared_variables.input = [1, 5];
         state.sections[2].decleared_variables.operation = [1, 5]; //result is 5+7=12
         state.sections[2].num_outputs = 0;
-        state.variables = computeResults(0, state.sections, state.variables);
+        state.sections[2].operation = 0;
+        state.variables = computeResults(0, state.sections, state.variables, state.operations, state.operations);
       });
       it('should add more output slots if the number increased', () => {
         expect(state.sections[0].num_outputs).to.equal(2);
@@ -631,15 +649,18 @@ describe('App', () => {
   describe('DO', () => {
     it('should return initial state', () => {
       expect(
-        game(mockup.gamestate, {}).sections.length
+        immutable.fromJS(game(mockup.gamestate, {})).toJS().sections.length
       ).to.equal(3);
     });
     
     describe('When player adds a variable', () => {
       let state = null;
       beforeEach(()=>{
-        state = game(mockup.gamestate, {});
+        state = immutable.fromJS(game(mockup.gamestate, {})).toJS();
         state.sections[1].decleared_variables.operation = {0: 3};
+        state.sections[0] = {...state.sections[0], operation:0};
+        state.sections[1].operation = 0;
+        state.sections[2].operation = 0;
       });
       it('should declear the question variable', () => {
         //Adding an pre-decleared variable
@@ -652,7 +673,7 @@ describe('App', () => {
         //should create a new variable and add the id into question variable array
         var length = Object.keys(state.variables).length;
         vid = Math.max(...Object.keys(state.variables));
-        state = game(state, actions.addVariable(0, 5, actions.VARIABLETYPE.QUESTION, undefined));
+        state = game(state, actions.addVariable(0, 5, actions.VARIABLETYPE.QUESTION));
         vid = vid+1;
         expect(Object.keys(state.variables)).to.have.length(length+1);
         expect(state.sections[0].decleared_variables.question[4]).to.equal(vid);
@@ -693,7 +714,7 @@ describe('App', () => {
         //Should add the variable id into operation variable array and update answer value (number)`
         
         //Add the first variable
-        state = game(state, actions.addVariable(0, 4, actions.VARIABLETYPE.RESULT, undefined));
+        state = game(state, actions.addVariable(0, 4, actions.VARIABLETYPE.RESULT));
         var result_id = state.sections[0].decleared_variables.result[3];
         var result = state.variables[result_id];
         expect(result_id).to.equal(8);
@@ -719,7 +740,7 @@ describe('App', () => {
     describe('When player name a variable', () => {
       let state = null;
       beforeEach(()=>{
-        state = game(mockup.gamestate, {});
+        state = immutable.fromJS(game(mockup.gamestate, {})).toJS();
       });      
       it('should change variable name', () => {
         state = game(state, actions.nameVariable(1, 'first', 7));
@@ -733,7 +754,7 @@ describe('App', () => {
     describe('When player open a section', () => {
       let state = null;
       beforeEach(()=>{
-        state = game(mockup.gamestate, {});
+        state = immutable.fromJS(game(mockup.gamestate, {})).toJS();
       });       
       it('should show section content', () => {
         expect(state.sections[0].is_question_opened).to.equal(false);
@@ -753,33 +774,50 @@ describe('App', () => {
     describe('When player select or change an operation method', () => {
       let state = null;
       beforeEach(()=>{
-        state = game(mockup.gamestate, {});
+        state = immutable.fromJS(game(mockup.gamestate, {})).toJS();
+        state.sections[0].decleared_variables.question = {0:1, 1:2}; //value of v[1] = 5, v[2] = 6
+        state.sections[0].decleared_variables.operation = {0:1, 1:2}; //value of v[1] = 5, v[2] = 6
+        state.sections[0].decleared_variables.result = {0:3} //default is null
+        state.variables = computeResults(0, state.sections, state.variables, state.operations);
       });
-      it('should update operation method and calculate/re-calculate result', () => {
-//        expect
+      it('should return null if no operation has been selected', () => {
+        expect(state.sections[0].operation).to.be(null);
+        expect(state.variables[3].value).to.equal(null);
       });
-    })
+      it('should return 11 if ADDITION operation has been selected', () => {
+        state = game(state, actions.selectOperation(0, 0))
+        console.log(`operation: ${mockup.gamestate.sections[0].operation}`);
+        expect(state.sections[0].operation).to.be(0);
+        expect(state.variables[3].value).to.equal(11);
+      });
+      it('should return -1 if SUBTRACTION operation has been selected', () => {
+        state = game(state, actions.selectOperation(0, 1));
+        expect(state.sections[0].operation).to.be(1);
+        expect(state.variables[3].value).to.equal(-1);
+      });
+    });
     describe('When player removes a variable', () => {
       let state = null;
       beforeEach(()=>{
         //Setup testing enviroment
-        state = game(mockup.gamestate, {});
-        state = immutable.fromJS(state);
-        state = state.toJS();
+        state = immutable.fromJS(game(mockup.gamestate, {})).toJS();
         state.sections[0].decleared_variables.question = {0:1, 1:null, 3:7};  //1 is 5, 7 is null
         state.sections[0].decleared_variables.operation = {0:1, 1:7};
         state.sections[0].decleared_variables.result = {0:3};  //3 is result, default vaule is null
         state.sections[0].decleared_variables.output = {0:1, 1:3};
+        state.sections[0].operation = 0;
         
         state.sections[1].decleared_variables.input = {0:1, 1:3};
         state.sections[1].decleared_variables.operation = {0:1, 4:4}; //4 is 2
         state.sections[1].decleared_variables.result = {0:5}; //5 is result, default value is 5+2=7
         state.sections[1].decleared_variables.output = {0:1, 1:5, 2:3};
+        state.sections[1].operation = 0;
         
         state.sections[2].decleared_variables.input = {0:1, 1:5, 2:3};
         state.sections[2].decleared_variables.operation = {0:1, 1:5, 2:3}; 
         state.sections[2].decleared_variables.result = {0:6}; //result is 5+7+null=null
-        state.variables = computeResults(0, state.sections, state.variables);
+        state.sections[2].operation = 0;
+        state.variables = computeResults(0, state.sections, state.variables, state.operations);
       });
       
       it('should output nulls as initial mocked result', () => {
@@ -837,12 +875,26 @@ describe('App', () => {
         expect(state.variables[6].value).to.equal(null);
       });
     });
+    describe('When player add a commnet on a variable', () => {
+      let state = null;
+      beforeEach(()=>{
+        //Setup testing enviroment
+        state = immutable.fromJS(game(mockup.gamestate, {})).toJS();
+        state.sections[0].decleared_variables.output = {0:1, 1:2};
+        state.sections[0].num_outputs = 2;
+      });
+      it('should add comment on the variable', () => {
+        expect(state.variables[2].comment).to.equal(null);
+        state = game(state, actions.addComment('This is the comment', 2));
+        expect(state.variables[2].comment).to.equal('This is the comment');
+      });
+    });
   });
   describe('REALTIME', ()=>{
     describe('When receive a real-time update from Firebase', () => {
       let state = null;
       beforeEach(()=>{
-        state = game(mockup.gamestate, {});
+        state = immutable.fromJS(game(mockup.gamestate, {})).toJS();
       });
       it('should convert variable objects to array ', () => {
         //Remove an output variable (number)

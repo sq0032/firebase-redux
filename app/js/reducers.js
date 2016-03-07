@@ -1,5 +1,5 @@
 import { combineReducers } from 'redux';
-import { TYPE, VARIABLETYPE, SECTIONTYPE, GameScreens } from './actions';
+import { TYPE, VARIABLETYPE, SECTIONTYPE, OPERATIONTYPE, GameScreens } from './actions';
 import immutable from 'immutable';
 //import lodash from 'lodash';
 
@@ -41,7 +41,7 @@ export const mockup = {
           },
         },
         decleared_variables:{
-          input: {},
+          input: {0:0},
           question: {},
           operation: {},
           result: {},
@@ -150,7 +150,12 @@ export const mockup = {
       0: {
         vid: 0,
         value: null,
-        name: null
+        name: {
+          first: 2,
+          middle: 1,
+          last: 0
+        },
+        commend: "There were 10 apples on the tree on day 1"
       },
       1: {
         vid: 1,
@@ -159,7 +164,8 @@ export const mockup = {
           first: 0,
           middle: 2,
           last: 0
-        }
+        },
+        commend: null
       },
       2: {
         vid: 2,
@@ -168,7 +174,8 @@ export const mockup = {
           first: 0,
           middle: 0,
           last: 0
-        }
+        },
+        commend: null
       },
       3: {
         vid: 3,
@@ -177,7 +184,8 @@ export const mockup = {
           first: 0,
           middle: 1,
           last: 0
-        }
+        },
+        commend: null
       },
       4: {
         vid: 4,
@@ -186,7 +194,8 @@ export const mockup = {
           first: 1,
           middle: 0,
           last: 0
-        }
+        },
+        commend: null
       },
       5: {
         vid: 5,
@@ -195,7 +204,8 @@ export const mockup = {
           first: 1,
           middle: 1,
           last: 0
-        }
+        },
+        commend: null
       },
       6: {
         vid: 6,
@@ -204,17 +214,26 @@ export const mockup = {
           first: 2,
           middle: 3,
           last: 0
-        }
+        },
+        commend: null
       },
       7: {
         vid: 7,
         value: null,
-        name: null
-      }
+        name: null,
+        commend: null
+      },
     },
     operations: {
-      0: 'ADDITION',
-      1: 'SUBTRACTION'
+      0: {
+        name: OPERATIONTYPE.ADDITION,
+        description: 'The addition of two whole numbers is the total amount of those quantities combined.',
+        symbol: '+'
+      },
+      1: {
+        name: OPERATIONTYPE.SUBTRACTION,
+        symbol: '-'
+      }
     }
   },
   //read reducer
@@ -486,6 +505,10 @@ export function section(state, action, vid){
       var section = immutable.fromJS(state);
       section = section.setIn(['decleared_variables',action.variable_type,action.line_num-1], action.variable_id);
       return section.toJS();
+    case TYPE.DO_SELECT_OPERATION:
+      if (action.section_index != state.index){return state;}
+      return {...state, operation: action.operation};
+      break;
     case TYPE.DO_SELECT_VARIABLE:
       if (action.section_index != state.index){
         return state;
@@ -533,6 +556,8 @@ export function sections(state, action, vid){
     case TYPE.PLAN_ASSIGN_PLAYER:
       return state.map(s=>section(s,action));
     case TYPE.DO_ADD_VARIABLE:
+      return state.map(s=>section(s,action));
+    case TYPE.DO_SELECT_OPERATION:
       return state.map(s=>section(s,action));
 //    case TYPE.DO_REMOVE_VARIABLE:
 //      return state.map(s=>section(s,action));
@@ -584,7 +609,7 @@ export function variables(state, action){
       return state
   }
 }
-export function computeResults(section_index, sections, variables){
+export function computeResults(section_index, sections, variables, operations){
     //Compute new result
     variables = immutable.fromJS(variables);
     variables = variables.toJS();
@@ -597,16 +622,48 @@ export function computeResults(section_index, sections, variables){
         //Compute new result
         var operation_id_arr = sections[n].decleared_variables.operation;
         var result_id = sections[n].default_variables.result[0];
-        variables[result_id].value = 0;
-        for (let key in operation_id_arr){
-          const operation = variables[operation_id_arr[key]];
-          if (operation == null){continue;}
-          if (operation.value == null){
+        //Execute operations
+        var operation_id = sections[n].operation;
+        if (operation_id == null){
+          variables[result_id].value = null;
+          continue;
+        }
+        switch (operations[operation_id].name){
+          case OPERATIONTYPE.ADDITION:
+            variables[result_id].value = 0;
+            for (let key in operation_id_arr){
+              const paramater = variables[operation_id_arr[key]];
+              if (paramater == null){continue;}
+              if (paramater.value == null){
+                variables[result_id].value = null;
+                break;
+              } else {
+                variables[result_id].value = variables[result_id].value + paramater.value;
+              }
+            }
+            break;
+          case OPERATIONTYPE.SUBTRACTION:
+            variables[result_id].value = 0;
+            var count = 0;
+            for (let key in operation_id_arr){
+              const paramater = variables[operation_id_arr[key]];
+              if (paramater == null){continue;}
+              if (paramater.value == null){
+                variables[result_id].value = null;
+                break;
+              } else {
+                if (count == 0){
+                  variables[result_id].value = paramater.value;
+                } else {
+                  variables[result_id].value = variables[result_id].value - paramater.value;
+                }
+                count = count + 1;
+              }
+            }            
+            break;
+          default:
             variables[result_id].value = null;
             break;
-          } else {
-            variables[result_id].value = variables[result_id].value + operation.value;
-          }
         }
       }
     }
@@ -681,7 +738,7 @@ export function game(state = mockup.gamestate, action){
           }
         }
       }
-      variables_state = computeResults(s_i, sections_state.toJS(), variables_state);
+      variables_state = computeResults(s_i, sections_state.toJS(), variables_state, state.operations);
       return Object.assign(
         {}, 
         state,
@@ -700,7 +757,7 @@ export function game(state = mockup.gamestate, action){
       switch (v_type){
         case VARIABLETYPE.RESULT:
         case VARIABLETYPE.QUESTION:
-          if (typeof(vid)=='undefined'){
+          if (vid == null){
 //            action.variable_id = variables_state[variables_state.length-1].vid+1;
             action.variable_id = Math.max(...Object.keys(variables_state))+1;
             variables_state[action.variable_id] = {
@@ -718,7 +775,7 @@ export function game(state = mockup.gamestate, action){
         case VARIABLETYPE.OPERATION:
           //Add the operation variable
           sections_state = sections(state.sections, action);
-          variables_state = computeResults(s_i, sections_state, variables_state);
+          variables_state = computeResults(s_i, sections_state, variables_state, state.operations);
           break;
         case VARIABLETYPE.OUTPUT:
           //Add the output variable
@@ -859,14 +916,14 @@ export function game(state = mockup.gamestate, action){
                   sections_state = sections_state.setIn([temp_s_i, 'decleared_variables', 'question', key], null);
                 }
               }
-            }
-            if (i >= order){
               //Remove variable from operation array
               for (let key in d_vs.get('operation').toJS()){
                 if ( d_vs.getIn(['operation', key]) == vid ){
                   sections_state = sections_state.setIn([temp_s_i, 'decleared_variables', 'operation', key], null);
                 }
               }
+            }
+            if (i >= order){
               //Remove variable from result array
               for (let key in d_vs.get('result').toJS()){
                 if ( d_vs.getIn(['result', key]) == vid ){
@@ -926,7 +983,7 @@ export function game(state = mockup.gamestate, action){
           break;
       }
       
-      variables_state = computeResults(s_i, sections_state.toJS(), variables_state);
+      variables_state = computeResults(s_i, sections_state.toJS(), variables_state, state.operations);
       
       return Object.assign(
         {},
@@ -940,6 +997,15 @@ export function game(state = mockup.gamestate, action){
         state,
         {sections: sections(state.sections, action)}
       );
+    case TYPE.DO_SELECT_OPERATION:
+      var sections_state = sections(state.sections, action);
+      var variables_state = computeResults(action.section_index, sections_state, state.variables, state.operations)
+      return {
+        ...state, 
+        sections: sections_state,
+        variables: variables_state
+      };
+      break;
     case TYPE.DO_REMOVE_OUTPUT:
       return Object.assign(
         {},
