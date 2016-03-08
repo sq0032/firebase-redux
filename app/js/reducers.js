@@ -149,7 +149,7 @@ export const mockup = {
     variables: {
       0: {
         vid: 0,
-        value: null,
+        value: 10,
         name: {
           first: 2,
           middle: 1,
@@ -232,6 +232,7 @@ export const mockup = {
       },
       1: {
         name: OPERATIONTYPE.SUBTRACTION,
+        description: 'Subtraction represents the operation of removing objects from a collection. For example, 5 − 2 = 3',
         symbol: '-'
       }
     }

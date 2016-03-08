@@ -22,6 +22,9 @@ export default class Result extends Component {
   handleOpenSection() {
     const {dispatch, user} = this.props;
     dispatch(openSection(user.cur_section, SECTIONTYPE.RESULT));
+    this.setState({
+      is_mouse_hover_label: false      
+    });
   }
   handleMouseEnterLabel() {
     this.setState({is_mouse_hover_label:true});
@@ -47,22 +50,17 @@ export default class Result extends Component {
       );
     }
     return VariableEditors;
-  }  
+  }
   renderDisplay() {
     const {user, game} = this.props;
-    const cur_section = user.cur_section;
-    const dec_vs = game.sections[cur_section].default_variables.result;
-    var Values = [];
-    for (let i = 0; i < 6; i++){
-      if (dec_vs.hasOwnProperty(i)){
-        let value = game.variables[dec_vs[i]].value ? game.variables[dec_vs[i]].value : 'null';
-        Values.push(<div style={style.item} key={i}>vid:{dec_vs[i]}, value:{value}</div>);
-      } else {
-        Values.push(<div style={style.item} key={i}>-</div>);
-      }
-    }    
+    const section = game.sections[user.cur_section];
+    const result_id = section.default_variables.result[0];
+    console.log(`aresult_id: ${result_id}`);
+    console.log(game.variables[result_id]);
+    const result = game.variables[result_id].value;
+    const answer = game.answers[section.answer];
     return (
-      <div style={style.display}>{Values}</div>
+      <div style={style.display}>{answer} [{result}]</div>
     );
   }  
   render() {
@@ -112,7 +110,7 @@ Result.propTypes = {
 
 const style = {
   base: {
-    minHeight: '100px',
+    height: '110px',
     width: '100%',
     position: 'relative',
     display: 'table-row'

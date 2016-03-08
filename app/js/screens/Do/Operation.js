@@ -3,6 +3,7 @@ import { openSection, SECTIONTYPE } from '../../actions';
 import { connect } from 'react-redux';
 
 import VariableSelector from './VariableSelector';
+import OperationSelector from './OperationSelector';
 
 function select(state) {
   return {
@@ -23,6 +24,9 @@ export default class Operation extends Component {
   handleOpenSection() {
     const {dispatch, user} = this.props;
     dispatch(openSection(user.cur_section, SECTIONTYPE.OPERATION));
+    this.setState({
+      is_mouse_hover_label: false      
+    });
   }
   handleMouseEnterLabel() {
     this.setState({is_mouse_hover_label:true});
@@ -63,18 +67,26 @@ export default class Operation extends Component {
   }
   render() {
     const {game, user} = this.props;
-    if (game.sections[user.cur_section].is_operation_opened){
-      const answer = game.answers[game.sections[user.cur_section].answer];
+    const hover_label = this.state.is_mouse_hover_label ? style.label_hover : null;
+    const section = game.sections[user.cur_section];
+    if (section.is_operation_opened){
+      const answer = game.answers[section.answer];
+      const operation_name = section.operation == null ? null : game.operations[section.operation].name;
+      const operation_description = section.operation == null ? 'Click square to select an operation' : game.operations[section.operation].description;
       const VariableEditors = this.renderSelector();
       const Display = this.renderDisplay();
       return (
         <div style={style.base}>
-          <div style={style.display}>{answer}</div>
+          <div style={style.display}>{operation_description}</div>
           <div style={style.label_wrap}>
-            <div style={style.label}>+</div>
+            <div style={{...style.label, ...hover_label}}
+              onMouseEnter={this.handleMouseEnterLabel.bind(this)}
+              onMouseLeave={this.handleMouseLeaveLabel.bind(this)}>
+                <OperationSelector/>
+            </div>
           </div>
           <div style={style.selector}>
-            <div style={style.selector_header}>ADDITION</div>
+            <div style={style.selector_header}>{operation_name}</div>
             <div style={style.selector_table}>
               {VariableEditors}
             </div>
@@ -83,7 +95,6 @@ export default class Operation extends Component {
         </div>
       );    
     } else {
-      const hover_label = this.state.is_mouse_hover_label ? style.label_hover : null;
       return (
         <div style={style.base}>
           <div style={style.display}></div>
@@ -109,7 +120,7 @@ Operation.propTypes = {
 
 const style = {
   base: {
-    minHeight: '100px',
+    height: '110px',
     width: '100%',
     position: 'relative',
     display: 'table-row'
@@ -135,7 +146,6 @@ const style = {
   },
   label: {
     border: '1px solid black',
-    borderRadius: '50%',
     fontSize: '400%',
     lineHeight: '100px',
     textAlign: 'center',

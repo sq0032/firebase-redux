@@ -23,6 +23,9 @@ export default class Question extends Component {
   handleOpenSection() {
     const {dispatch, user} = this.props;
     dispatch(openSection(user.cur_section, SECTIONTYPE.QUESTION));
+    this.setState({
+      is_mouse_hover_label: false      
+    });
   }
   handleMouseEnterLabel() {
     this.setState({is_mouse_hover_label:true});
@@ -113,7 +116,7 @@ Question.propTypes = {
 
 const style = {
   base: {
-    minHeight: '100px',
+    height: '110px',
     width: '100%',
     position: 'relative',
     display: 'table-row'

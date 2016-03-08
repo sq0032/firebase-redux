@@ -48,7 +48,6 @@ export default class VariableSelector extends Component {
       const vid = variables[key];
       if (vid == null || typeof(game.variables[vid].name) == 'undefined'){continue;}
       const name = game.variables[vid].name;
-      console.log(game.variable_names.first[name.first]);
       if (name == null || name.first == null || name.middle == null || name.last == null){continue;}
       let first = game.variable_names.first[name.first];
       let middle = game.variable_names.middle[name.middle];

@@ -27,7 +27,6 @@ export default class VariableEditor extends Component {
   handleAddVariable() {
     const {dispatch, user, line_num, type, def_vid} = this.props;
     const section_id = user.cur_section;
-    console.log(`vid: ${def_vid}`);
     if (def_vid){
       dispatch(addAndUpdateVariable(section_id, line_num, type, def_vid));
     } else {

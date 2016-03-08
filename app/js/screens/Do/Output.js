@@ -24,6 +24,9 @@ export default class Output extends Component {
   handleOpenSection() {
     const {dispatch, user} = this.props;
     dispatch(openSection(user.cur_section, SECTIONTYPE.OUTPUT));
+    this.setState({
+      is_mouse_hover_label: false      
+    });
   }
   handleMouseEnterLabel() {
     this.setState({is_mouse_hover_label:true});
@@ -81,7 +84,7 @@ export default class Output extends Component {
         <div style={style.base}>
           <div style={style.display}>{Display}</div>
           <div style={style.label_wrap}>
-            <div style={style.label}>!</div>
+            <div style={style.label}>&lt;</div>
           </div>
           <div style={style.selector}>
             <div style={style.selector_header}>OUTPUT</div>
@@ -119,10 +122,11 @@ Output.propTypes = {
 
 const style = {
   base: {
-    minHeight: '100px',
+    height: '110px',
     width: '100%',
     position: 'relative',
-    display: 'table-row'
+    display: 'table-row',
+    marginBottom: '10px'
   },
   display: {
     width: '40%',
