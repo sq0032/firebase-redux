@@ -25,7 +25,7 @@ export const TYPE = {
   DO_REMOVE_OUTPUT: 'DO_REMOVE_OUTPUT',
   DO_OPEN_SECTION: 'DO_OPEN_SECTION',
   DO_SELECT_OPERATION: 'DO_SELECT_OPERATION',
-  DO_ADD_COMMENT: 'DO_ADD_COMMENT',
+  DO_EDIT_COMMENT: 'DO_EDIT_COMMENT',
   
   //REALTIME
   FETCH_GAME_STATE: 'FETCH_GAME_STATE',
@@ -198,9 +198,9 @@ export function selectOperation(section_index, operation){
     operation: operation
   }
 }
-export function addComment(comment, vid){
+export function editComment(comment, vid){
   return {
-    type: TYPE.DO_ADD_COMMENT,
+    type: TYPE.DO_EDIT_COMMENT,
     comment: comment,
     vid: vid
   }

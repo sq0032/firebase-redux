@@ -59,22 +59,14 @@ export default class Input extends Component {
       const first = game.variable_names.first[name.first];
       const middle = game.variable_names.middle[name.middle];
       const last = game.variable_names.last[name.last];
-      const commend = game.variable_names.commend;
-      const commend_div = (<span style={{backgroundColor:"yellow"}}>{commend}</span>);
+      const comment = game.variables[dec_vs[key]].comment;
+      const comment_div = (<span style={{backgroundColor:"yellow"}}>{comment}</span>);
       Values.push(
         <div style={style.item} key={key}>
-          {first} {middle} {last} {commend_div}
+          {first} {middle} {last} {comment_div}
         </div>
       );
     }
-//    for (let i = 0; i < Object.keys(dec_vs).length; i++){
-//      if (dec_vs.hasOwnProperty(i)){
-//        let value = game.variables[dec_vs[i]].value ? game.variables[dec_vs[i]].value : 'null';
-//        Values.push(<div style={style.item} key={i}>{value}</div>);
-//      } else {
-//        Values.push(<div style={style.item} key={i}>-</div>);
-//      }
-//    }
     return (
       <div style={style.display}>{Values}</div>
     );

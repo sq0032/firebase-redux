@@ -52,12 +52,12 @@ export const mockup = {
         answer: null,
         operation: null,
         watcher: {},
-        num_outputs: 0,
+        num_outputs: 1,
         is_input_opened: false,
         is_question_opened: false,
         is_operation_opened: false,
         is_result_opened: false,
-        is_output_opened: false,
+        is_output_opened: true,
       },
       {
         index: 1,
@@ -155,7 +155,7 @@ export const mockup = {
           middle: 1,
           last: 0
         },
-        commend: "There were 10 apples on the tree on day 1"
+        comment: "There were 10 apples on the tree on day 1"
       },
       1: {
         vid: 1,
@@ -165,7 +165,7 @@ export const mockup = {
           middle: 2,
           last: 0
         },
-        commend: null
+        comment: null
       },
       2: {
         vid: 2,
@@ -175,7 +175,7 @@ export const mockup = {
           middle: 0,
           last: 0
         },
-        commend: null
+        comment: null
       },
       3: {
         vid: 3,
@@ -185,7 +185,7 @@ export const mockup = {
           middle: 1,
           last: 0
         },
-        commend: null
+        comment: null
       },
       4: {
         vid: 4,
@@ -195,7 +195,7 @@ export const mockup = {
           middle: 0,
           last: 0
         },
-        commend: null
+        comment: null
       },
       5: {
         vid: 5,
@@ -205,7 +205,7 @@ export const mockup = {
           middle: 1,
           last: 0
         },
-        commend: null
+        comment: null
       },
       6: {
         vid: 6,
@@ -215,13 +215,13 @@ export const mockup = {
           middle: 3,
           last: 0
         },
-        commend: null
+        comment: null
       },
       7: {
         vid: 7,
         value: null,
         name: null,
-        commend: null
+        comment: null
       },
     },
     operations: {
@@ -580,21 +580,23 @@ export function variable(state, action){
         last: action.name_section == 'last' ? action.name_id : state.name.last
       };
       return {...state, name: name};
+    case TYPE.DO_EDIT_COMMENT:
+      return {...state, comment:action.comment};
+    default:
+      return state;
   }
 }
 export function variables(state, action){
   switch (action.type){
     case TYPE.DO_NAME_VARIABLE:
-      var variables = {};
-      for (let key in state){
-        if (key == action.vid){
-          variables[key] = variable(state[key], action);
-        } else {
-          variables[key] = state[key];
-        }
-      }
-      return variables;
+      var variables_state = {...state};
+      variables_state[action.vid] = variable(variables_state[action.vid], action);
+      return variables_state;
       break;
+    case TYPE.DO_EDIT_COMMENT:
+      var variables_state = {...state};
+      variables_state[action.vid] = variable(variables_state[action.vid], action);
+      return variables_state;
     case TYPE.UPDATE_GAME_STATE:
       const new_variables = action.game_state.variables;
       var new_variables_arr = {};
@@ -798,6 +800,8 @@ export function game(state = mockup.gamestate, action){
         {variables: variables_state},
         {sections: sections_state}
       );
+    case TYPE.DO_EDIT_COMMENT:
+      return {...state, variables: variables(state.variables, action)};
     case TYPE.DO_NAME_VARIABLE:
       return Object.assign(
         {},

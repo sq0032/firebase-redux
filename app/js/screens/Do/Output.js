@@ -3,6 +3,7 @@ import { openSection, SECTIONTYPE } from '../../actions';
 import { connect } from 'react-redux';
 
 import VariableSelector from './VariableSelector';
+import CommentEditor from './CommentEditor';
 
 function select(state) {
   return {
@@ -51,16 +52,6 @@ export default class Output extends Component {
     const {user, game} = this.props;
     const cur_section = user.cur_section;
     const dec_vs = game.sections[user.cur_section].decleared_variables.output;
-//    const Values = dec_vs.map((id, index)=>{
-//      if (typeof(id)=='undefined'||id==null){
-//        console.log('return null');
-//        return (<div style={style.item} key={index}>-</div>);
-//      }
-//      let value = game.variables[id].value ? game.variables[id].value : 'null';
-//      return (
-//        <div style={style.item} key={index}>{value}</div>
-//      );
-//    });
     var Values = [];
     for (let key in dec_vs){
       if(dec_vs[key]==null){continue;}
@@ -68,22 +59,15 @@ export default class Output extends Component {
       const first = game.variable_names.first[name.first];
       const middle = game.variable_names.middle[name.middle];
       const last = game.variable_names.last[name.last];
-      const commend = game.variable_names.commend;
-      const commend_div = (<span style={{backgroundColor:"yellow"}}>{commend}</span>);
+      const comment = game.variables[dec_vs[key]].comment;
+//      const comment_div = (<span style={{backgroundColor:"yellow"}}>{commend}</span>);
       Values.push(
         <div style={style.item} key={key}>
-          {first} {middle} {last} {commend_div}
+          {first} {middle} {last}
+          <CommentEditor comment={comment} vid={key}/>
         </div>
       );
     }
-//    for (let i = 0; i < 6; i++){
-//      if (dec_vs.hasOwnProperty(i)){
-//        let value = game.variables[dec_vs[i]].value ? game.variables[dec_vs[i]].value : 'null';
-//        Values.push(<div style={style.item} key={i}>{value}</div>);
-//      } else {
-//        Values.push(<div style={style.item} key={i}>-</div>);
-//      }
-//    }    
     return (
       <div style={style.display}>{Values}</div>
     );

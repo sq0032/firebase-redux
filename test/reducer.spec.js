@@ -609,8 +609,12 @@ describe('App', () => {
     });
   });
   describe('PLAN', () => {
+    let state = null;
+    beforeEach(() => {
+      //Setup testing enviroment
+      state = immutable.fromJS(game(mockup.gamestate, {})).toJS();
+    });    
     describe('When player sets an output number', () => {
-      let state = null;
       beforeEach(() => {
         //Setup testing enviroment
         state = immutable.fromJS(game(mockup.gamestate, {})).toJS();
@@ -643,6 +647,20 @@ describe('App', () => {
         state = game(state, actions.setOutputNumber(0,0));
         expect(Object.keys(state.sections[0].decleared_variables.output)).to.have.length(0);
         expect(state.variables[5].value).to.equal(2);
+      });
+    });
+    describe('When player select an answer for a section', () => {
+      it('should add the answer to the section', () => {
+        expect(state.sections[0].answer).to.equal(null);
+        state = game(state, actions.selectAnswer(0,1));
+        expect(state.sections[0].answer).to.equal(1);
+      });      
+    });
+    xdescribe('When team leader assigned a player to a game section', () => {
+      it('should add the player to the game section', () => {
+        expect(state.sections[0].player).to.equal(null);
+        state = game(state, actions.assignPlayer(0, 1));  
+        expect(state.sections[0].player).to.equal(1);
       });
     });
   });
@@ -786,7 +804,6 @@ describe('App', () => {
       });
       it('should return 11 if ADDITION operation has been selected', () => {
         state = game(state, actions.selectOperation(0, 0))
-        console.log(`operation: ${mockup.gamestate.sections[0].operation}`);
         expect(state.sections[0].operation).to.be(0);
         expect(state.variables[3].value).to.equal(11);
       });
@@ -885,7 +902,7 @@ describe('App', () => {
       });
       it('should add comment on the variable', () => {
         expect(state.variables[2].comment).to.equal(null);
-        state = game(state, actions.addComment('This is the comment', 2));
+        state = game(state, actions.editComment('This is the comment', 2));
         expect(state.variables[2].comment).to.equal('This is the comment');
       });
     });
