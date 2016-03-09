@@ -495,7 +495,8 @@ export function section(state, action, vid){
       }
     case TYPE.PLAN_ASSIGN_PLAYER:
       if (state.index == action.section_index){
-        return Object.assign({}, state, {player:action.player_index});
+        console.log(`player id: ${action.player_id}`);
+        return Object.assign({}, state, {player:action.player_id});
       } else {
         return state;
       }
@@ -690,6 +691,9 @@ export function game(state = mockup.gamestate, action){
         state,
         {sections: sections(state.sections, action)}
       );
+    case TYPE.PLAN_ASSIGN_PLAYER:
+      return {...state, sections: sections(state.sections, action)};
+      break;
     case TYPE.PLAN_SET_OUTPUT_NUMBER:
       s_i = action.section_index;
       var variables_state = immutable.fromJS(state.variables);
@@ -1029,11 +1033,11 @@ export function game(state = mockup.gamestate, action){
   }
 }
 export const user_dic = {
-  id: 1,
-  name: 'Mark',
-  cur_section: 0,
+  1: {uid:1, name: 'Sam', cur_section: 0},
+  2: {uid:2, name: 'Amenda', cur_section: 0},
+  3: {uid:3, name: 'David', cur_section: 0}
 }
-export function players(state = [user_dic], action){
+export function players(state = user_dic, action){
   switch (action.type){
 //    case TYPE.JOIN_GAME:
 //      return {
@@ -1043,7 +1047,7 @@ export function players(state = [user_dic], action){
       return state
   }
 }
-export function user(state = user_dic, action){
+export function user(state = user_dic[1], action){
   switch (action.type){
 //    case TYPE.JOIN_GAME:
 //      return {

@@ -1,5 +1,5 @@
 import Firebase from 'firebase';
-var rootRef = new Firebase('https://blazing-fire-2123.firebaseio.com');
+//var rootRef = new Firebase('https://blazing-fire-2123.firebaseio.com');
 
 /* Action types */
 export const TYPE = {

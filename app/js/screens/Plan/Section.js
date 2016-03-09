@@ -1,8 +1,8 @@
 import React, { Component, PropTypes } from 'react';
 import { selectAnswer, assignPlayer, enableNextScreen, setOutputNumber } from '../../actions';
 import { connect } from 'react-redux';
-import Firebase from 'firebase';
-var rootRef = new Firebase('https://blazing-fire-2123.firebaseio.com');
+//import Firebase from 'firebase';
+//var rootRef = new Firebase('https://blazing-fire-2123.firebaseio.com');
 
 function select(state) {
   return {
@@ -30,16 +30,18 @@ export default class Section extends Component {
   setOutputNumber(event){
     const {dispatch, section_index} = this.props;
     const num_outputs = parseInt(event.target.value);
-    rootRef.child(`game/sections/${section_index}`).update({
-      num_outputs: num_outputs
-    }, error => {
-      if (error) {
-        dispatch(reportError('Set Output Number Error'));
-      } else {
-        dispatch(setOutputNumber(section_index, num_outputs));
-      }
-    });    
+//    rootRef.child(`game/sections/${section_index}`).update({
+//      num_outputs: num_outputs
+//    }, error => {
+//      if (error) {
+//        dispatch(reportError('Set Output Number Error'));
+//      } else {
+//        dispatch(setOutputNumber(section_index, num_outputs));
+//      }
+//    });
+    dispatch(setOutputNumber(section_index, num_outputs));
   }
+  
   renderAnswerSelector(){
     const {section_index, game} = this.props;
     const that = this;
@@ -67,11 +69,17 @@ export default class Section extends Component {
     const {section_index, players, game} = this.props;
     const that = this;
       
-    var PlayerOptions = players.map(player=>(
-      <option key={player.id} value={player.id}>{player.name}</option>
-    ));
+//    var PlayerOptions = players.map(player=>(
+//      <option key={player.id} value={player.id}>{player.name}</option>
+//    ));
+    var PlayerOptions = [];
+    for(let id in players){
+      PlayerOptions.push(
+        <option key={id} value={id}>{players[id].name}</option>
+      );
+    }
     PlayerOptions = [
-      (<option key={0} value="select">Select an player</option>),
+      (<option key="select" value="select">-</option>),
       PlayerOptions
     ];
     
@@ -79,7 +87,7 @@ export default class Section extends Component {
     return (
       <select 
         value={section.player}
-        onChange={this.selectAnswer.bind(this)}>
+        onChange={this.assignPlayer.bind(this)}>
         {PlayerOptions}
       </select>
     );
@@ -115,11 +123,11 @@ export default class Section extends Component {
         <label>Answer:</label>
           {AnswerSelector}
         <br/>
-        <label>Player:</label>
-          {PlayerSelector}
+        <div><img style={style.user_img} src='./app/img/user.png'/></div>
+        {PlayerSelector}
         <br/>
         <label>Number of Outputs:</label>
-          {OutputSetter}
+        {OutputSetter}
         <br/>
       </div>
     )
@@ -137,4 +145,8 @@ const style = {
     top: '100px',
     left: '50px',
   },
+  user_img: {
+    width: '40px',
+    height: '40px',
+  },   
 }
