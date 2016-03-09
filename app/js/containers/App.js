@@ -4,6 +4,7 @@ import { GameScreens } from '../actions';
 
 import Screen from '../screens/Screen';
 import Nav from '../components/Nav';
+import VideoChat from '../components/VideoChat';
 
   
 class App extends Component {
@@ -27,6 +28,7 @@ class App extends Component {
       <div>
         <Nav/>
         {Screen}
+        <VideoChat/>
       </div>
     )
   }
