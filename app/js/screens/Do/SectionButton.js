@@ -59,7 +59,6 @@ const style = {
     textAlign: 'center',
     lineHeight: '75px',
     fontSize: '200%',
-//    marginBottom: '50px',
     cursor: 'pointer',
     display: 'inline-block'
   },

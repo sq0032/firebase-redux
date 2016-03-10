@@ -1,5 +1,5 @@
 import React, { Component, PropTypes } from 'react';
-import { DNDTYPE, orderSection } from '../actions';
+import { DNDTYPE, orderSection } from '../../actions';
 import { connect } from 'react-redux';
 import { DropTarget } from 'react-dnd';
 
@@ -37,7 +37,7 @@ export default class DroppableSlot extends Component {
     const that = this;
     return connectDropTarget(
       <div style={{...style.base, backgroundColor}}>
-        <p style={style.text}>{section_index}:{text}</p>
+        <p style={style.text}>{text}</p>
       </div>
     )
   }
@@ -51,9 +51,13 @@ DroppableSlot.propTypes = {
 
 const style = {
   base: {
-    width: '300px',
-    minHeight: '125px',
+    minWidth: '150px',
+    maxWidth: '300px',
+    minHeight: '75px',
     border: '1px solid black',
+    borderRadius: '10px',
+    padding: '5px',
+    margin: '5px'
   },
   text: {
     margin: '0px'

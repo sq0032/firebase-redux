@@ -55,7 +55,7 @@ export default class Section extends Component {
         <div style={style.cell}>
           <div 
             style={style.label}>
-            {section_index+1}
+            {section.order+1}
           </div>
         </div>
         <div style={style.cell}>

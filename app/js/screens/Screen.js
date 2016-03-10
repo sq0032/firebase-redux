@@ -3,7 +3,7 @@ import {Motion, spring} from 'react-motion';
 import {GameScreens} from '../actions'
 
 import Intro from './Intro';
-import Read from './Read';
+import Read from './Read/Read';
 import Plan from './Plan/Base';
 import Do from './Do/Base';
 import Test from './Test';
