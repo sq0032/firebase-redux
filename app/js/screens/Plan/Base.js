@@ -32,7 +32,7 @@ export default class Plan extends Component {
     const Sections = this.renderSections();
     return (
       <div>
-        <div>
+        <div style={style.table}>
           {Sections}
         </div>
       </div>
@@ -45,6 +45,11 @@ Plan.propTypes = {
 
 
 const style = {
+  table: {
+    border: '1px solid red',
+    display: 'table',
+    width: '100%'
+  },  
   sections: {
     top: '100px',
     left: '50px',

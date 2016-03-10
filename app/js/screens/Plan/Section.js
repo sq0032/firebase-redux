@@ -1,6 +1,9 @@
 import React, { Component, PropTypes } from 'react';
 import { selectAnswer, assignPlayer, enableNextScreen, setOutputNumber } from '../../actions';
 import { connect } from 'react-redux';
+
+import Player from './Player.js';
+import Output from './Output.js';
 //import Firebase from 'firebase';
 //var rootRef = new Firebase('https://blazing-fire-2123.firebaseio.com');
 
@@ -20,28 +23,6 @@ export default class Section extends Component {
       parseInt(event.target.value)
     ));
   }
-  assignPlayer(event){
-    const {dispatch, section_index} = this.props;
-    dispatch(assignPlayer(
-      section_index, 
-      parseInt(event.target.value)
-    ));
-  }
-  setOutputNumber(event){
-    const {dispatch, section_index} = this.props;
-    const num_outputs = parseInt(event.target.value);
-//    rootRef.child(`game/sections/${section_index}`).update({
-//      num_outputs: num_outputs
-//    }, error => {
-//      if (error) {
-//        dispatch(reportError('Set Output Number Error'));
-//      } else {
-//        dispatch(setOutputNumber(section_index, num_outputs));
-//      }
-//    });
-    dispatch(setOutputNumber(section_index, num_outputs));
-  }
-  
   renderAnswerSelector(){
     const {section_index, game} = this.props;
     const that = this;
@@ -65,70 +46,29 @@ export default class Section extends Component {
       </select>
     );
   }
-  renderPlayerSelector(){
-    const {section_index, players, game} = this.props;
-    const that = this;
-      
-//    var PlayerOptions = players.map(player=>(
-//      <option key={player.id} value={player.id}>{player.name}</option>
-//    ));
-    var PlayerOptions = [];
-    for(let id in players){
-      PlayerOptions.push(
-        <option key={id} value={id}>{players[id].name}</option>
-      );
-    }
-    PlayerOptions = [
-      (<option key="select" value="select">-</option>),
-      PlayerOptions
-    ];
-    
-    const section = game.sections.filter(s=>s.index==section_index)[0];
-    return (
-      <select 
-        value={section.player}
-        onChange={this.assignPlayer.bind(this)}>
-        {PlayerOptions}
-      </select>
-    );
-  }
-  renderOutputSetter() {
-    const {section_index, players, game} = this.props;
-    const that = this;
-    var NumberOptions = [];
-    for (let i = 0; i <= game.config.max_num_outputs; i++){
-      NumberOptions.push(
-        <option key={i} value={i}>{i}</option>
-      );
-    }
-    
-    const section = game.sections.filter(s=>s.index==section_index)[0];
-    return (
-      <select 
-        value={section.num_outputs}
-        onChange={this.setOutputNumber.bind(this)}>
-        {NumberOptions}
-      </select>
-    );
-  }
   render() {
     const {section_index, game} = this.props;
     const AnswerSelector = this.renderAnswerSelector();
-    const PlayerSelector = this.renderPlayerSelector();
-    const OutputSetter = this.renderOutputSetter();
-    const section = game.sections.filter(s=>s.index==section_index)[0];
+    const section = game.sections[section_index];
     return (
-      <div>
-        <p>{section_index}:{section.text}</p>
-        <label>Answer:</label>
-          {AnswerSelector}
-        <br/>
-        <div><img style={style.user_img} src='./app/img/user.png'/></div>
-        {PlayerSelector}
-        <br/>
-        <label>Number of Outputs:</label>
-        {OutputSetter}
-        <br/>
+      <div style={style.row}>
+        <div style={style.cell}>
+          <div 
+            style={style.label}>
+            {section_index+1}
+          </div>
+        </div>
+        <div style={style.cell}>
+          <p>{section.text}</p>
+          <label>Answer:</label>
+            {AnswerSelector}
+        </div>
+        <div style={style.cell}>
+          <Output section_index={section_index}/>
+        </div>
+        <div style={style.cell}>
+          <Player section_index={section_index}/>
+        </div>
       </div>
     )
   }
@@ -138,9 +78,20 @@ Section.propTypes = {
   section_index: PropTypes.number.isRequired
 }
 
-
-
 const style = {
+  cell: {
+    display: 'table-cell',
+    border: '10px solid transparent',
+    verticalAlign: 'middle',
+//    padding:' 20px'
+  },
+  row: {
+//    minHeight: '210px',
+//    width: '100%',
+//    position: 'relative',
+//    border: '5px solid black',
+    display: 'table-row'
+  },
   sections: {
     top: '100px',
     left: '50px',
@@ -148,5 +99,17 @@ const style = {
   user_img: {
     width: '40px',
     height: '40px',
-  },   
+  },
+  label: {
+    height: '75px',
+    width: '75px',
+    borderRadius: '50%',
+    border: '1px solid black',
+    margin: '0px 10px 0px 10px',
+    textAlign: 'center',
+    lineHeight: '75px',
+    fontSize: '200%',
+    cursor: 'pointer',
+    display: 'inline-block'
+  }
 }
