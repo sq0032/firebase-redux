@@ -30,7 +30,7 @@ export const mockup = {
       {
         index: 0,
         order: 0,
-        text: 'How many apples did Mark get if he colleted [5] apples and added them to [2] he already had?',
+        text: 'How many apples did Sam get if he colleted [5] apples and added them to [2] he already had?',
         default_variables: {
           question: {
             0: 1,
@@ -62,7 +62,7 @@ export const mockup = {
       {
         index: 1,
         order: 1,
-        text: 'How many apples did Seid have if he already had [4] and Mark gave him all his apples?',
+        text: 'How many apples did Amenda have if he already had [4] and Sam gave him all his apples?',
         default_variables: {
           question: {
             0: 4
@@ -93,7 +93,7 @@ export const mockup = {
       {
         index: 2,
         order: 2,
-        text: 'How many apples remained on the tree on day 1 after Mark ollected his apples?',
+        text: 'How many apples remained on the tree on day 1 after Sam ollected his apples?',
         default_variables: {
           question: {},
           result: {0: 6},
@@ -119,20 +119,20 @@ export const mockup = {
       }
     ],
     answers: {
-      0: "Mark got # apples",
-      1: "Mark got # chairs",
-      2: "Mark got # starts",
-      3: "Seid got # apples",
-      4: "Seid got # charis",
-      5: "Seid got # stars",
+      0: "Sam got # apples",
+      1: "Sam got # chairs",
+      2: "Sam got # starts",
+      3: "Amenda got # apples",
+      4: "Amenda got # charis",
+      5: "Amenda got # stars",
       6: "On the tree # apples remained",
       7: "On the tree # charis remained",
       8: "On the tree # stars remained",
     },
     variable_names:{
       first: {
-        0: "Mark's",
-        1: "Seid's",
+        0: "Sam's",
+        1: "Amenda's",
         2: "Tree's"
       },
       middle: {
@@ -271,7 +271,7 @@ export const mockup_dic = {
       {
         index: 0,
         order: 0,
-        text: 'How many apples did Mark get if he colleted [5] apples and added them to [2] he already had?',
+        text: 'How many apples did Sam get if he colleted [5] apples and added them to [2] he already had?',
         default_variables: {
           question: [1,2],
           result: [3],
@@ -291,7 +291,7 @@ export const mockup_dic = {
       {
         index: 1,
         order: 1,
-        text: 'How many apples did Seid have if he already had [4] and Mark gave him all his apples?',
+        text: 'How many apples did Amenda have if he already had [4] and Sam gave him all his apples?',
         default_variables: {
           question: [4],
           result: [5],
@@ -311,7 +311,7 @@ export const mockup_dic = {
       {
         index: 2,
         order: 2,
-        text: 'How many apples remained on the tree on day 1 after Mark ollected his apples?',
+        text: 'How many apples remained on the tree on day 1 after Sam ollected his apples?',
         default_variables: {
           question: [],
           result: [6],
@@ -330,20 +330,20 @@ export const mockup_dic = {
       }
     ],
     answers: [
-      {index: 1, text: "Mark got # apples"},
-      {index: 2, text: "Mark got # chairs"},
-      {index: 3, text: "Mark got # starts"},
-      {index: 4, text: "Seid got # apples"},
-      {index: 5, text: "Seid got # charis"},
-      {index: 6, text: "Seid got # stars"},
+      {index: 1, text: "Sam got # apples"},
+      {index: 2, text: "Sam got # chairs"},
+      {index: 3, text: "Sam got # starts"},
+      {index: 4, text: "Amenda got # apples"},
+      {index: 5, text: "Amenda got # charis"},
+      {index: 6, text: "Amenda got # stars"},
       {index: 7, text: "On the tree # apples remained"},
       {index: 8, text: "On the tree # charis remained"},
       {index: 9, text: "On the tree # stars remained"}
     ],
     varable_names:{
       first: [
-        {index: 1, text: "Mark's"},
-        {index: 2, text: "Seid's"},
+        {index: 1, text: "Sam's"},
+        {index: 2, text: "Amenda's"},
       ],
       middle: [
         {index: 1, text: "existing"},
@@ -366,7 +366,7 @@ export const mockup_dic = {
         vid: 1,
         value: 5,
         name: {
-          first: "Mark's",
+          first: "Sam's",
           middle: "colleted",
           last: "apples"
         },
@@ -382,7 +382,7 @@ export const mockup_dic = {
         vid: 3,
         value: null,
         name: {
-          first: "Mark's",
+          first: "Sam's",
           middle: "total",
           last: "apples"
         },
@@ -398,7 +398,7 @@ export const mockup_dic = {
         vid: 5,
         value: null,
         name: {
-          first: "Seid's",
+          first: "Amenda's",
           middle: "total",
           last: "apples"
         },

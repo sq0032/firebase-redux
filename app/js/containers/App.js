@@ -6,6 +6,28 @@ import Screen from '../screens/Screen';
 import Nav from '../components/Nav';
 import VideoChat from '../components/VideoChat';
 
+import 'aws-sdk/dist/aws-sdk';
+const AWS = window.AWS;
+// Initialize the Amazon Cognito credentials provider
+AWS.config.region = 'us-east-1'; // Region
+AWS.config.credentials = new AWS.CognitoIdentityCredentials({
+    IdentityPoolId: 'us-east-1:d8e6ce93-9af3-4b2a-ac8a-65a8c804ff75',
+});
+
+// Initialize the Cognito Sync client
+
+//AWS.config.credentials.get(function(){
+//   var syncClient = new AWS.CognitoSyncManager();
+//   syncClient.openOrCreateDataset('myDataset', function(err, dataset) {
+//      dataset.put('myKey', 'myValue', function(err, record){
+//         dataset.synchronize({
+//            onSuccess: function(data, newRecords) {
+//                // Your handler code here
+//            }
+//         });
+//      });
+//   });
+//});
   
 class App extends Component {
     
@@ -46,15 +68,6 @@ const style = {
 }
 
 App.propTypes = {
-//  visibleTodos: PropTypes.arrayOf(PropTypes.shape({
-//    text: PropTypes.string.isRequired,
-//    completed: PropTypes.bool.isRequired
-//  }).isRequired).isRequired,
-//  visibilityFilter: PropTypes.oneOf([
-//    'SHOW_ALL',
-//    'SHOW_COMPLETED',
-//    'SHOW_ACTIVE'
-//  ]).isRequired
 }
 
 function select(state) {

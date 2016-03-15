@@ -35,7 +35,10 @@ module.exports = {
                 presets: ['react', 'es2015', 'stage-0']
               }
             }
-        ]
+        ],
+        noParse: [
+          /aws\-sdk/,
+        ]      
     },
     plugins: [
       new webpack.HotModuleReplacementPlugin()
