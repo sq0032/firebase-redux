@@ -2,7 +2,7 @@ import React, { Component, PropTypes } from 'react';
 import {Motion, spring} from 'react-motion';
 import {GameScreens} from '../actions'
 
-import Intro from './Intro';
+import Intro from './Intro/Intro';
 import Read from './Read/Read';
 import Plan from './Plan/Base';
 import Do from './Do/Base';

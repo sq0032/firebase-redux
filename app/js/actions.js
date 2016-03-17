@@ -10,6 +10,7 @@ export const TYPE = {
   ENABLE_NEXT_SCREEN: 'ENABLE_NEXT_SCREEN',
   //INTRO
   INTRO_OPEN_ENVELOP: 'INTRO_OPEN_ENVELOP',
+  INTRO_VOTE_LEADER: 'INTRO_VOTE_LEADER',
   //READ
   READ_ORDER_SECTION: 'READ_ORDER_SECTION',
   //PLAN
@@ -91,6 +92,12 @@ export function openEnvelop(){
   return {
     type: TYPE.INTRO_OPEN_ENVELOP
   }
+}
+export function voteLeader(user_id){
+  return {
+    type: TYPE.INTRO_VOTE_LEADER,
+    user_id: user_id
+  }  
 }
 /* Read actions */
 export function orderSection(section_index, section_order){

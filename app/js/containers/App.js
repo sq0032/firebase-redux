@@ -10,7 +10,7 @@ import VideoChat from '../components/VideoChat';
 class App extends Component {
     
   renderScreen() {
-    const offset = this.props.gameScreen.cur_screen;
+    const offset = this.props.screen.cur_screen;
     const Screens = GameScreens.map((screen, index)=>{
       if (index >= offset - 1 && index <= offset + 1 ){
         return (
@@ -23,7 +23,7 @@ class App extends Component {
   }
   render() {
     const Screen = this.renderScreen();
-    const { dispatch, gameScreen } = this.props
+    const { dispatch, screen } = this.props
     return (
       <div>
         <Nav/>
@@ -59,7 +59,7 @@ App.propTypes = {
 
 function select(state) {
   return {
-    gameScreen: state.gameScreens,
+    screen: state.screens,
   }
 }
 

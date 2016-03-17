@@ -4,30 +4,30 @@ import { goNextScreen, goPreviousScreen, GameScreens } from '../actions';
 
 export default class Nav extends Component {
   renderGoPreviousBtn() {
-    const { gameScreen, dispatch } = this.props;
-    if (gameScreen.cur_screen == 0){
+    const { screen, dispatch } = this.props;
+    if (screen.cur_screen == 0){
       return null;
     } else {
       return (
         <button
           style={style.previous_btn}
-          onClick={()=>dispatch(goPreviousScreen(gameScreen.cur_screen))}>
+          onClick={()=>dispatch(goPreviousScreen(screen.cur_screen))}>
           Go Previous
         </button>
       );
     }
   }  
   renderGoNextBtn() {
-    const { gameScreen, dispatch } = this.props;
-    if (gameScreen.cur_screen == 4){
+    const { screen, dispatch } = this.props;
+    if (screen.cur_screen == 4){
       return null;
     } else {
-      const is_screen_available = gameScreen.enable_screens[gameScreen.cur_screen+1];
+      const is_screen_available = screen.enable_screens[screen.cur_screen+1];
       if (is_screen_available){
         return (
           <button
             style={style.next_btn}
-            onClick={()=>dispatch(goNextScreen(gameScreen.cur_screen))}>
+            onClick={()=>dispatch(goNextScreen(screen.cur_screen))}>
             Go Next
           </button>
         );
@@ -36,7 +36,7 @@ export default class Nav extends Component {
           <button
             disabled
             style={style.next_btn}
-            onClick={()=>dispatch(goNextScreen(gameScreen.cur_screen))}>
+            onClick={()=>dispatch(goNextScreen(screen.cur_screen))}>
             Go Next
           </button>
         );        
@@ -44,7 +44,7 @@ export default class Nav extends Component {
     }
   }
   render() {
-    const { dispatch, gameScreen } = this.props;
+    const { dispatch, screen } = this.props;
     const GoPreviousBtn = this.renderGoPreviousBtn();
     const GoNextBtn = this.renderGoNextBtn();
     return (
@@ -52,7 +52,7 @@ export default class Nav extends Component {
         {GoPreviousBtn}
         {GoNextBtn}
         <p style={style.text}>
-          Screen Index:{gameScreen.cur_screen}, Screen Name:{GameScreens[gameScreen.cur_screen]}
+          Screen Index:{screen.cur_screen}, Screen Name:{GameScreens[screen.cur_screen]}
         </p>
       </div>
     )
@@ -62,7 +62,7 @@ export default class Nav extends Component {
 Nav.propTypes = {
 //  onClick: PropTypes.func.isRequired,
 //  text: PropTypes.string.isRequired,
-//  completed: PropTypesgameScreen: state.gameScreens,.bool.isRequired
+//  completed: PropTypesscreen: state.screens,.bool.isRequired
 }
 
 const style = {
@@ -94,7 +94,7 @@ const style = {
 
 function select(state) {
   return {
-    gameScreen: state.gameScreens,
+    screen: state.screens,
   }
 }
 

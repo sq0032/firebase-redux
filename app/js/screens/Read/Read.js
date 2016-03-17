@@ -9,7 +9,6 @@ import DroppableSlot from './DroppableSlot';
 
 function select(state) {
   return {
-    read: state.read,
     game: state.game,
   }
 }

@@ -1,5 +1,5 @@
 import React, { Component, PropTypes } from 'react';
-import { openEnvelop, enableNextScreen } from '../actions';
+import { openEnvelop, enableNextScreen } from '../../actions';
 import { connect } from 'react-redux';
 import { DragSource } from 'react-dnd';
 
