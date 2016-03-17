@@ -23,13 +23,11 @@ export const mockup = {
     config: {
       max_num_outputs: 4
     },    
-    statement: {
-      text: "There were 10 apples on the tree on day 1",
-    },
+    statement: "There were 10 apples on the tree on day 1",
     sections: [
       {
         index: 0,
-        order: 0,
+        order: null,
         text: 'How many apples did Sam get if he colleted [5] apples and added them to [2] he already had?',
         default_variables: {
           question: {
@@ -52,16 +50,16 @@ export const mockup = {
         answer: null,
         operation: null,
         watcher: {},
-        num_outputs: 1,
+        num_outputs: 0,
         is_input_opened: false,
         is_question_opened: false,
         is_operation_opened: false,
         is_result_opened: false,
-        is_output_opened: true,
+        is_output_opened: false,
       },
       {
         index: 1,
-        order: 1,
+        order: null,
         text: 'How many apples did Amenda have if he already had [4] and Sam gave him all his apples?',
         default_variables: {
           question: {
@@ -92,7 +90,7 @@ export const mockup = {
       },
       {
         index: 2,
-        order: 2,
+        order: null,
         text: 'How many apples remained on the tree on day 1 after Sam ollected his apples?',
         default_variables: {
           question: {},
@@ -1024,14 +1022,25 @@ export const user_dic = {
   2: {uid:2, name: 'Amenda', cur_section: 0, is_leader:false, votes:0},
   3: {uid:3, name: 'David', cur_section: 0, is_leader:false, votes:0}
 }
-export function players(state = user_dic, action){
+export function player(state, action){
   switch (action.type){
     case TYPE.INTRO_VOTE_LEADER:
       if (action.user_id == state.uid){
         return {...state, is_leader:true}
       } else {
         return {...state, is_leader:false}
+      }      
+    default:
+      return state
+  }  
+}
+export function players(state = user_dic, action){
+  switch (action.type){
+    case TYPE.INTRO_VOTE_LEADER:
+      for (let uid in state){
+        state[uid] = player(state[uid], action);
       }
+      return {...state}
     default:
       return state
   }

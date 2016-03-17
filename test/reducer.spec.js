@@ -439,7 +439,7 @@ describe('App', () => {
     beforeEach(() => {
       //Setup testing enviroment
       state = immutable.fromJS(game(mockup.gamestate, {})).toJS();
-    });    
+    });
     describe('When player sets an output number', () => {
       beforeEach(() => {
         //Setup testing enviroment
@@ -485,7 +485,7 @@ describe('App', () => {
     describe('When team leader assigned a player to a game section', () => {
       it('should add the player to the game section', () => {
         expect(state.sections[0].player).to.equal(null);
-        state = game(state, actions.assignPlayer(0, 1));  
+        state = game(state, actions.assignPlayer(0, 1));
         expect(state.sections[0].player).to.equal(1);
       });
     });

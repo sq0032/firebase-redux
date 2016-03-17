@@ -123,7 +123,7 @@ const style = {
     textAlign: 'center',
     lineHeight: '75px',
     fontSize: '200%',
-    cursor: 'pointer',
+//    cursor: 'pointer',
 //    display: 'inline-block'
   }  
 }
